@@ -15,14 +15,10 @@ import javax.swing.JFrame;
 //Still needs to display the image from a web address.
 
 public class showTable extends Panel {
-			BufferedImage  image;
+			BufferedImage  image = null;
 			public showTable() {
 				try {
-					System.out.println("Enter image name\n");
-					BufferedReader buff = new BufferedReader(new InputStreamReader(System.in));
-					String imageName = buff.readLine();
-					File input = new File(imageName);
-					image = ImageIO.read(input);
+					image = ImageIO.read(new File("src/packA/Board.gif"));
 				} catch (IOException ie) {
 					System.out.println("Error:"+ie.getMessage());
 				}
@@ -34,9 +30,11 @@ public class showTable extends Panel {
 			}
 
 			static public void main(String args[]) throws Exception {
+				InputBox input = new InputBox();
 				JFrame frame = new JFrame("Monopoly by CessnaSkyhawk");
 				Panel panel = new showTable();
 				frame.getContentPane().add(panel);
+				frame.getContentPane().add(input.getBox());
 				frame.setSize(900, 900);
 				frame.setVisible(true);
 			}
