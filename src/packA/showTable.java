@@ -36,7 +36,7 @@ public class showTable extends Panel {
 				JFrame frame = new JFrame("Monopoly by CessnaSkyhawk");
 				Panel panel = new showTable();
 				frame.getContentPane().add(panel);
-				frame.getContentPane().add(input.getBox(), BorderLayout.NORTH);
+				frame.getContentPane().add(input.getBox(), BorderLayout.EAST);
 				frame.setSize(900, 900);
 				frame.setVisible(true);
 			}

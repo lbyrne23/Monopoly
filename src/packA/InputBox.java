@@ -17,6 +17,7 @@ public class InputBox{
 	public InputBox(){
 		input = new JTextField();
 		input.addActionListener(new TextProcess());
+		add(input);
 		
 	}
 	
@@ -25,6 +26,7 @@ public class InputBox{
 			lastCommand = input.getText();
 			input.setText(null);
 			System.out.println(lastCommand);
+			
 		}
 	}
 	
