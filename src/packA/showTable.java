@@ -20,7 +20,7 @@ public class showTable extends Panel {
 			BufferedImage  image = null;
 			public showTable() {
 				try {
-					image = ImageIO.read(new File("src/packA/Board.gif"));
+					image = ImageIO.read(new File("src/packA/Board2.gif"));
 				} catch (IOException ie) {
 					System.out.println("Error:"+ie.getMessage());
 				}

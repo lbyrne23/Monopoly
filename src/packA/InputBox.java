@@ -22,7 +22,9 @@ public class InputBox{
 	
 	private class TextProcess implements ActionListener{
 		public void  actionPerformed(ActionEvent e){
+			lastCommand = input.getText();
 			input.setText(null);
+			System.out.println(lastCommand);
 		}
 	}
 	
@@ -30,12 +32,9 @@ public class InputBox{
 		return input;
 	}
 	
-	public void actionPerformed(KeyEvent e) {
-		input.setText(null);
-	}
-
 	
 	public JTextField input;
+	private String lastCommand;
 	
 }
 
