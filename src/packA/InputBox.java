@@ -6,19 +6,37 @@ package packA;
 // Fiachra Dunn
 //
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
 
+import java.awt.BorderLayout;
+import java.awt.event.*;
 
 public class InputBox{ 	
 	
 	public InputBox(){
+		input = new JTextField();
+		input.addActionListener(new TextProcess());
+		
+	}
+	
+	private class TextProcess implements ActionListener{
+		public void  actionPerformed(ActionEvent e){
+			input.setText(null);
+		}
 	}
 	
 	public JTextField getBox(){
-		return inputBox;
+		return input;
 	}
 	
-	private JTextField inputBox = new JTextField();
+	public void actionPerformed(KeyEvent e) {
+		input.setText(null);
+	}
+
+	
+	public JTextField input;
 	
 }
+
 

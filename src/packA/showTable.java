@@ -1,5 +1,6 @@
 package packA;
 
+import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.image.BufferedImage;
@@ -10,6 +11,7 @@ import java.io.InputStreamReader;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
 
 //MJ
 //Still needs to display the image from a web address.
@@ -34,7 +36,7 @@ public class showTable extends Panel {
 				JFrame frame = new JFrame("Monopoly by CessnaSkyhawk");
 				Panel panel = new showTable();
 				frame.getContentPane().add(panel);
-				frame.getContentPane().add(input.getBox());
+				frame.getContentPane().add(input.getBox(), BorderLayout.NORTH);
 				frame.setSize(900, 900);
 				frame.setVisible(true);
 			}
