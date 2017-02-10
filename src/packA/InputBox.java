@@ -16,8 +16,9 @@ public class InputBox{
 	
 	public InputBox(){
 		input = new JTextField();
+		output = new JTextField();
+		output.setEditable(false);
 		input.addActionListener(new TextProcess());
-		add(input);
 		
 	}
 	
@@ -25,7 +26,7 @@ public class InputBox{
 		public void  actionPerformed(ActionEvent e){
 			lastCommand = input.getText();
 			input.setText(null);
-			System.out.println(lastCommand);
+			output.setText( output.getText() + "\r" + lastCommand);
 			
 		}
 	}
@@ -36,6 +37,7 @@ public class InputBox{
 	
 	
 	public JTextField input;
+	public JTextField output;
 	private String lastCommand;
 	
 }
