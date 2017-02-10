@@ -1,19 +1,19 @@
+package packA;
 import java.awt.BorderLayout;
 import java.awt.Panel;
 
 import javax.swing.JFrame;
 
-import packA.InputBox;
-import packA.showTable;
-
 public class Layout{
 	static public void main(String[] args){
-		InputBox input = new InputBox();
+		InputBox myTextInterface = new InputBox();
+		myTextInterface.input.setBounds(50, 890, 700, 50);
+		myTextInterface.output.setBounds(700, 0, 200, 50);
 		JFrame frame = new JFrame("Monopoly by CessnaSkyhawk");
 		Panel panel = new showTable();
 		frame.getContentPane().add(panel);
-		frame.getContentPane().add(input.input, BorderLayout.NORTH);
-		frame.getContentPane().add(input.output, BorderLayout.CENTER);
+		frame.getContentPane().add(myTextInterface.input);
+		frame.getContentPane().add(myTextInterface.output);
 		frame.setSize(900, 900);
 		frame.setVisible(true);	
 	}
