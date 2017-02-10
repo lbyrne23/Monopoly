@@ -14,7 +14,7 @@ public class Layout{
 		frame.getContentPane().add(panel);
 		frame.getContentPane().add(myTextInterface.input);
 		frame.getContentPane().add(myTextInterface.output);
-		frame.setSize(900, 900);
+		frame.setSize(1250, 750);
 		frame.setVisible(true);	
 	}
 }
