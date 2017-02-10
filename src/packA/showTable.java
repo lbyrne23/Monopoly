@@ -17,18 +17,18 @@ import javax.swing.JTextField;
 //Still needs to display the image from a web address.
 
 public class showTable extends Panel {
-			BufferedImage  image = null;
-			public showTable() {
-				try {
-					image = ImageIO.read(new File("src/packA/Board2.gif"));
-				} catch (IOException ie) {
-					System.out.println("Error:"+ie.getMessage());
-				}
-			}
-
-			public void paint(Graphics g) {
-				g.drawImage( image, 0, 0, 700, 704, null);
-				
-			}
-
+	BufferedImage  image = null;
+	public showTable() {
+		try {
+			image = ImageIO.read(new File("src/packA/Board2.gif"));
+		} catch (IOException ie) {
+			System.out.println("Error:"+ie.getMessage());
 		}
+	}
+
+	public void paint(Graphics g) {
+		g.drawImage( image, 0, 0, 700, 704, null);
+
+	}
+
+}
