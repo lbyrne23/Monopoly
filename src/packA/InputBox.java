@@ -8,6 +8,7 @@ package packA;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 import java.awt.BorderLayout;
 import java.awt.event.*;
@@ -16,7 +17,7 @@ public class InputBox{
 	
 	public InputBox(){
 		input = new JTextField();
-		output = new JTextField();
+		output = new JTextArea();
 		output.setEditable(false);
 		input.addActionListener(new TextProcess());
 		
@@ -26,7 +27,7 @@ public class InputBox{
 		public void  actionPerformed(ActionEvent e){
 			lastCommand = input.getText();
 			input.setText(null);
-			output.setText( output.getText() + "\r" + lastCommand);
+			output.append(lastCommand + "\n");
 			
 		}
 	}
@@ -37,7 +38,7 @@ public class InputBox{
 	
 	
 	public JTextField input;
-	public JTextField output;
+	public JTextArea output;
 	private String lastCommand;
 	
 }
