@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.color.*;
@@ -23,22 +25,26 @@ public class Player extends JPanel{
 	double gX;
 	double gY;
 	int location;
+	int player;
+	int place;
 
 
-	public Player(){
+	public Player(int playernum){
 		location = 0;
+		player = playernum;
+		place = player*10;
 
-		points.add(new Point(40, 45));
-		points.add(new Point(145, 45));
-		points.add(new Point(225, 45));
-		points.add(new Point(295, 45));
-		points.add(new Point(370, 45));
-		points.add(new Point(450, 45));
-		points.add(new Point(550, 45));
-		points.add(new Point(630, 45));
-		points.add(new Point(705, 45));
-		points.add(new Point(775, 45));
-		points.add(new Point(855, 45));
+		points.add(new Point(665, (635+place)));
+		points.add(new Point(605, (635+place)));
+		points.add(new Point(555, (635+place)));
+		points.add(new Point(495, (635+place)));
+		points.add(new Point(425, (635+place)));
+		points.add(new Point(355, (635+place)));
+		points.add(new Point(285, (635+place)));
+		points.add(new Point(225, (635+place)));
+		points.add(new Point(175, (635+place)));
+		points.add(new Point(115, (635+place)));
+		points.add(new Point(40, (635+place)));
 
 		points.add(new Point(855, 150));
 		points.add(new Point(855, 235));
@@ -73,26 +79,47 @@ public class Player extends JPanel{
 		points.add(new Point(40, 150));
 	}
 
-
 	public void paint(Graphics g){
-		setSize(700,704);
-		super.paintComponent(g);
-		gX = points.get(location).getX();
-		gY = points.get(location).getY();
-		circleX = (int) gX;
-		circleY = (int) gY;
-		g.drawOval(circleX, circleY, 10, 10);
-		g.setColor(Color.GREEN);
-		g.fillOval(circleX, circleY, 10, 10);
+		setSize(900,900);
 
+		for(location = 0; location < points.size(); location++){
+			super.paintComponent(g);
+			gX = points.get(location).getX();
+			gY = points.get(location).getY();
+			circleX = (int) gX;
+			circleY = (int) gY;
+			g.drawOval(circleX, circleY, 10, 10);
+
+			if(player == 0){
+				g.setColor(Color.GREEN);
+			}
+			if(player == 1){
+				g.setColor(Color.BLUE);
+			}
+			if(player == 2){
+				g.setColor(Color.RED);
+			}
+			if(player == 3){
+				g.setColor(Color.YELLOW);
+			}
+			if(player == 4){
+				g.setColor(Color.ORANGE);
+			}
+			if(player == 5){
+				g.setColor(Color.BLACK);
+			}
+			g.fillOval(circleX, circleY, 10, 10); 
+		}
 	}
 
+
 	public static void main(String [] args){
-		JFrame MainFrame = new JFrame();
-		MainFrame.setSize(900, 900);
-		Player dot = new Player();
-		MainFrame.add(dot);
-		MainFrame.setVisible(true);
+		JPanel main = new JPanel();
+		main.setSize(700, 704);
+		Player a = new Player(0);
+		main.setOpaque(true);
+		main.add(a);
+		main.setVisible(true);
 
 	}
 }
