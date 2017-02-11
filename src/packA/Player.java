@@ -46,55 +46,54 @@ public class Player extends JPanel{
 		points.add(new Point(115, (635+place)));
 		points.add(new Point(40, (635+place)));
 
-		points.add(new Point(855, 150));
-		points.add(new Point(855, 235));
-		points.add(new Point(855, 310));
-		points.add(new Point(855, 360));
-		points.add(new Point(855, 460));
-		points.add(new Point(855, 545));
-		points.add(new Point(855, 625));
-		points.add(new Point(855, 705));
-		points.add(new Point(855, 770));
-		points.add(new Point(855, 860));
+		points.add(new Point((5+place), 605));
+		points.add(new Point((5+place), 540));
+		points.add(new Point((5+place), 480));
+		points.add(new Point((5+place), 425));
+		points.add(new Point((5+place), 350));
+		points.add(new Point((5+place), 295));
+		points.add(new Point((5+place), 245));
+		points.add(new Point((5+place), 185));
+		points.add(new Point((5+place), 115));
+		points.add(new Point((5+place), 40));
 
-		points.add(new Point(775, 860));
-		points.add(new Point(705, 860));
-		points.add(new Point(630, 860));
-		points.add(new Point(550, 860));
-		points.add(new Point(450, 860));
-		points.add(new Point(370, 860));
-		points.add(new Point(295, 860));
-		points.add(new Point(225, 860));
-		points.add(new Point(145, 860));
-		points.add(new Point(40, 860));
+		points.add(new Point(115, 5+place));
+		points.add(new Point(175, 5+place));
+		points.add(new Point(220, 5+place));
+		points.add(new Point(285, 5+place));
+		points.add(new Point(355, 5+place));
+		points.add(new Point(425, 5+place));
+		points.add(new Point(490, 5+place));
+		points.add(new Point(550, 5+place));
+		points.add(new Point(605, 5+place));
 
-		points.add(new Point(40, 775));
-		points.add(new Point(40, 705));
-		points.add(new Point(40, 625));
-		points.add(new Point(40, 545));
-		points.add(new Point(40, 460));
-		points.add(new Point(40, 360));
-		points.add(new Point(40, 310));
-		points.add(new Point(40, 235));
-		points.add(new Point(40, 150));
+		points.add(new Point(630+place, 115));
+		points.add(new Point(630+place, 185));
+		points.add(new Point(630+place, 245));
+		points.add(new Point(630+place, 295));
+		points.add(new Point(630+place, 355));
+		points.add(new Point(630+place, 425));
+		points.add(new Point(630+place, 485));
+		points.add(new Point(630+place, 545));
+		points.add(new Point(630+place, 605));
 	}
 
+	
 	public void paint(Graphics g){
-		setSize(900,900);
+		setSize(700,704);
 
 		for(location = 0; location < points.size(); location++){
-			super.paintComponent(g);
+			//super.paintComponent(g);
 			gX = points.get(location).getX();
 			gY = points.get(location).getY();
 			circleX = (int) gX;
 			circleY = (int) gY;
-			g.drawOval(circleX, circleY, 10, 10);
 
 			if(player == 0){
 				g.setColor(Color.GREEN);
 			}
 			if(player == 1){
-				g.setColor(Color.BLUE);
+				g.setColor(Color.ORANGE);
 			}
 			if(player == 2){
 				g.setColor(Color.RED);
@@ -103,7 +102,7 @@ public class Player extends JPanel{
 				g.setColor(Color.YELLOW);
 			}
 			if(player == 4){
-				g.setColor(Color.ORANGE);
+				g.setColor(Color.BLUE);
 			}
 			if(player == 5){
 				g.setColor(Color.BLACK);
@@ -113,7 +112,7 @@ public class Player extends JPanel{
 	}
 
 
-	public static void main(String [] args){
+	/*public static void main(String [] args){
 		JPanel main = new JPanel();
 		main.setSize(700, 704);
 		Player a = new Player(0);
@@ -121,5 +120,5 @@ public class Player extends JPanel{
 		main.add(a);
 		main.setVisible(true);
 
-	}
+	}*/
 }
