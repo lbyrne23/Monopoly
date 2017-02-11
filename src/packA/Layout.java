@@ -5,10 +5,13 @@ package packA;
 //import java.awt.GridBagLayout;
 //import java.awt.GridLayout;
 //import java.awt.Insets;
+import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-//import javax.swing.JTextField;
+import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 //import javax.swing.SwingUtilities;
 
 import packA.showTable;
@@ -16,29 +19,28 @@ import packA.InputBox;
 
 public class Layout {
 	static public void main(String[] args){
-		InputBox myTextInterface = new InputBox();
+		
+		
 		JFrame frame = new JFrame("Monopoly by CessnaSkyhawk");
-		JPanel monPanel = new showTable();	
-		JPanel inputPanel = new JPanel();
-		JPanel outputPanel = new JPanel();
+		frame.setLayout(new BorderLayout());
+		showTable monPanel = new showTable();	
+		
+		InputBox inputPanel = new InputBox();
+		
+		JTextArea output = new JTextArea(5, 20);
+		output.setEditable(false);
+		
+		JScrollPane scrollPane = new JScrollPane(output);
+		inputPanel.setOutput(output); // gets JTextArea component of 
+														  //outputPanel for reference
+		
+		
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//		frame.setLocationRelativeTo(null);
-
-		//		GridBagConstraints gbc = new GridBagConstraints();
-		//		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		//		gbc.insets = new Insets(10, 10, 10, 10);
-		//		gbc.fill = GridBagConstraints.HORIZONTAL;
-
-		monPanel.setBounds(0, 0, 700, 704);
-		inputPanel.setBounds(800, 0, 1250, 700);
-		outputPanel.setBounds(0, 700, 1250, 750);
-
-		frame.add(inputPanel.add(myTextInterface.input));
-		frame.add(outputPanel.add(myTextInterface.output));
+		frame.add(inputPanel, BorderLayout.SOUTH);
+		frame.add(scrollPane, BorderLayout.EAST);
 		frame.add(monPanel);
-		//		frame.add(myTextInterface.input, gbc);
-		//		frame.add(myTextInterface.output, gbc);		
+		
 
 		frame.setSize(1250, 750);
 		frame.setVisible(true);	

@@ -6,20 +6,19 @@ package packA;
 // Fiachra Dunn
 //
 
-import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
+import javax.swing.JPanel;
 
-import java.awt.BorderLayout;
+
 import java.awt.event.*;
 
-public class InputBox{ 	
+public class InputBox extends JPanel{ 	
 	
 	public InputBox(){
-		input = new JTextField();
-		output = new JTextArea();
-		output.setEditable(false);
+		input = new JTextField(20);
 		input.addActionListener(new TextProcess());
+		add(input);
 		
 	}
 	
@@ -32,8 +31,9 @@ public class InputBox{
 		}
 	}
 	
-	public JTextField getBox(){
-		return input;
+	
+	public void setOutput(JTextArea newOutput){
+		output = newOutput;
 	}
 	
 	
