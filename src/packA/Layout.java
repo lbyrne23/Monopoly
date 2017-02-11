@@ -30,9 +30,9 @@ public class Layout {
 		//		gbc.insets = new Insets(10, 10, 10, 10);
 		//		gbc.fill = GridBagConstraints.HORIZONTAL;
 
-		monPanel.setLocation(0, 0);
-		inputPanel.setLocation(800, 0);
-		outputPanel.setLocation(0, 700);
+		monPanel.setBounds(0, 0, 700, 704);
+		inputPanel.setBounds(800, 0, 1250, 700);
+		outputPanel.setBounds(0, 700, 1250, 750);
 
 		frame.add(inputPanel.add(myTextInterface.input));
 		frame.add(outputPanel.add(myTextInterface.output));
