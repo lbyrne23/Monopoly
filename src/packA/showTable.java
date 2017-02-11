@@ -1,22 +1,21 @@
 package packA;
 
-import java.awt.BorderLayout;
 import java.awt.Graphics;
-import java.awt.Panel;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
+//import java.io.InputStreamReader;
+//import java.io.BufferedReader;
+
+import javax.swing.JPanel;
+//import javax.swing.JTextField;
+//import javax.swing.JFrame;
 
 //MJ
 //Still needs to display the image from a web address.
 
-public class showTable extends Panel {
+public class showTable extends JPanel {
 	BufferedImage  image = null;
 	public showTable() {
 		try {
@@ -28,7 +27,5 @@ public class showTable extends Panel {
 
 	public void paint(Graphics g) {
 		g.drawImage( image, 0, 0, 700, 704, null);
-
 	}
-
 }
