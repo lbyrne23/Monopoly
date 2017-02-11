@@ -79,15 +79,15 @@ public class Player extends JPanel{
 	}
 
 	
-	public void paint(Graphics g){
+	public void draw(Graphics g){
 		setSize(700,704);
-
 		for(location = 0; location < points.size(); location++){
-			//super.paintComponent(g);
-			gX = points.get(location).getX();
-			gY = points.get(location).getY();
-			circleX = (int) gX;
-			circleY = (int) gY;
+//			//super.paintComponent(g);
+//			gX = points.get(location).getX();
+//			gY = points.get(location).getY();
+//			circleX = (int) gX;
+//			circleY = (int) gY;
+			
 
 			if(player == 0){
 				g.setColor(Color.GREEN);
