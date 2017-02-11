@@ -30,17 +30,22 @@ public class showTable extends JPanel {
 			System.out.println("Error:"+ie.getMessage());
 		}
 		
-		for (int i = 0; i < 6; i++)
-		{
-			playerList.set(i, new Player(i));
-		}
+//		for (int i = 0; i < 6; i++)
+//		{
+//			playerList.set(i, new Player(i));
+//		}
 	}
 
-	public void paint(Graphics g) {
-		g.drawImage( image, 0, 0, 700, 704, null);
-		for (int i = 0; i < 6; ++i)
-		{
-			playerList.get(i).draw(g);
-		}	
-	}	
+//	public void paint(Graphics g) {
+//		g.drawImage( image, 0, 0, 700, 704, null);
+//	}
+	
+	Player A = new Player(0);
+	Player B = new Player(1);
+	Player C = new Player(2);
+	public void paintComponent(Graphics g){
+		A.draw(g);
+		B.draw(g);
+		C.draw(g);
+	}
 }

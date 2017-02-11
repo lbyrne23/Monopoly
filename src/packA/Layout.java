@@ -25,20 +25,20 @@ public class Layout {
 		frame.setLayout(new BorderLayout());
 		showTable monPanel = new showTable();	
 		
-//		InputBox inputPanel = new InputBox();
+		InputBox inputPanel = new InputBox();
 		
-//		JTextArea output = new JTextArea(5, 20);
-//		output.setEditable(false);
+		JTextArea output = new JTextArea(5, 20);
+		output.setEditable(false);
 		
-//		JScrollPane scrollPane = new JScrollPane(output);
-//		inputPanel.setOutput(output); // gets JTextArea component of 
-														  //outputPanel for reference
+		JScrollPane scrollPane = new JScrollPane(output);
+		inputPanel.setOutput(output); 										// gets JTextArea component of outputPanel for reference
+																			
 		
 		
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		frame.add(inputPanel, BorderLayout.SOUTH);
-//		frame.add(scrollPane, BorderLayout.EAST);
+		frame.add(inputPanel, BorderLayout.SOUTH);
+		frame.add(scrollPane, BorderLayout.EAST);
 		frame.add(monPanel);
 		
 

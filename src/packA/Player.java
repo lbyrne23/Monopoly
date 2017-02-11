@@ -81,12 +81,11 @@ public class Player extends JPanel{
 	
 	public void draw(Graphics g){
 		setSize(700,704);
-		for(location = 0; location < points.size(); location++){
-//			//super.paintComponent(g);
-//			gX = points.get(location).getX();
-//			gY = points.get(location).getY();
-//			circleX = (int) gX;
-//			circleY = (int) gY;
+			//super.paintComponent(g);
+			gX = points.get(location).getX();
+			gY = points.get(location).getY();
+			circleX = (int) gX;
+			circleY = (int) gY;
 			
 
 			if(player == 0){
@@ -108,7 +107,6 @@ public class Player extends JPanel{
 				g.setColor(Color.BLACK);
 			}
 			g.fillOval(circleX, circleY, 10, 10); 
-		}
 	}
 
 
