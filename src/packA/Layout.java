@@ -6,6 +6,9 @@ package packA;
 //import java.awt.GridLayout;
 //import java.awt.Insets;
 import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -44,5 +47,6 @@ public class Layout {
 
 		frame.setSize(1250, 750);
 		frame.setVisible(true);	
+		monPanel.sprint1Test();
 	}
 }

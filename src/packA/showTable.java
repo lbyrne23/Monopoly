@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import javax.imageio.ImageIO;
 //import java.io.InputStreamReader;
@@ -22,7 +25,10 @@ import packA.Player;
 public class showTable extends JPanel {
 	BufferedImage  image = null;	
 	ArrayList<Player> playerList = new ArrayList<Player>(6);
-
+	Player A = new Player(0);
+	Player B = new Player(1);
+	Player C = new Player(2);
+	
 	public showTable() {
 		try {
 			image = ImageIO.read(new File("src/packA/Board2.gif"));
@@ -30,23 +36,33 @@ public class showTable extends JPanel {
 			System.out.println("Error:"+ie.getMessage());
 		}
 		
-//		for (int i = 0; i < 6; i++)
-//		{
-//			playerList.set(i, new Player(i));
-//		}
+		add(A);
+		add(B);
+		add(C);
+		A.setLocation(0);
+		B.setLocation(1);
+		C.setLocation(2);
+
 	}
 
-	public void paint(Graphics g) {
+	
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
 		g.drawImage( image, 0, 0, 700, 704, null);
+		A.paintComponent(g);
+		B.paintComponent(g);
+		C.paintComponent(g);
 	}
 	
-	Player A = new Player(0);
-	Player B = new Player(1);
-	Player C = new Player(2);
-	public void paintComponent(Graphics g){
-		g.drawImage( image, 0, 0, 700, 704, null);
-		A.draw(g);
-		B.draw(g);
-		C.draw(g);
+	public void sprint1Test(){
+		Timer timer = new Timer(500, new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				A.setLocation(	(A.getPosition() + 1)%39	);
+				B.setLocation(	(B.getPosition() + 1)%39	);
+				C.setLocation(	(C.getPosition() + 1)%39	);
+				repaint();
+			}		
+		});
+		timer.start();
 	}
 }

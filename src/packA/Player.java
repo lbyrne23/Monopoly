@@ -1,5 +1,6 @@
 package packA;
 import javax.swing.JFrame;
+import javax.swing.JComponent;
 import javax.swing.Timer;
 import javax.swing.JPanel;
 
@@ -17,7 +18,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 
-public class Player extends JPanel{
+public class Player extends JComponent{
 
 	ArrayList<Point> points = new ArrayList<Point>();
 	int circleX;
@@ -79,9 +80,8 @@ public class Player extends JPanel{
 	}
 
 	
-	public void draw(Graphics g){
-		setSize(700,704);
-			//super.paintComponent(g);
+	public void paintComponent(Graphics g){
+			super.paintComponent(g);
 			gX = points.get(location).getX();
 			gY = points.get(location).getY();
 			circleX = (int) gX;
@@ -108,15 +108,16 @@ public class Player extends JPanel{
 			}
 			g.fillOval(circleX, circleY, 10, 10); 
 	}
+	
+	public void setLocation(int newLocation){
+		location = newLocation;
+	}
+	
+	public int getPosition(){
+		return location;
+	}
+	
 
 
-	/*public static void main(String [] args){
-		JPanel main = new JPanel();
-		main.setSize(700, 704);
-		Player a = new Player(0);
-		main.setOpaque(true);
-		main.add(a);
-		main.setVisible(true);
 
-	}*/
 }
