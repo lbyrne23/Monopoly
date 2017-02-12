@@ -21,13 +21,13 @@ import java.util.ArrayList;
 public class Player extends JComponent{
 
 	ArrayList<Point> points = new ArrayList<Point>();
-	int circleX;
-	int circleY;
-	double gX;
-	double gY;
-	int location;
-	int player;
-	int place;
+	private int circleX;
+	private int circleY;
+	private double gX;
+	private double gY;
+	private int location;
+	private int player;
+	private int place;
 
 
 	public Player(int playernum){
@@ -79,45 +79,43 @@ public class Player extends JComponent{
 		points.add(new Point(630+place, 605));
 	}
 
-	
-	public void paintComponent(Graphics g){
-			super.paintComponent(g);
-			gX = points.get(location).getX();
-			gY = points.get(location).getY();
-			circleX = (int) gX;
-			circleY = (int) gY;
-			
 
-			if(player == 0){
-				g.setColor(Color.GREEN);
-			}
-			if(player == 1){
-				g.setColor(Color.ORANGE);
-			}
-			if(player == 2){
-				g.setColor(Color.RED);
-			}
-			if(player == 3){
-				g.setColor(Color.YELLOW);
-			}
-			if(player == 4){
-				g.setColor(Color.BLUE);
-			}
-			if(player == 5){
-				g.setColor(Color.BLACK);
-			}
-			g.fillOval(circleX, circleY, 10, 10); 
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		gX = points.get(location).getX();
+		gY = points.get(location).getY();
+		circleX = (int) gX;
+		circleY = (int) gY;
+
+
+		if(player == 0){
+			g.setColor(Color.GREEN);
+		}
+		if(player == 1){
+			g.setColor(Color.ORANGE);
+		}
+		if(player == 2){
+			g.setColor(Color.RED);
+		}
+		if(player == 3){
+			g.setColor(Color.YELLOW);
+		}
+		if(player == 4){
+			g.setColor(Color.BLUE);
+		}
+		if(player == 5){
+			g.setColor(Color.BLACK);
+		}
+		g.fillOval(circleX, circleY, 10, 10); 
 	}
-	
+
+
 	public void setLocation(int newLocation){
 		location = newLocation;
 	}
-	
+
+
 	public int getPosition(){
 		return location;
 	}
-	
-
-
-
 }
