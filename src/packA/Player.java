@@ -67,6 +67,7 @@ public class Player extends JComponent{
 		points.add(new Point(490, 5+place));
 		points.add(new Point(550, 5+place));
 		points.add(new Point(605, 5+place));
+		points.add(new Point (655, 5+place));
 
 		points.add(new Point(630+place, 115));
 		points.add(new Point(630+place, 185));
