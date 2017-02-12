@@ -36,14 +36,15 @@ public class showTable extends JPanel {
 //		}
 	}
 
-//	public void paint(Graphics g) {
-//		g.drawImage( image, 0, 0, 700, 704, null);
-//	}
+	public void paint(Graphics g) {
+		g.drawImage( image, 0, 0, 700, 704, null);
+	}
 	
 	Player A = new Player(0);
 	Player B = new Player(1);
 	Player C = new Player(2);
 	public void paintComponent(Graphics g){
+		g.drawImage( image, 0, 0, 700, 704, null);
 		A.draw(g);
 		B.draw(g);
 		C.draw(g);
