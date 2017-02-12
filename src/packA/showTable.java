@@ -28,6 +28,10 @@ public class showTable extends JPanel {
 	Player A = new Player(0);
 	Player B = new Player(1);
 	Player C = new Player(2);
+	Player D = new Player(3);
+	Player E = new Player(4);
+	Player F = new Player(5);
+
 	
 	public showTable() {
 		try {
@@ -39,9 +43,16 @@ public class showTable extends JPanel {
 		add(A);
 		add(B);
 		add(C);
+		add(D);
+		add(E);
+		add(F);
+		
 		A.setLocation(0);
-		B.setLocation(1);
-		C.setLocation(2);
+		B.setLocation(0);
+		C.setLocation(0);
+		D.setLocation(0);
+		E.setLocation(0);
+		F.setLocation(0);
 
 	}
 
@@ -52,6 +63,10 @@ public class showTable extends JPanel {
 		A.paintComponent(g);
 		B.paintComponent(g);
 		C.paintComponent(g);
+		D.paintComponent(g);
+		E.paintComponent(g);
+		F.paintComponent(g);
+
 	}
 	
 	public void sprint1Test(){
@@ -60,6 +75,9 @@ public class showTable extends JPanel {
 				A.setLocation(	(A.getPosition() + 1)%39	);
 				B.setLocation(	(B.getPosition() + 1)%39	);
 				C.setLocation(	(C.getPosition() + 1)%39	);
+				D.setLocation(	(D.getPosition() + 1)%39	);
+				E.setLocation(	(E.getPosition() + 1)%39	);
+				F.setLocation(	(F.getPosition() + 1)%39	);
 				repaint();
 			}		
 		});
