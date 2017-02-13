@@ -1,39 +1,29 @@
 package packA;
-import javax.swing.JFrame;
-import javax.swing.JComponent;
-import javax.swing.Timer;
-import javax.swing.JPanel;
-
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+// A class to store co-ordinates for player tokens and paint them. It provides other classes with useful methods without seeing what's happening on the inside.
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.color.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import javax.swing.JComponent;
 
 
 public class Player extends JComponent{
 
-	ArrayList<Point> points = new ArrayList<Point>(); //Array of co-ordinates
+	ArrayList<Point> points = new ArrayList<Point>(); 					// Array of co-ordinates.
 	private int circleX;
 	private int circleY;
-	private double gX; // for casting
+	private double gX; 													// For casting.
 	private double gY;
-	private int location; //location on board
-	private int player; //to track which player it is
-	private int place; //used to calculate loction and prevent collisions
+	private int location; 												// Location on board.
+	private int player; 												// To track which player it is.
+	private int place; 													// Used to calculate location and prevent collisions.
 
 
 	public Player(int playernum){
-		location = 0; //start at GO
+		location = 0; 													// Start at GO.
 		player = playernum;
-		place = player*10; //calculate place on square
+		place = player*10; 												// Calculate place on square.
 
 		//Bottom Squares 
 		points.add(new Point(665, (635+place)));
@@ -60,7 +50,7 @@ public class Player extends JComponent{
 		points.add(new Point((5+place), 115));
 		points.add(new Point((5+place), 40));
 
-		//Top
+		//Top Squares
 		points.add(new Point(115, 5+place));
 		points.add(new Point(175, 5+place));
 		points.add(new Point(220, 5+place));
@@ -72,7 +62,7 @@ public class Player extends JComponent{
 		points.add(new Point(605, 5+place));
 		points.add(new Point (655, 5+place));
 
-		//Right-Side
+		//Right Side Squares
 		points.add(new Point(630+place, 115));
 		points.add(new Point(630+place, 185));
 		points.add(new Point(630+place, 245));
@@ -86,14 +76,14 @@ public class Player extends JComponent{
 
 
 	public void paintComponent(Graphics g){
-		super.paintComponent(g); //erase old squares
-		gX = points.get(location).getX(); //get point on array list
+		super.paintComponent(g); 										// Erase old squares.
+		gX = points.get(location).getX(); 								// Get point on array list.
 		gY = points.get(location).getY();
-		circleX = (int) gX; //cast
+		circleX = (int) gX; 											// Cast.
 		circleY = (int) gY;
 
 
-		//different colors depending on player number
+		//Different colors depending on player number.
 		if(player == 0){
 			g.setColor(Color.GREEN);
 		}
@@ -115,7 +105,8 @@ public class Player extends JComponent{
 		g.fillOval(circleX, circleY, 10, 10); 
 	}
 
-	//Classes used when drawing on image of board
+
+	//Classes used when drawing on image of board.
 	public void setLocation(int newLocation){
 		location = newLocation;
 	}
