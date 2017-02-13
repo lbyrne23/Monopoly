@@ -1,20 +1,10 @@
 package packA;
-import javax.swing.JFrame;
 import javax.swing.JComponent;
-import javax.swing.Timer;
-import javax.swing.JPanel;
-
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.color.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+
 import java.util.ArrayList;
 
 
@@ -31,9 +21,9 @@ public class Player extends JComponent{
 
 
 	public Player(int playernum){
-		location = 0;
-		player = playernum;
-		place = player*10;
+		location = 0; //Keeps track of position on board
+		player = playernum; // Keeps track of what Player Number is associated with the object
+		place = player*10; //Used to calculate off-set for positioning players
 
 		points.add(new Point(665, (635+place)));
 		points.add(new Point(605, (635+place)));
