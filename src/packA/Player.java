@@ -20,21 +20,22 @@ import java.util.ArrayList;
 
 public class Player extends JComponent{
 
-	ArrayList<Point> points = new ArrayList<Point>();
+	ArrayList<Point> points = new ArrayList<Point>(); //Array of co-ordinates
 	private int circleX;
 	private int circleY;
-	private double gX;
+	private double gX; // for casting
 	private double gY;
-	private int location;
-	private int player;
-	private int place;
+	private int location; //location on board
+	private int player; //to track which player it is
+	private int place; //used to calculate loction and prevent collisions
 
 
 	public Player(int playernum){
-		location = 0;
+		location = 0; //start at GO
 		player = playernum;
-		place = player*10;
+		place = player*10; //calculate place on square
 
+		//Bottom Squares
 		points.add(new Point(665, (635+place)));
 		points.add(new Point(605, (635+place)));
 		points.add(new Point(555, (635+place)));
@@ -47,6 +48,7 @@ public class Player extends JComponent{
 		points.add(new Point(115, (635+place)));
 		points.add(new Point(40, (635+place)));
 
+		//Left Side Squares
 		points.add(new Point((5+place), 605));
 		points.add(new Point((5+place), 540));
 		points.add(new Point((5+place), 480));
@@ -58,6 +60,7 @@ public class Player extends JComponent{
 		points.add(new Point((5+place), 115));
 		points.add(new Point((5+place), 40));
 
+		//Top
 		points.add(new Point(115, 5+place));
 		points.add(new Point(175, 5+place));
 		points.add(new Point(220, 5+place));
@@ -69,6 +72,7 @@ public class Player extends JComponent{
 		points.add(new Point(605, 5+place));
 		points.add(new Point (655, 5+place));
 
+		//Right-Side
 		points.add(new Point(630+place, 115));
 		points.add(new Point(630+place, 185));
 		points.add(new Point(630+place, 245));
@@ -82,13 +86,14 @@ public class Player extends JComponent{
 
 
 	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		gX = points.get(location).getX();
+		super.paintComponent(g); //erase old squares
+		gX = points.get(location).getX(); //get point on array list
 		gY = points.get(location).getY();
-		circleX = (int) gX;
+		circleX = (int) gX; //cast
 		circleY = (int) gY;
 
 
+		//different colors depending on player number
 		if(player == 0){
 			g.setColor(Color.GREEN);
 		}
@@ -110,11 +115,10 @@ public class Player extends JComponent{
 		g.fillOval(circleX, circleY, 10, 10); 
 	}
 
-
+	//Classes used when drawing on image of board
 	public void setLocation(int newLocation){
 		location = newLocation;
 	}
-
 
 	public int getPosition(){
 		return location;
