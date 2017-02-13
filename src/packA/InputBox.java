@@ -16,24 +16,25 @@ import java.awt.event.*;
 public class InputBox extends JPanel{ 	
 	
 	public InputBox(){
-		input = new JTextField(20);
-		input.addActionListener(new TextProcess());
-		add(input);
+		input = new JTextField(20); //Text field that will be used for input
+		input.addActionListener(new TextProcess()); //add our custom ActionListener
+		add(input);	//add 'input' to the Jpanel
 		
 	}
 	
 	private class TextProcess implements ActionListener{
 		public void  actionPerformed(ActionEvent e){
-			lastCommand = input.getText();
-			input.setText(null);
-			output.append(lastCommand + "\n");
+			lastCommand = input.getText(); //set String 'lastCommand' to hold the text currently in JTextField
+			input.setText(null);	//wipe the JTextField
+			output.append(lastCommand + "\n");	//Append to the text currently in the JTextArea output
 			
 		}
 	}
 	
 	
+	//Function instantiates our output.
 	public void setOutput(JTextArea newOutput){
-		output = newOutput;
+		output = newOutput; 
 	}
 	
 	

@@ -26,15 +26,15 @@ public class Layout {
 		
 		JFrame frame = new JFrame("Monopoly by CessnaSkyhawk");
 		frame.setLayout(new BorderLayout());
-		showTable monPanel = new showTable();	
+		showTable monPanel = new showTable();	//panel for displaying board and players
 		
-		InputBox inputPanel = new InputBox();
+		InputBox inputPanel = new InputBox();	// panel which takes in text
 		
-		JTextArea output = new JTextArea(5, 20);
+		JTextArea output = new JTextArea(5, 20);	//text area for message display
 		output.setEditable(false);
 		
-		JScrollPane scrollPane = new JScrollPane(output);
-		inputPanel.setOutput(output); 										// gets JTextArea component of outputPanel for reference
+		JScrollPane scrollPane = new JScrollPane(output); //Create JScrollPane for viewing text area
+		inputPanel.setOutput(output); //set 'output' to be the designated output destination for text input.
 																			
 		
 		
