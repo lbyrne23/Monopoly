@@ -35,7 +35,7 @@ public class Player extends JComponent{
 		player = playernum;
 		place = player*10; //calculate place on square
 
-		//Bottom Squares
+		//Bottom Squares 
 		points.add(new Point(665, (635+place)));
 		points.add(new Point(605, (635+place)));
 		points.add(new Point(555, (635+place)));
