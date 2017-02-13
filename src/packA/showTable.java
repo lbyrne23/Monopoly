@@ -23,9 +23,12 @@ import packA.Player;
 //MJ
 
 public class showTable extends JPanel {
-	BufferedImage  image = null;	
-	ArrayList<Player> playerList = new ArrayList<Player>(6);
-
+	private BufferedImage  image = null;	
+	private ArrayList<Player> playerList = new ArrayList<Player>(6);
+	
+	//These Integers are just for Sprint 1 demosntration.
+	private int timerLoop;
+	private int playerLoop;
 	
 	public showTable() {
 		try {
@@ -34,9 +37,12 @@ public class showTable extends JPanel {
 			System.out.println("Error:"+ie.getMessage());
 		}
 		
+		timerLoop = 0;
+		playerLoop = 0;
+		
 		for (int i=0; i<6; i++){
 			playerList.add(new Player(i));
-			add(playerList.get(i));
+		//	add(playerList.get(i));
 		}
 		
 		
@@ -54,11 +60,23 @@ public class showTable extends JPanel {
 	}
 	
 	public void sprint1Test(){
-		Timer timer = new Timer(500, new ActionListener(){
+		Timer timer = new Timer(250, new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				for(Player p : playerList){
-					p.setLocation(	((p.getPosition() )+ 1)%40		);
+				if (timerLoop == 0){
+					add(playerList.get(playerLoop));
+					timerLoop++;
 				}
+				Player currPlayer = playerList.get(playerLoop);
+				currPlayer.setLocation((currPlayer.getPosition() + 1)%40);
+				timerLoop++;
+				
+				if (timerLoop == 40){
+					currPlayer.setLocation((currPlayer.getPosition() + 1)%40);
+					remove(playerList.get(playerLoop));
+					playerLoop = (playerLoop + 1)%6;
+					timerLoop = 0;
+				}
+					
 				repaint();
 			}		
 		});
