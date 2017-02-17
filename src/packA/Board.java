@@ -31,14 +31,10 @@ public class Board extends JPanel {
 		}
 		
 		output = newOutput; // Give area for outputting info.
+		output.append("Welcome to Monopoly by Cessna Skyhawk!\n Please enter a player name.\n");
 		
+		playerTurn = -1; //Indicates players have not yet been instantiated. 
 		playerList = new ArrayList<Player>(players);
-
-
-		//Add players to our playerList (currently loading maximum players every time).
-		for (int i=0; i<players; i++){
-			playerList.add(new Player(i, "Player" + i));
-		}
 	}
 
 
@@ -54,8 +50,15 @@ public class Board extends JPanel {
 	public boolean playerAction(String command){
 			//Return True unless the command 'done' is entered.
 			//This class will call other functions depending on command given
+		if(playerTurn == -1){
+			playerList.add(new Player(numberOfPlayers, command));
+			output.append("Player " + numberOfPlayers + " name : " + command + "\n");
+			repaint();
+			numberOfPlayers++;
+			output.append("Please enter a player name.\n");
+		}
+		
 		if(command != null){
-			output.append(command + "\n");
 			
 		}
 			

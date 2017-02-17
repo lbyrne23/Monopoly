@@ -116,4 +116,8 @@ public class Player extends JComponent{
 	public int getPosition(){
 		return location;
 	}
+	
+	public String getName(){
+		return name;
+	}
 }

@@ -20,8 +20,8 @@ public class InputBox extends JPanel{
 	private class TextProcess implements ActionListener{
 		public void  actionPerformed(ActionEvent e){
 			lastCommand = input.getText();				// Set String 'lastCommand' to hold the text currently in JTextField.
-			output.playerAction(lastCommand); 							//When Enter is pressed, Board makes Playeraction.
-			input.setText("");							// Wipe the JTextField.
+			output.playerAction(lastCommand); 			//When Enter is pressed, Board makes Playeraction.
+			input.setText(null);							// Wipe the JTextField.
 		}
 	}
 
