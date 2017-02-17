@@ -51,14 +51,20 @@ public class Board extends JPanel {
 		}
 	}
 		
-	public boolean takeTurn(String command){
+	public boolean playerAction(String command){
 			//Return True unless the command 'done' is entered.
 			//This class will call other functions depending on command given
+		if(command != null){
 			output.append(command + "\n");
+			
+		}
+			
 			if(command.equals("done")){
 				return false;
 			}
 			else return true;
 		}
-	}	
+
+	
+}	
 

@@ -19,14 +19,15 @@ public class InputBox extends JPanel{
 
 	private class TextProcess implements ActionListener{
 		public void  actionPerformed(ActionEvent e){
-			lastCommand = input.getText(); 					// Set String 'lastCommand' to hold the text currently in JTextField.
+			lastCommand = input.getText();				// Set String 'lastCommand' to hold the text currently in JTextField.
+			output.playerAction(lastCommand); 							//When Enter is pressed, Board makes Playeraction.
 			input.setText("");							// Wipe the JTextField.
 		}
 	}
 
 
 	//Function instantiates our output.
-	public void setOutput(JTextArea newOutput){
+	public void setOutput(Board newOutput){
 		output = newOutput; 
 	}
 
@@ -37,8 +38,8 @@ public class InputBox extends JPanel{
 	}
 
 	public JTextField input;
-	public JTextArea output;
 	private String lastCommand;
+	private Board output;
 }
 
 

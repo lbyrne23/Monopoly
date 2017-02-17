@@ -20,14 +20,18 @@ public class Layout {
 		frame.setLayout(new BorderLayout());
 
 
-		InputBox inputPanel = new InputBox();									//Panel which takes in text.
-
+		
+		
+		
 		JTextArea output = new JTextArea(5, 20);								//Text area for message display.
 		output.setEditable(false);
+		
 		Board monPanel = new Board(6, output);									//Panel for displaying board and players.
-
+		InputBox inputPanel = new InputBox();									//Panel which takes in text.
+		inputPanel.setOutput(monPanel);									 	//Set 'output' to be the designated output destination for text input.
+		
 		JScrollPane scrollPane = new JScrollPane(output); 						//Create JScrollPane for viewing text area.
-		inputPanel.setOutput(output);									 	//Set 'output' to be the designated output destination for text input.
+		
 
 
 		//Adding panels to frame.
@@ -40,7 +44,7 @@ public class Layout {
 		frame.setSize(1250, 750);											
 		frame.setVisible(true);	
 		
-		while(monPanel.takeTurn(inputPanel.getCommand()));
+		
 		
 		
 	}
