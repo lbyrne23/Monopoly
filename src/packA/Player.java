@@ -18,11 +18,13 @@ public class Player extends JComponent{
 	private int location; 												// Location on board.
 	private int player; 												// To track which player it is.
 	private int place; 													// Used to calculate location and prevent collisions.
+	private String name;
+	
 
-
-	public Player(int playernum){
+	public Player(int playernum, String playerName){
 		location = 0; 													// Start at GO.
 		player = playernum;
+		name = playerName;
 		place = player*10; 												// Calculate place on square.
 
 		//Bottom Squares 

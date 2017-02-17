@@ -3,39 +3,41 @@ package packA;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.JTextArea;
 
 import packA.Player;
 
 
-public class showTable extends JPanel {
+public class Board extends JPanel {
 	private BufferedImage  image = null;	
 	private ArrayList<Player> playerList = new ArrayList<Player>(6);		 				// Array list to store players.
+	private int playerTurn;
+	private int numberOfPlayers;
+	private JTextArea output;
+	
 
-	//These Integers are just for Sprint 1 demonstration.
-	private int timerLoop;
-	private int playerLoop;
-
-	public showTable() {
+	public Board(int players, JTextArea newOutput) {
 		try {																				// Try to load image from project files.
 			image = ImageIO.read(new File("src/packA/Board2.gif"));
 		} catch (IOException ie) {
 			System.out.println("Error:"+ie.getMessage());
 		}
+		
+		output = newOutput; // Give area for outputting info.
+		
+		playerList = new ArrayList<Player>(players);
 
-		timerLoop = 0;
-		playerLoop = 0;
 
 		//Add players to our playerList (currently loading maximum players every time).
-		for (int i=0; i<6; i++){
-			playerList.add(new Player(i));
+		for (int i=0; i<players; i++){
+			playerList.add(new Player(i, "Player" + i));
 		}
 	}
 
@@ -48,25 +50,15 @@ public class showTable extends JPanel {
 			p.paintComponent(g);
 		}
 	}
+		
+	public boolean takeTurn(String command){
+			//Return True unless the command 'done' is entered.
+			//This class will call other functions depending on command given
+			output.append(command + "\n");
+			if(command.equals("done")){
+				return false;
+			}
+			else return true;
+		}
+	}	
 
-
-	//Timer to move players.
-	public void sprint1Test(){
-		Timer timer = new Timer(250, new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				timerLoop++; 																// Keeps track of how many moves have happened.
-				Player currPlayer = playerList.get(playerLoop);
-				currPlayer.setLocation((currPlayer.getPosition() + 1)%40);
-
-
-				if (timerLoop == 40){														// If player has moved back to start, start moving next player.
-					playerLoop = (playerLoop + 1)%6; 										// playerLoop is used to reference player, move on to next player.
-					timerLoop = 0;
-				}
-
-				repaint();
-			}		
-		});
-		timer.start();
-	}
-}
