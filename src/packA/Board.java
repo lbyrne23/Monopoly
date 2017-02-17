@@ -35,6 +35,7 @@ public class Board extends JPanel {
 		
 		playerTurn = -1; //Indicates players have not yet been instantiated. 
 		playerList = new ArrayList<Player>(players);
+		numberOfPlayers = 0;
 	}
 
 
@@ -47,27 +48,47 @@ public class Board extends JPanel {
 		}
 	}
 		
-	public boolean playerAction(String command){
-			//Return True unless the command 'done' is entered.
+	public void playerAction(String command){
 			//This class will call other functions depending on command given
 		if(playerTurn == -1){
-			playerList.add(new Player(numberOfPlayers, command));
-			output.append("Player " + numberOfPlayers + " name : " + command + "\n");
-			repaint();
-			numberOfPlayers++;
-			output.append("Please enter a player name.\n");
+			if(numberOfPlayers == 6){ //Case of Maximum players
+				playerTurn++;
+			}
+			
+			if(numberOfPlayers>1 && command.equals("done")){	//Case of sufficient players to begin
+				playerTurn++;
+				return;
+			}
+			
+			if(numberOfPlayers < 6){	//Adding players if there's room
+				playerList.add(new Player(numberOfPlayers, command));
+				output.append("Player " + numberOfPlayers + " name : " + command + "\n");
+				repaint();
+				numberOfPlayers++;
+				
+				switch(numberOfPlayers){	//Different message displayed once sufficient players added.
+				case 1:	output.append("Please enter a player name.\n");
+						break;
+						
+				default : output.append("Please enter a player name, or type 'done' to begin.\n");
+				}
+				
+				return;
+			}
+			
+			
 		}
 		
-		if(command != null){
-			
+		if(command.equals("move")){
+			Player tmpPlayer = playerList.get(playerTurn);
+			tmpPlayer.setLocation(tmpPlayer.getPosition()+1);
+			repaint();
 		}
 			
 			if(command.equals("done")){
-				return false;
-			}
-			else return true;
+			playerTurn = (playerTurn+1)%numberOfPlayers;
 		}
-
+	}
 	
-}	
+}
 
