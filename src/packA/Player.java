@@ -20,14 +20,16 @@ public class Player extends JComponent{
 	private int place; 													// Used to calculate location and prevent collisions.
 	private String name;
 	private int firstRoll;
+	private int money;
 
 
 	public Player(int playernum, String playerName){
 		location = 0; 													// Start at GO.
 		player = playernum;
 		name = playerName;
-		place = player*10; 												// Calculate place on square.
-
+		place = player*10;												// Calculate place on square.
+		money = 1500;
+		
 		//Bottom Squares 
 		points.add(new Point(665, (635+place)));
 		points.add(new Point(605, (635+place)));
@@ -128,5 +130,13 @@ public class Player extends JComponent{
 	
 	public int getFirstRoll(){
 		return firstRoll;
+	}
+	
+	public int getBalance(){
+		return money;
+	}
+	
+	public void updateBalance(int amount){
+		money = money + amount;
 	}
 }

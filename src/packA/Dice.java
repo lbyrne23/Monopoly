@@ -21,7 +21,7 @@ public class Dice {
 	}
 
 	
-	public String toString() {
-        return dice1 + " + " + dice2 + " = " + dice1+dice2; 
+	public static String words() {
+        return dice1 + " + " + dice2 + " = " + (dice1+dice2) + "\n"; 
     }	
 }

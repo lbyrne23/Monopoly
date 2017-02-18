@@ -65,6 +65,8 @@ public class Board extends JPanel {
 					playerList.get(i).setFirstRoll(Dice.Roll());
 					output.append(playerList.get(i).getName() + " : " + playerList.get(i).getFirstRoll() + "\n");
 				}
+				Dice.rollAgain = false;
+				output.append("(Player who rolled highest) goes first.\n Enter 'roll' \n");
 				return;
 			}
 
@@ -99,15 +101,27 @@ public class Board extends JPanel {
 
 		if(command.equals("roll")){
 			Player tmpPlayer = playerList.get(playerTurn);
-			tmpPlayer.setLocation(tmpPlayer.getPosition()+Dice.Roll());
+			int thisRoll = Dice.Roll();
+			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
+				tmpPlayer.updateBalance(200);
+			}
+			
+			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
+			output.append(Dice.words() + "\n");
+			output.append(tmpPlayer.getBalance() + "\n");
 			repaint();
+			
 			if(	Dice.rollAgain == false){
 				playerTurn = (playerTurn+1)%numberOfPlayers;
+				output.append(playerList.get(playerTurn).getName()+ "'s turn. \n");
 			}
 			if(	Dice.rollAgain == true){
 				output.append("Doubles: Roll again\n");
+				tmpPlayer.setLocation((tmpPlayer.getPosition()+Dice.Roll())%40);
+				output.append(Dice.words());
 				Dice.rollAgain = false;
 			}
+			
 		}	
 	}
 }
