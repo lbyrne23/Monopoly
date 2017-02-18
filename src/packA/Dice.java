@@ -1,5 +1,6 @@
 package packA;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Dice {
@@ -23,8 +24,6 @@ public class Dice {
 	public String toString() {
         return dice1 + " + " + dice2 + " = " + dice1+dice2; 
     }
-	
-	
 	
 }
 

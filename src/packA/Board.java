@@ -57,6 +57,12 @@ public class Board extends JPanel {
 
 			if(numberOfPlayers>1 && command.equals("done")){	//Case of sufficient players to begin
 				playerTurn++;
+				output.append("Roll to see who goes first \n");
+				
+				for(int i = 0; i < numberOfPlayers; i++){
+					playerList.get(i).setFirstRoll(Dice.Roll());
+					output.append(playerList.get(i).getName() + " : " + playerList.get(i).getFirstRoll() + "\n");
+				}
 				return;
 			}
 
@@ -70,7 +76,7 @@ public class Board extends JPanel {
 				case 1:	output.append("Please enter a player name.\n");
 				break;
 
-				default : output.append("Please enter a player name, or type 'done' to begin.\n");
+				default : output.append("Please enter a player name, \n or type 'done' to begin.\n");
 				}
 
 				return;
@@ -87,7 +93,6 @@ public class Board extends JPanel {
 
 		if(command.equals("done")){
 			playerTurn = (playerTurn+1)%numberOfPlayers;
-			
 		}
 		
 		if(command.equals("roll")){

@@ -19,7 +19,8 @@ public class Player extends JComponent{
 	private int player; 												// To track which player it is.
 	private int place; 													// Used to calculate location and prevent collisions.
 	private String name;
-	
+	private int firstRoll;
+
 
 	public Player(int playernum, String playerName){
 		location = 0; 													// Start at GO.
@@ -116,8 +117,16 @@ public class Player extends JComponent{
 	public int getPosition(){
 		return location;
 	}
-	
+
 	public String getName(){
 		return name;
+	}
+
+	public void setFirstRoll(int number){
+		firstRoll = number;
+	}
+	
+	public int getFirstRoll(){
+		return firstRoll;
 	}
 }
