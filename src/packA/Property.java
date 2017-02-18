@@ -4,23 +4,70 @@ import java.util.ArrayList;
 
 public class Property {
 	private String name;
-	private String colour;
 	private int owner;
 	private int price;
-	private int rent;
+	private int rent;											// Using a fixed rent for Sprint 2.
 	private int mortgage;
 
-	private int houseCost;
-	private int oneHouse;
-	private int twoHouse;
-	private int threeHouse;
-	private int fourHouse;
+//	private String colour;
+//	
+//	private int houseCost;
+//	private int oneHouse;
+//	private int twoHouse;
+//	private int threeHouse;
+//	private int fourHouse;
+//	
+//	private int hotelCost;
+//	private int hotel;
+		
 	
-	private int hotelCost;
-	private int hotel;
+	public void property(String nameIN, int priceIN, int mortgageIN){
+		name = nameIN;
+		owner = -1;
+		price = priceIN;
+		rent = 50;
+		mortgage = mortgageIN;
+	}
+	
+	public String returnName(){
+		return name;
+	}
+	
+	public String returnOwner(){
+		if (owner >= 0)
+		{
+			return "Owned by Player " + owner;
+		} else {
+			return "No owner yet.";
+		}
+	}
+	
+	public int returnPrice(){
+		return price;
+	}
+	
+	public int returnRent(){
+		return rent;
+	}
+	
+	public int returnMortgage(){
+		return mortgage;
+	}
+	
+	public void boughtProperty(int playerNum){
+		owner = playerNum;
+	}
 	
 	
-	public void propertyAdd() {
+	
+	
+	
+	
+	
+	
+	
+	
+//	public void propertyAdd() {
 //		propertyList.add("Old Kent Road");
 //		propertyList.add("Whitechapel Rd");
 //		propertyList.add("The Angel Islington");
@@ -43,5 +90,5 @@ public class Property {
 //		propertyList.add("Bond St");
 //		propertyList.add("Park Lane");
 //		propertyList.add("Mayfair");
-	}
+//	}
 }
