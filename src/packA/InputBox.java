@@ -41,5 +41,3 @@ public class InputBox extends JPanel{
 	private String lastCommand;
 	private Board output;
 }
-
-

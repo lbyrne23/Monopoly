@@ -18,9 +18,6 @@ public class Layout {
 
 		JFrame frame = new JFrame("Monopoly by CessnaSkyhawk");
 		frame.setLayout(new BorderLayout());
-
-
-		
 		
 		
 		JTextArea output = new JTextArea(5, 20);								//Text area for message display.
@@ -28,7 +25,7 @@ public class Layout {
 		
 		Board monPanel = new Board(6, output);									//Panel for displaying board and players.
 		InputBox inputPanel = new InputBox();									//Panel which takes in text.
-		inputPanel.setOutput(monPanel);									 	//Set 'output' to be the designated output destination for text input.
+		inputPanel.setOutput(monPanel);									 		//Set 'output' to be the designated output destination for text input.
 		
 		JScrollPane scrollPane = new JScrollPane(output); 						//Create JScrollPane for viewing text area.
 		
@@ -43,8 +40,6 @@ public class Layout {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1250, 750);											
 		frame.setVisible(true);	
-		
-		
 		
 		
 	}

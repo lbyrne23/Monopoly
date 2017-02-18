@@ -30,10 +30,10 @@ public class Board extends JPanel {
 			System.out.println("Error:"+ie.getMessage());
 		}
 
-		output = newOutput; // Give area for outputting info.
-		output.append("Welcome to Monopoly by Cessna Skyhawk!\n Please enter a player name.\n");
+		output = newOutput; 																// Give area for outputting info.
+		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
-		playerTurn = -1; //Indicates players have not yet been instantiated. 
+		playerTurn = -1; 																	//Indicates players have not yet been instantiated. 
 		playerList = new ArrayList<Player>(players);
 		numberOfPlayers = 0;
 	}
@@ -48,17 +48,19 @@ public class Board extends JPanel {
 		}
 	}
 
+
 	public void playerAction(String command){
 		//This class will call other functions depending on command given
 		if(playerTurn == -1){
-			if(numberOfPlayers == 6){ //Case of Maximum players
+			if(numberOfPlayers == 6){ 														//Case of Maximum players
 				playerTurn++;
 			}
 
-			if(numberOfPlayers>1 && command.equals("done")){	//Case of sufficient players to begin
+
+			if(numberOfPlayers>1 && command.equals("done")){								//Case of sufficient players to begin
 				playerTurn++;
 				output.append("Roll to see who goes first \n");
-				
+
 				for(int i = 0; i < numberOfPlayers; i++){
 					playerList.get(i).setFirstRoll(Dice.Roll());
 					output.append(playerList.get(i).getName() + " : " + playerList.get(i).getFirstRoll() + "\n");
@@ -66,13 +68,14 @@ public class Board extends JPanel {
 				return;
 			}
 
-			if(numberOfPlayers < 6){	//Adding players if there's room
+
+			if(numberOfPlayers < 6){														//Adding players if there's room
 				playerList.add(new Player(numberOfPlayers, command));
 				output.append("Player " + numberOfPlayers + " name : " + command + "\n");
 				repaint();
 				numberOfPlayers++;
 
-				switch(numberOfPlayers){	//Different message displayed once sufficient players added.
+				switch(numberOfPlayers){													//Different message displayed once sufficient players added.
 				case 1:	output.append("Please enter a player name.\n");
 				break;
 
@@ -81,9 +84,8 @@ public class Board extends JPanel {
 
 				return;
 			}
-
-
 		}
+
 
 		if(command.equals("move")){
 			Player tmpPlayer = playerList.get(playerTurn);
@@ -94,7 +96,7 @@ public class Board extends JPanel {
 		if(command.equals("done")){
 			playerTurn = (playerTurn+1)%numberOfPlayers;
 		}
-		
+
 		if(command.equals("roll")){
 			Player tmpPlayer = playerList.get(playerTurn);
 			tmpPlayer.setLocation(tmpPlayer.getPosition()+Dice.Roll());
@@ -106,10 +108,6 @@ public class Board extends JPanel {
 				output.append("Doubles: Roll again\n");
 				Dice.rollAgain = false;
 			}
-		}
-		
-		
+		}	
 	}
-
 }
-

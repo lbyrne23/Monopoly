@@ -16,14 +16,12 @@ public class Dice {
 		if(dice1 == dice2){
 			rollAgain = true;
 		}
-
+		
 		return dice1+dice2;
 	}
 
 	
 	public String toString() {
         return dice1 + " + " + dice2 + " = " + dice1+dice2; 
-    }
-	
+    }	
 }
-
