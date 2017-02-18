@@ -7,19 +7,19 @@ public class Property {
 	private int owner;
 	private int price;
 	private int rent;	
-	
-	
+
+
 	public Property(String nameIN, int ownerIN, int priceIN, int rentIN){
 		name = nameIN;
 		owner = ownerIN;
 		price = priceIN;
 		rent = rentIN;
 	}
-	
+
 	public String returnName(){
 		return name;
 	}
-	
+
 	public String returnOwner(){
 		if (owner >= 0)
 		{
@@ -28,22 +28,22 @@ public class Property {
 			return "No owner yet.";
 		}
 	}
-	
+
 	public int returnPrice(){
 		return price;
 	}
-	
+
 	public int returnRent(){
 		return rent;
 	}
-		
+
 	public void boughtProperty(int playerNum){
 		owner = playerNum;
 	}
-	
+
 	public void propertyAdd() {
 		ArrayList<Property> propertyList = new ArrayList<Property>();
-		
+
 		// Owner initially set to -1 when there is no owner. Rent set to the constant 10 for Sprint 2.
 		propertyList.add(new Property("Old Kent Rd", -1, 60, 10));
 		propertyList.add(new Property("Whitechapel Rd", -1, 60, 10));

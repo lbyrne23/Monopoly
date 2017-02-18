@@ -12,15 +12,15 @@ public class InputBox extends JPanel{
 	public InputBox(){
 		input = new JTextField(20); 						// Text field that will be used for input.
 		input.addActionListener(new TextProcess()); 		// Add our custom ActionListener.
-		add(input);	// Add 'input' to the JPanel.
+		add(input);											// Add 'input' to the JPanel.
 		input.setText("");
 	}
 
 
 	private class TextProcess implements ActionListener{
 		public void  actionPerformed(ActionEvent e){
-			lastCommand = input.getText();				// Set String 'lastCommand' to hold the text currently in JTextField.
-			output.playerAction(lastCommand); 			//When Enter is pressed, Board makes Playeraction.
+			lastCommand = input.getText();					// Set String 'lastCommand' to hold the text currently in JTextField.
+			output.playerAction(lastCommand); 				//When Enter is pressed, Board makes Playeraction.
 			input.setText(null);							// Wipe the JTextField.
 		}
 	}

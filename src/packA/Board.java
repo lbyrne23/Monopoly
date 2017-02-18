@@ -27,7 +27,7 @@ public class Board extends JPanel {
 		try {																				// Try to load image from project files.
 			image = ImageIO.read(new File("src/packA/Board2.gif"));
 		} catch (IOException ie) {
-			System.out.println("Error:"+ie.getMessage());
+			System.out.println("Error: "+ie.getMessage());
 		}
 
 		output = newOutput; 																// Give area for outputting info.
@@ -59,14 +59,14 @@ public class Board extends JPanel {
 
 			if(numberOfPlayers>1 && command.equals("done")){								//Case of sufficient players to begin
 				playerTurn++;
-				output.append("Roll to see who goes first \n");
+				output.append("Roll to see who goes first\n");
 
 				for(int i = 0; i < numberOfPlayers; i++){
 					playerList.get(i).setFirstRoll(Dice.Roll());
 					output.append(playerList.get(i).getName() + " : " + playerList.get(i).getFirstRoll() + "\n");
 				}
 				Dice.rollAgain = false;
-				output.append("(Player who rolled highest) goes first.\n Enter 'roll' \n");
+				output.append("(Player who rolled highest) goes first.\nEnter 'roll' \n");
 				return;
 			}
 
@@ -105,12 +105,12 @@ public class Board extends JPanel {
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
 			}
-			
+
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
 			output.append(Dice.words() + "\n");
 			output.append(tmpPlayer.getBalance() + "\n");
 			repaint();
-			
+
 			if(	Dice.rollAgain == false){
 				playerTurn = (playerTurn+1)%numberOfPlayers;
 				output.append(playerList.get(playerTurn).getName()+ "'s turn. \n");
@@ -120,8 +120,7 @@ public class Board extends JPanel {
 				tmpPlayer.setLocation((tmpPlayer.getPosition()+Dice.Roll())%40);
 				output.append(Dice.words());
 				Dice.rollAgain = false;
-			}
-			
+			}		
 		}	
 	}
 }

@@ -29,7 +29,7 @@ public class Player extends JComponent{
 		name = playerName;
 		place = player*10;												// Calculate place on square.
 		money = 1500;
-		
+
 		//Bottom Squares 
 		points.add(new Point(665, (635+place)));
 		points.add(new Point(605, (635+place)));
@@ -84,7 +84,7 @@ public class Player extends JComponent{
 		super.paintComponent(g); 										// Erase old squares.
 		gX = points.get(location).getX(); 								// Get point on array list.
 		gY = points.get(location).getY();
-		circleX = (int) gX; 											// Cast.
+		circleX = (int) gX; 											// Casting.
 		circleY = (int) gY;
 
 
@@ -127,15 +127,15 @@ public class Player extends JComponent{
 	public void setFirstRoll(int number){
 		firstRoll = number;
 	}
-	
+
 	public int getFirstRoll(){
 		return firstRoll;
 	}
-	
+
 	public int getBalance(){
 		return money;
 	}
-	
+
 	public void updateBalance(int amount){
 		money = money + amount;
 	}

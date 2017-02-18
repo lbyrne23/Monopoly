@@ -12,16 +12,16 @@ public class Dice {
 	public static int Roll(){
 		dice1 = rand.nextInt(6) + 1;
 		dice2 = rand.nextInt(6) + 1;
-		
+
 		if(dice1 == dice2){
 			rollAgain = true;
 		}
-		
+
 		return dice1+dice2;
 	}
 
-	
+
 	public static String words() {
-        return dice1 + " + " + dice2 + " = " + (dice1+dice2) + "\n"; 
-    }	
+		return dice1 + " + " + dice2 + " = " + (dice1+dice2) + "\n"; 
+	}	
 }
