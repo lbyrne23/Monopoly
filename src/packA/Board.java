@@ -21,7 +21,7 @@ public class Board extends JPanel {
 	private int playerTurn;
 	private int numberOfPlayers;
 	private JTextArea output;
-	
+
 
 	public Board(int players, JTextArea newOutput) {
 		try {																				// Try to load image from project files.
@@ -29,10 +29,10 @@ public class Board extends JPanel {
 		} catch (IOException ie) {
 			System.out.println("Error:"+ie.getMessage());
 		}
-		
+
 		output = newOutput; // Give area for outputting info.
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\n Please enter a player name.\n");
-		
+
 		playerTurn = -1; //Indicates players have not yet been instantiated. 
 		playerList = new ArrayList<Player>(players);
 		numberOfPlayers = 0;
@@ -47,48 +47,64 @@ public class Board extends JPanel {
 			p.paintComponent(g);
 		}
 	}
-		
+
 	public void playerAction(String command){
-			//This class will call other functions depending on command given
+		//This class will call other functions depending on command given
 		if(playerTurn == -1){
 			if(numberOfPlayers == 6){ //Case of Maximum players
 				playerTurn++;
 			}
-			
+
 			if(numberOfPlayers>1 && command.equals("done")){	//Case of sufficient players to begin
 				playerTurn++;
 				return;
 			}
-			
+
 			if(numberOfPlayers < 6){	//Adding players if there's room
 				playerList.add(new Player(numberOfPlayers, command));
 				output.append("Player " + numberOfPlayers + " name : " + command + "\n");
 				repaint();
 				numberOfPlayers++;
-				
+
 				switch(numberOfPlayers){	//Different message displayed once sufficient players added.
 				case 1:	output.append("Please enter a player name.\n");
-						break;
-						
+				break;
+
 				default : output.append("Please enter a player name, or type 'done' to begin.\n");
 				}
-				
+
 				return;
 			}
-			
-			
+
+
 		}
-		
+
 		if(command.equals("move")){
 			Player tmpPlayer = playerList.get(playerTurn);
 			tmpPlayer.setLocation(tmpPlayer.getPosition()+1);
 			repaint();
 		}
-			
-			if(command.equals("done")){
+
+		if(command.equals("done")){
 			playerTurn = (playerTurn+1)%numberOfPlayers;
+			
 		}
+		
+		if(command.equals("roll")){
+			Player tmpPlayer = playerList.get(playerTurn);
+			tmpPlayer.setLocation(tmpPlayer.getPosition()+Dice.Roll());
+			repaint();
+			if(	Dice.rollAgain == false){
+				playerTurn = (playerTurn+1)%numberOfPlayers;
+			}
+			if(	Dice.rollAgain == true){
+				output.append("Doubles: Roll again\n");
+				Dice.rollAgain = false;
+			}
+		}
+		
+		
 	}
-	
+
 }
 
