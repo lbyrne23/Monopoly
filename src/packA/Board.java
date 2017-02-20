@@ -21,7 +21,8 @@ import packA.Player;
 
 public class Board extends JPanel {
 	private BufferedImage  image = null;	
-	private ArrayList<Player> playerList = new ArrayList<Player>(6);		 				// Array list to store players.
+	private ArrayList<Player> playerList = new ArrayList<Player>(6);// Array list to store players.
+	private PropertyList properties = new PropertyList();
 	private int playerTurn;
 	private int numberOfPlayers;
 	private JTextArea output;
@@ -50,6 +51,32 @@ public class Board extends JPanel {
 		for(Player p : playerList){															// Loop to draw each player.
 			p.paintComponent(g);
 		}
+	}
+	
+	public String squareInfo(){
+		//Get property at location of current players turn.
+		Player tmpPlayer = playerList.get(playerTurn);
+		Property tmpProperty = properties.get(tmpPlayer.getPosition());
+		String info;
+		
+		if(tmpProperty.returnOwner() == null){
+			info = tmpProperty.returnName() + "\n";
+		}
+		else if(tmpProperty.returnOwner() < 0){
+		info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
+		+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+		}
+		
+		else if(tmpProperty.returnOwner() == playerTurn){
+			info = "This is your property!\n";
+		}
+		
+		else{
+			info = tmpProperty.returnName() + " ; \n -Player " + tmpProperty.returnOwner()
+			+ " owns this property.\n You must pay rent of £" + tmpProperty.returnRent() + ".\n";
+		}
+		
+		return info;
 	}
 
 
@@ -123,10 +150,10 @@ public class Board extends JPanel {
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
-			output.append(Dice.words() + "\n");
+			output.append("\n"+ Dice.words() + "\n");
 			repaint();
 
-			output.append("Would you like to 'buy' or 'rent'?\nEnter 'done' to finish turn\n");
+			output.append(squareInfo());
 
 			/*if(	Dice.rollAgain == true){
 				output.append("As you rolled doubles you can roll again \n"
