@@ -64,30 +64,31 @@ public class Board extends JPanel {
 			if(numberOfPlayers>1 && command.equals("done")){								//Case of sufficient players to begin
 				playerTurn++;
 				output.append("Roll to see who goes first\n");
-				
-				// All below is dice roll algorithm - will clean up into a method soon
+
+				/* All below is dice roll algorithm - will clean up into a method soon
 				int Roll;
 				int[] firstRolls = new int[numberOfPlayers];
-				
+
 				for(int i = 0; i < numberOfPlayers; i++){
 					Roll = Dice.Roll();
 					playerList.get(i).setFirstRoll(Roll);
 					firstRolls[i] = Roll;
 					output.append(playerList.get(i).getName() + " : " + playerList.get(i).getFirstRoll() + "\n");
 				}
-				
+
 				Arrays.sort(firstRolls);
-				
+
 				for(int count = 0; count < numberOfPlayers; count++){
-				      if(playerList.get(count).getFirstRoll() == firstRolls[numberOfPlayers]){
-				    	  //Set this player to roll first
-				      }
+					if(playerList.get(count).getFirstRoll() == firstRolls[numberOfPlayers]){
+						//Set this player to roll first
+					}
 				}
-				
+
 				Dice.rollAgain = false;
+				End of dice roll shite*/
 				output.append("(Player who rolled highest) goes first.\nEnter 'roll' \n");
 				return;
-				//End of dice roll shite
+				
 			}
 
 
@@ -117,7 +118,7 @@ public class Board extends JPanel {
 
 		if(command.equals("done")){
 			playerTurn = (playerTurn+1)%numberOfPlayers;
-			output.append(playerList.get(playerTurn).getName() +"'s turn \n");
+			output.append(playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 		}
 
 		if(command.equals("roll")){
@@ -131,19 +132,19 @@ public class Board extends JPanel {
 			output.append(Dice.words() + "\n");
 			repaint();
 
-			output.append("Would you like to 'buy' or 'rent' ?\n");
+			output.append("Would you like to 'buy' or 'rent'?\nEnter 'done' to finish turn\n");
 
-			if(	Dice.rollAgain == true){
+			/*if(	Dice.rollAgain == true){
 				output.append("As you rolled doubles you can roll again \n"
 						+ "Type 'again' to do so\n");
-				
+
 				output.append("Doubles: Roll again\n");
 				tmpPlayer.setLocation((tmpPlayer.getPosition()+Dice.Roll())%40);
 				output.append(Dice.words());
 
 
-				Dice.rollAgain = false;
-			}		
+				Dice.rollAgain = false; 
+			}*/
 		}
 		if(command.equals("help")){
 			output.append("'roll' : Roll dice \n"
@@ -159,7 +160,7 @@ public class Board extends JPanel {
 			output.append("Your balance: " + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
-		/* else {
+		/*else {
 			output.append("Invalid command \n");
 		} */
 	}
