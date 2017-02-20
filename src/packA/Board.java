@@ -61,7 +61,7 @@ public class Board extends JPanel {
 			}
 
 
-			if(numberOfPlayers>1 && command.equals("done")){								//Case of sufficient players to begin
+			if(numberOfPlayers>1 && command.equalsIgnoreCase("done")){								//Case of sufficient players to begin
 				playerTurn++;
 				output.append("Roll to see who goes first\n");
 
@@ -110,12 +110,12 @@ public class Board extends JPanel {
 		}
 
 
-		if(command.equals("done")){
+		if(command.equalsIgnoreCase("done")){
 			playerTurn = (playerTurn+1)%numberOfPlayers;
 			output.append(playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 		}
 
-		if(command.equals("roll")){
+		if(command.equalsIgnoreCase("roll")){
 			Player tmpPlayer = playerList.get(playerTurn);
 			int thisRoll = Dice.Roll();
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
@@ -140,7 +140,7 @@ public class Board extends JPanel {
 				Dice.rollAgain = false; 
 			}*/
 		}
-		if(command.equals("help")){
+		if(command.equalsIgnoreCase("help")){
 			output.append("'roll' : Roll dice \n"
 					+ "'pay rent' : Pay rent of square you landed on \n"
 					+ "'buy' : Buy property of square you landed on \n"
@@ -150,7 +150,7 @@ public class Board extends JPanel {
 					+ "'quit' : Quit the game \n");
 		}
 
-		if(command.equals("balance")){
+		if(command.equalsIgnoreCase("balance")){
 			output.append("Your balance: " + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
