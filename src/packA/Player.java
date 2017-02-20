@@ -124,8 +124,8 @@ public class Player extends JComponent{
 		return name;
 	}
 
-	public void setFirstRoll(int number){
-		firstRoll = number;
+	public int setFirstRoll(int number){
+		return firstRoll = number;
 	}
 
 	public int getFirstRoll(){

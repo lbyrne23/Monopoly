@@ -5,11 +5,15 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+
 import javax.swing.JTextArea;
 
 import packA.Player;
@@ -60,14 +64,30 @@ public class Board extends JPanel {
 			if(numberOfPlayers>1 && command.equals("done")){								//Case of sufficient players to begin
 				playerTurn++;
 				output.append("Roll to see who goes first\n");
-
+				
+				// All below is dice roll algorithm - will clean up into a method soon
+				int Roll;
+				int[] firstRolls = new int[numberOfPlayers];
+				
 				for(int i = 0; i < numberOfPlayers; i++){
-					playerList.get(i).setFirstRoll(Dice.Roll());
+					Roll = Dice.Roll();
+					playerList.get(i).setFirstRoll(Roll);
+					firstRolls[i] = Roll;
 					output.append(playerList.get(i).getName() + " : " + playerList.get(i).getFirstRoll() + "\n");
 				}
+				
+				Arrays.sort(firstRolls);
+				
+				for(int count = 0; count < numberOfPlayers; count++){
+				      if(playerList.get(count).getFirstRoll() == firstRolls[numberOfPlayers]){
+				    	  //Set this player to roll first
+				      }
+				}
+				
 				Dice.rollAgain = false;
 				output.append("(Player who rolled highest) goes first.\nEnter 'roll' \n");
 				return;
+				//End of dice roll shite
 			}
 
 
@@ -81,7 +101,7 @@ public class Board extends JPanel {
 				case 1:	output.append("Please enter a player name.\n");
 				break;
 
-				default : output.append("Please enter a player name, \n or type 'done' to begin.\n");
+				default : output.append("Please enter a player name, \nor type 'done' to begin.\n");
 				}
 
 				return;
@@ -97,6 +117,7 @@ public class Board extends JPanel {
 
 		if(command.equals("done")){
 			playerTurn = (playerTurn+1)%numberOfPlayers;
+			output.append(playerList.get(playerTurn).getName() +"'s turn \n");
 		}
 
 		if(command.equals("roll")){
@@ -108,19 +129,38 @@ public class Board extends JPanel {
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
 			output.append(Dice.words() + "\n");
-			output.append(tmpPlayer.getBalance() + "\n");
 			repaint();
 
-			if(	Dice.rollAgain == false){
-				playerTurn = (playerTurn+1)%numberOfPlayers;
-				output.append(playerList.get(playerTurn).getName()+ "'s turn. \n");
-			}
+			output.append("Would you like to 'buy' or 'rent' ?\n");
+
 			if(	Dice.rollAgain == true){
+				output.append("As you rolled doubles you can roll again \n"
+						+ "Type 'again' to do so\n");
+				
 				output.append("Doubles: Roll again\n");
 				tmpPlayer.setLocation((tmpPlayer.getPosition()+Dice.Roll())%40);
 				output.append(Dice.words());
+
+
 				Dice.rollAgain = false;
 			}		
-		}	
+		}
+		if(command.equals("help")){
+			output.append("'roll' : Roll dice \n"
+					+ "'pay rent' : Pay rent of square you landed on \n"
+					+ "'buy' : Buy property of square you landed on \n"
+					+ "'property': Query the properties you currently own \n"
+					+ "'balance' : Query your current balance \n"
+					+ "'done' : Finish your turn \n"
+					+ "'quit' : Quit the game \n");
+		}
+
+		if(command.equals("balance")){
+			output.append("Your balance: " + playerList.get(playerTurn).getBalance() + "\n");
+		}
+
+		/* else {
+			output.append("Invalid command \n");
+		} */
 	}
 }
