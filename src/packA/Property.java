@@ -2,7 +2,7 @@ package packA;
 
 import java.util.ArrayList;
 
-public class Property {
+class Property {
 	private String name;
 	private int owner;
 	private int price;
@@ -41,7 +41,7 @@ public class Property {
 		owner = playerNum;
 	}
 
-	public void propertyAdd() {
+	public ArrayList<Property> propertyAdd() {
 		ArrayList<Property> propertyList = new ArrayList<Property>();
 
 		// Owner initially set to -1 when there is no owner. Rent set to the constant 10 for Sprint 2.
@@ -67,5 +67,7 @@ public class Property {
 		propertyList.add(new Property("Bond St", -1, 320, 10));
 		propertyList.add(new Property("Park Lane", -1, 350, 10));
 		propertyList.add(new Property("Mayfair", -1, 400, 10));
+		
+		return propertyList;
 	}
 }

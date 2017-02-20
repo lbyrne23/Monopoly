@@ -110,12 +110,6 @@ public class Board extends JPanel {
 		}
 
 
-		if(command.equals("move")){
-			Player tmpPlayer = playerList.get(playerTurn);
-			tmpPlayer.setLocation(tmpPlayer.getPosition()+1);
-			repaint();
-		}
-
 		if(command.equals("done")){
 			playerTurn = (playerTurn+1)%numberOfPlayers;
 			output.append(playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
