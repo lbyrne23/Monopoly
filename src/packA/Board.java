@@ -23,9 +23,11 @@ public class Board extends JPanel {
 	private BufferedImage  image = null;	
 	private ArrayList<Player> playerList = new ArrayList<Player>(6);// Array list to store players.
 	private PropertyList properties = new PropertyList();
-	private int playerTurn;
 	private int numberOfPlayers;
 	private JTextArea output;
+	
+	//Following integers are for tracking details of players' turns. 
+	private int playerTurn;
 
 
 	public Board(int players, JTextArea newOutput) {
@@ -138,13 +140,31 @@ public class Board extends JPanel {
 
 
 		if(command.equalsIgnoreCase("done")){
-			playerTurn = (playerTurn+1)%numberOfPlayers;
-			output.append(playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+			doneFunction();
 		}
 
-		if(command.equalsIgnoreCase("roll")){
+		else if(command.equalsIgnoreCase("roll")){
+			rollFunction();
+		}
+		
+		else if(command.equalsIgnoreCase("help")){
+		helpFunction();
+		}
+
+		else if(command.equalsIgnoreCase("balance")){
+			output.append("Your balance: " + playerList.get(playerTurn).getBalance() + "\n");
+		}
+
+		else {
+			output.append("\nInvalid command, enter 'help' for a list of commands. \n");
+		}
+	}
+	
+	public void rollFunction(){
+		if(Dice.allowedRoll == 0 || Dice.allowedRoll == 2){
 			Player tmpPlayer = playerList.get(playerTurn);
 			int thisRoll = Dice.Roll();
+			
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
 			}
@@ -154,35 +174,48 @@ public class Board extends JPanel {
 			repaint();
 
 			output.append(squareInfo());
-
-			/*if(	Dice.rollAgain == true){
-				output.append("As you rolled doubles you can roll again \n"
-						+ "Type 'again' to do so\n");
-
-				output.append("Doubles: Roll again\n");
-				tmpPlayer.setLocation((tmpPlayer.getPosition()+Dice.Roll())%40);
-				output.append(Dice.words());
-
-
-				Dice.rollAgain = false; 
-			}*/
+		
+			if(Dice.allowedRoll == 2){
+				output.append("\nYou are able to roll again!\n");
+			}
 		}
-		if(command.equalsIgnoreCase("help")){
-			output.append("'roll' : Roll dice \n"
-					+ "'pay rent' : Pay rent of square you landed on \n"
-					+ "'buy' : Buy property of square you landed on \n"
-					+ "'property': Query the properties you currently own \n"
-					+ "'balance' : Query your current balance \n"
-					+ "'done' : Finish your turn \n"
-					+ "'quit' : Quit the game \n");
+		else{
+			output.append("\nYou cannot roll again.");
 		}
+		
 
-		if(command.equalsIgnoreCase("balance")){
-			output.append("Your balance: " + playerList.get(playerTurn).getBalance() + "\n");
+		/*if(	Dice.rollAgain == true){
+			output.append("As you rolled doubles you can roll again \n"
+					+ "Type 'again' to do so\n");
+
+			output.append("Doubles: Roll again\n");
+			tmpPlayer.setLocation((tmpPlayer.getPosition()+Dice.Roll())%40);
+			output.append(Dice.words());
+
+
+			Dice.rollAgain = false; 
+		}*/
+	}
+	
+	public void helpFunction(){
+		output.append("'roll' : Roll dice \n"
+				+ "'pay rent' : Pay rent of square you landed on \n"
+				+ "'buy' : Buy property of square you landed on \n"
+				+ "'property': Query the properties you currently own \n"
+				+ "'balance' : Query your current balance \n"
+				+ "'done' : Finish your turn \n"
+				+ "'quit' : Quit the game \n");
+	}
+	
+	public void doneFunction(){
+		if(Dice.allowedRoll != 0){
+		Dice.allowedRoll = 0;
+		playerTurn = (playerTurn+1)%numberOfPlayers;
+		output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 		}
-
-		/*else {
-			output.append("Invalid command \n");
-		} */
+		else{
+			output.append("\nYou cannot end your turn without rolling");
+		}
+		
 	}
 }
