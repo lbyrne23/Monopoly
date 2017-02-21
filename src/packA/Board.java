@@ -22,7 +22,7 @@ import packA.Player;
 public class Board extends JPanel {
 	private BufferedImage  image = null;	
 	private static ArrayList<Player> playerList = new ArrayList<Player>(6);// Array list to store players.
-	//private PropertyList properties = new PropertyList();
+	private PropertyList properties = new PropertyList();
 	private static int numberOfPlayers;
 	private static JTextArea output;
 	static int winner;
@@ -56,7 +56,7 @@ public class Board extends JPanel {
 		}
 	}
 
-	/*public String squareInfo(){
+	public String squareInfo(){
 		//Get property at location of current players turn.
 		Player tmpPlayer = playerList.get(playerTurn);
 		Property tmpProperty = properties.get(tmpPlayer.getPosition());
@@ -80,7 +80,7 @@ public class Board extends JPanel {
 		}
 
 		return info;
-	}*/
+	}
 
 
 	public void playerAction(String command){
@@ -121,13 +121,13 @@ public class Board extends JPanel {
 		}
 
 
-		/*if(command.equalsIgnoreCase("buy")){
+		if(command.equalsIgnoreCase("buy")){
 			buyFunction();
 		}
 
 		else if(command.equalsIgnoreCase("property")){
 			propertyFunction();
-		}*/
+		}
 
 		else if(command.equalsIgnoreCase("done")){
 			doneFunction();
@@ -168,14 +168,14 @@ public class Board extends JPanel {
 			output.append("\n"+ Dice.words() + "\n");
 			repaint();
 
-			//output.append(squareInfo());
+			output.append(squareInfo());
 
 			if(Dice.allowedRoll == 2){
 				output.append("\nYou are able to roll again!\n");
 			}
 		}
 		else{
-			output.append("\nYou cannot roll again.");
+			output.append("\nYou cannot roll again.\n");
 		}
 
 	}
@@ -203,7 +203,7 @@ public class Board extends JPanel {
 
 	}
 
-	/* public void buyFunction(){
+	 public void buyFunction(){
 		Player currPlayer = playerList.get(playerTurn);
 		Property currProperty = properties.get(currPlayer.getPosition());
 		if(currProperty.returnOwner() == null || currProperty.returnOwner() >= 0){ 		// If property is owned or can't be purchased
@@ -227,7 +227,7 @@ public class Board extends JPanel {
 				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
 			}
 		}
-	} */
+	}
 
 
 	//Function to determine who goes first
