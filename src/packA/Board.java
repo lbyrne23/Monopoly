@@ -138,8 +138,16 @@ public class Board extends JPanel {
 			}
 		}
 
-
-		if(command.equalsIgnoreCase("done")){
+		
+		if(command.equalsIgnoreCase("buy")){
+			buyFunction();
+		}
+		
+		else if(command.equalsIgnoreCase("property")){
+			propertyFunction();
+		}
+		
+		else if(command.equalsIgnoreCase("done")){
 			doneFunction();
 		}
 
@@ -152,7 +160,7 @@ public class Board extends JPanel {
 		}
 
 		else if(command.equalsIgnoreCase("balance")){
-			output.append("Your balance: " + playerList.get(playerTurn).getBalance() + "\n");
+			output.append("\nYour balance: " + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
 		else {
@@ -198,7 +206,7 @@ public class Board extends JPanel {
 	}
 	
 	public void helpFunction(){
-		output.append("'roll' : Roll dice \n"
+		output.append("\n'roll' : Roll dice \n"
 				+ "'pay rent' : Pay rent of square you landed on \n"
 				+ "'buy' : Buy property of square you landed on \n"
 				+ "'property': Query the properties you currently own \n"
@@ -208,7 +216,7 @@ public class Board extends JPanel {
 	}
 	
 	public void doneFunction(){
-		if(Dice.allowedRoll != 0){
+		if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){
 		Dice.allowedRoll = 0;
 		playerTurn = (playerTurn+1)%numberOfPlayers;
 		output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
@@ -217,5 +225,32 @@ public class Board extends JPanel {
 			output.append("\nYou cannot end your turn without rolling");
 		}
 		
+		
+	}
+	
+	public void buyFunction(){
+		Player currPlayer = playerList.get(playerTurn);
+		Property currProperty = properties.get(currPlayer.getPosition());
+		if(currProperty.returnOwner() == null || currProperty.returnOwner() >= 0){ 		// If property is owned or can't be purchased
+			output.append("\n This property cannot be purchased. \n");
+		}
+		
+		else if (currPlayer.getBalance() >= currProperty.returnPrice()){				//If player can afford property, purchase
+			currProperty.setOwner(playerTurn);											//set Owner using whose turn it is.
+			currPlayer.updateBalance(-(currProperty.returnPrice()));					//subtract cost from player Balance
+			output.append("\n You have purchased '" + currProperty.returnName() + "'\n");
+		}
+		else{
+			output.append("\nYou cannot afford this property.\n");
+		}
+	}
+	
+	public void propertyFunction(){
+			output.append("\nThe properties you own are as follow;\n");
+		for(Property p : properties){
+			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
+				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
+			}
+		}
 	}
 }

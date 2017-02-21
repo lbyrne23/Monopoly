@@ -1,13 +1,19 @@
 package packA;
 
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
-public class OutputBox extends JTextArea {
+public class OutputBox extends JPanel {
 
 	public OutputBox(){
-		output = new JTextArea();
+		output = new JTextArea(40, 40);
 		output.setEditable(false);
-		add(output);
+		DefaultCaret caret = (DefaultCaret)output.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		JScrollPane scrollPane = new JScrollPane(output);				//Create JScrollPane for viewing text area.
+		add(scrollPane);
 	}
 
 	public  JTextArea getJTextArea(){

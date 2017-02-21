@@ -21,22 +21,18 @@ public class Layout {
 		frame.setLayout(new BorderLayout());
 
 
-		JTextArea output = new JTextArea(5, 20);								//Text area for message display.
-		output.setEditable(false);
-		DefaultCaret caret = (DefaultCaret)output.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-
-		Board monPanel = new Board(6, output);									//Panel for displaying board and players.
+		OutputBox outputPanel = new OutputBox();
+		Board monPanel = new Board(6, outputPanel.getJTextArea());									//Panel for displaying board and players.
 		InputBox inputPanel = new InputBox();									//Panel which takes in text.
 		inputPanel.setOutput(monPanel);									 		//Set 'output' to be the designated output destination for text input.
-
-		JScrollPane scrollPane = new JScrollPane(output); 						//Create JScrollPane for viewing text area.
+		
+		
 		
 
 
 		//Adding panels to frame.
 		frame.add(inputPanel, BorderLayout.SOUTH);								 
-		frame.add(scrollPane, BorderLayout.EAST);								
+		frame.add(outputPanel, BorderLayout.EAST);								
 		frame.add(monPanel);
 
 
