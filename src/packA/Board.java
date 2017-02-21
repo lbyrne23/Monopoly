@@ -27,8 +27,9 @@ public class Board extends JPanel {
 	private static JTextArea output;
 	static int winner;
 
-	//Following integers are for tracking details of players' turns. 
+	//Following variables are for tracking details of players' turns. 
 	private static int playerTurn;
+	private static boolean rentPaid = true;
 
 
 	public Board(int players, JTextArea newOutput) {
@@ -77,6 +78,7 @@ public class Board extends JPanel {
 		else{
 			info = tmpProperty.returnName() + " ; \n -Player " + tmpProperty.returnOwner()
 			+ " owns this property.\n You must pay rent of £" + tmpProperty.returnRent() + ".\n";
+			rentPaid = false;
 		}
 
 		return info;
@@ -86,12 +88,8 @@ public class Board extends JPanel {
 	public void playerAction(String command){
 		//This class will call other functions depending on command given
 		if(playerTurn == -1){
-			if(numberOfPlayers == 6){ 														//Case of Maximum players
-				playerTurn++;
-			}
-
-
-			if(numberOfPlayers>1 && command.equalsIgnoreCase("done")){								//Case of sufficient players to begin
+			
+			if(numberOfPlayers>1 && command.equalsIgnoreCase("done") || numberOfPlayers == 6){								//Case of sufficient players to begin
 				playerTurn++;
 				output.append("Roll to see who goes first\n");
 
@@ -127,6 +125,10 @@ public class Board extends JPanel {
 
 		else if(command.equalsIgnoreCase("property")){
 			propertyFunction();
+		}
+		
+		else if(command.equalsIgnoreCase("pay rent")){
+			payRentFunction();
 		}
 
 		else if(command.equalsIgnoreCase("done")){
@@ -191,14 +193,18 @@ public class Board extends JPanel {
 	}
 
 	public void doneFunction(){
-		if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){
+		if (!rentPaid){
+			output.append("\nYou cannot end your turn with outstanding rent.\n");
+		}
+		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){
 			Dice.allowedRoll = 0;
 			playerTurn = (playerTurn+1)%numberOfPlayers;
 			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 		}
-		else{
+		else if (!(Dice.allowedRoll != 0 && Dice.allowedRoll != 2)){
 			output.append("\nYou cannot end your turn without rolling");
 		}
+		
 
 
 	}
@@ -225,6 +231,31 @@ public class Board extends JPanel {
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
 				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
+			}
+		}
+	}
+	
+	public void payRentFunction(){
+		if(rentPaid){
+			output.append("\n There is no rent owed.");
+		}
+		
+		else{
+			Player currPlayer = playerList.get(playerTurn);
+			Property currProperty = properties.get(currPlayer.getPosition());	//Get player, property and owner of property.
+			Player debtor = playerList.get(currProperty.returnOwner());
+			int rent = currProperty.returnRent();
+			
+			if(currPlayer.getBalance() >= rent){
+				currPlayer.updateBalance(-(rent));
+				debtor.updateBalance(rent);
+				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
+				rentPaid = true;
+			}
+			else{
+				debtor.updateBalance(currPlayer.getBalance());
+				currPlayer.updateBalance(-((currPlayer.getBalance()) + 1));
+				rentPaid = true;
 			}
 		}
 	}
