@@ -149,8 +149,15 @@ public class Board extends JPanel {
 		
 		else if(command.equalsIgnoreCase("quit")){
 			highestPlayer();
-			output.append("\nGame Over. Winner is " + playerList.get(winner).getName() + " with £" + playerList.get(winner).getBalance() + "\n");
+			output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
+					+ " with £" + playerList.get(winner).getBalance() + "\n");
+			
+			
+			playerList.clear();
+			repaint();
+			
 		}
+			
 
 		else {
 			output.append("\nInvalid command, enter 'help' for a list of commands. \n");
