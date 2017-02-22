@@ -289,6 +289,7 @@ public class Board extends JPanel {
 				playerTurn = g;
 				highestFound = true; //terminate outer loop
 			}
+			g++;
 		}
 
 		Dice.allowedRoll = 0;
