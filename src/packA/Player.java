@@ -21,6 +21,7 @@ public class Player extends JComponent{
 	private String name;
 	private int firstRoll;
 	private int money;
+	private int propertyTotal;
 
 
 	public Player(int playernum, String playerName){
@@ -138,5 +139,17 @@ public class Player extends JComponent{
 
 	public void updateBalance(int amount){
 		money = money + amount;
+	}
+	
+	public int getTotal(){
+		return propertyTotal;
+	}
+
+	public void updateTotal(int value){
+		propertyTotal = propertyTotal + value;
+	}
+	
+	public int getNum(){
+		return player;
 	}
 }

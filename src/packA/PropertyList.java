@@ -2,7 +2,7 @@ package packA;
 
 import java.util.ArrayList;
 
-public class  PropertyList extends ArrayList<Property>{
+public class PropertyList extends ArrayList<Property>{
 	
 	public PropertyList(){
 		add(new Property("GO"));

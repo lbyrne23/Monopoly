@@ -22,10 +22,10 @@ import packA.Player;
 public class Board extends JPanel {
 	private BufferedImage  image = null;	
 	private static ArrayList<Player> playerList = new ArrayList<Player>(6);// Array list to store players.
-	private PropertyList properties = new PropertyList();
+	private static PropertyList properties = new PropertyList();
 	private static int numberOfPlayers;
 	private static JTextArea output;
-	static int winner;
+	static int winner = 0;
 
 	//Following variables are for tracking details of players' turns. 
 	private static int playerTurn;
@@ -67,8 +67,8 @@ public class Board extends JPanel {
 			info = tmpProperty.returnName() + "\n";
 		}
 		else if(tmpProperty.returnOwner() < 0){
-		info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
-		+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
+					+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){
@@ -88,7 +88,7 @@ public class Board extends JPanel {
 	public void playerAction(String command){
 		//This class will call other functions depending on command given
 		if(playerTurn == -1){
-			
+
 			if(numberOfPlayers>1 && command.equalsIgnoreCase("done") || numberOfPlayers == 6){								//Case of sufficient players to begin
 				playerTurn++;
 				output.append("Roll to see who goes first\n");
@@ -126,7 +126,7 @@ public class Board extends JPanel {
 		else if(command.equalsIgnoreCase("property")){
 			propertyFunction();
 		}
-		
+
 		else if(command.equalsIgnoreCase("pay rent")){
 			payRentFunction();
 		}
@@ -146,18 +146,14 @@ public class Board extends JPanel {
 		else if(command.equalsIgnoreCase("balance")){
 			output.append("\nYour balance: " + playerList.get(playerTurn).getBalance() + "\n");
 		}
-		
+
 		else if(command.equalsIgnoreCase("quit")){
 			highestPlayer();
-			output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
-					+ " with £" + playerList.get(winner).getBalance() + "\n");
-			
-			
 			playerList.clear();
 			repaint();
-			
+
 		}
-			
+
 
 		else {
 			output.append("\nInvalid command, enter 'help' for a list of commands. \n");
@@ -211,12 +207,12 @@ public class Board extends JPanel {
 		else if (!(Dice.allowedRoll != 0 && Dice.allowedRoll != 2)){
 			output.append("\nYou cannot end your turn without rolling");
 		}
-		
+
 
 
 	}
 
-	 public void buyFunction(){
+	public void buyFunction(){
 		Player currPlayer = playerList.get(playerTurn);
 		Property currProperty = properties.get(currPlayer.getPosition());
 		if(currProperty.returnOwner() == null || currProperty.returnOwner() >= 0){ 		// If property is owned or can't be purchased
@@ -234,25 +230,25 @@ public class Board extends JPanel {
 	}
 
 	public void propertyFunction(){
-			output.append("\nThe properties you own are as follow;\n");
+		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
 				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
 			}
 		}
 	}
-	
+
 	public void payRentFunction(){
 		if(rentPaid){
 			output.append("\n There is no rent owed.");
 		}
-		
+
 		else{
 			Player currPlayer = playerList.get(playerTurn);
 			Property currProperty = properties.get(currPlayer.getPosition());	//Get player, property and owner of property.
 			Player debtor = playerList.get(currProperty.returnOwner());
 			int rent = currProperty.returnRent();
-			
+
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
@@ -272,6 +268,7 @@ public class Board extends JPanel {
 	public static void goFirst(){
 		int Roll;
 		int[] firstRolls = new int[numberOfPlayers]; //array to store the first roll
+		boolean highestFound = false; //this boolean is used in a situation where 2 players roll the same number; the first will be chosen
 
 		for(int i = 0; i < numberOfPlayers; i++){
 			Roll = Dice.Roll();
@@ -286,30 +283,59 @@ public class Board extends JPanel {
 		Arrays.sort(firstRolls);
 
 		//go through list and determine which player's value matched the highest value
-		for(int count = 0; count < numberOfPlayers; count++){ 
-			if(playerList.get(count).getFirstRoll() == firstRolls[numberOfPlayers-1]){
-				playerTurn = count;
+		int g = 0;
+		while(g < numberOfPlayers && highestFound != true){ 
+			if(playerList.get(g).getFirstRoll() == firstRolls[numberOfPlayers-1]){
+				playerTurn = g;
+				highestFound = true; //terminate outer loop
 			}
 		}
+
 		Dice.allowedRoll = 0;
 	}
-	
+
+	//adds assets and current balance
 	public static void highestPlayer(){
-		int[] balances = new int[numberOfPlayers]; //array to store the balances
-		
+		int[] houses = new int[numberOfPlayers]; //array to store the balances
+
+
 		for(int i = 0; i < numberOfPlayers; i++){
-			balances[i] = playerList.get(i).getBalance();
-			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getBalance() + "\n"); //print balances to screen
+			for (int j = 0; j < 40; j++){
+				if(properties.get(j).returnOwner() != null && properties.get(j).returnOwner() == i){
+					playerList.get(i).updateTotal(properties.get(j).returnPrice());
+					houses[i] = playerList.get(i).getTotal();
+				}
+			}
 		}
 
+		for(int i = 0; i < numberOfPlayers; i++){
+			houses[i] = houses[i] + playerList.get(i).getBalance();
+		}
+
+		output.append("\n"); //its for aesthetics plz trust me
+
+		for(int i = 0; i < numberOfPlayers; i++){
+			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getTotal() + " worth of properties "
+					+ "and £"+ playerList.get(i).getBalance() +" current balance\n"); //print balances to screen
+		}
+
+
 		//sort balances from lowest to highest
-		Arrays.sort(balances);
+		Arrays.sort(houses);
+
 
 		//go through list and determine which player's value matched the highest value
 		for(int count = 0; count < numberOfPlayers; count++){ 
-			if(playerList.get(count).getBalance() == balances[numberOfPlayers-1]){
+			if((playerList.get(count).getTotal()+playerList.get(count).getBalance()) == houses[numberOfPlayers-1]){
 				winner = count;
 			}
 		}
+
+
+		output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
+				+ " with £" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets \n");
+
+
 	}
 }
+
