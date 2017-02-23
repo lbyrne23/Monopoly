@@ -67,8 +67,8 @@ public class Board extends JPanel {
 			info = tmpProperty.returnName() + "\n";
 		}
 		else if(tmpProperty.returnOwner() < 0){
-			info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
-					+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ; \n-This property is on the market for Â£"
+				+ tmpProperty.returnPrice() + "\n-It has rent of Â£" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){
@@ -77,7 +77,7 @@ public class Board extends JPanel {
 
 		else{
 			info = tmpProperty.returnName() + " ; \n -Player " + tmpProperty.returnOwner()
-			+ " owns this property.\n You must pay rent of £" + tmpProperty.returnRent() + ".\n";
+				+ " owns this property.\n You must pay rent of Â£" + tmpProperty.returnRent() + ".\n";
 			rentPaid = false;
 		}
 
@@ -233,7 +233,7 @@ public class Board extends JPanel {
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
+				output.append("\n" + p.returnName() + " : \n-The current rent is Â£" + p.returnRent() +"\n");
 			}
 		}
 	}
@@ -252,7 +252,7 @@ public class Board extends JPanel {
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
-				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
+				output.append("\nYou have paid " + debtor.getName() + " Â£" + rent + "\n");
 				rentPaid = true;
 			}
 			else{
@@ -268,7 +268,6 @@ public class Board extends JPanel {
 	public static void goFirst(){
 		int Roll;
 		int[] firstRolls = new int[numberOfPlayers]; //array to store the first roll
-		boolean highestFound = false; //this boolean is used in a situation where 2 players roll the same number; the first will be chosen
 
 		for(int i = 0; i < numberOfPlayers; i++){
 			Roll = Dice.Roll();
@@ -283,13 +282,19 @@ public class Board extends JPanel {
 		Arrays.sort(firstRolls);
 
 		//go through list and determine which player's value matched the highest value
-		int g = 0;
-		while(g < numberOfPlayers && highestFound != true){ 
-			if(playerList.get(g).getFirstRoll() == firstRolls[numberOfPlayers-1]){
-				playerTurn = g;
-				highestFound = true; //terminate outer loop
+		if (firstRolls[numberOfPlayers-1] == firstRolls[numberOfPlayers-2])
+		{
+			output.append("Re-roll..\n");
+			goFirst();
+		} else
+		{
+			int g = 0;
+			while(g < numberOfPlayers){ 
+				if(playerList.get(g).getFirstRoll() == firstRolls[numberOfPlayers-1]){
+					playerTurn = g;
+				}
+				g++;
 			}
-			g++;
 		}
 
 		Dice.allowedRoll = 0;
@@ -316,8 +321,8 @@ public class Board extends JPanel {
 		output.append("\n"); //its for aesthetics plz trust me
 
 		for(int i = 0; i < numberOfPlayers; i++){
-			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getTotal() + " worth of properties "
-					+ "and £"+ playerList.get(i).getBalance() +" current balance\n"); //print balances to screen
+			output.append(playerList.get(i).getName() + " : Â£" + playerList.get(i).getTotal() + " worth of properties "
+					+ "and Â£"+ playerList.get(i).getBalance() +" current balance\n"); //print balances to screen
 		}
 
 
@@ -334,7 +339,7 @@ public class Board extends JPanel {
 
 
 		output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
-				+ " with £" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets \n");
+				+ " with Â£" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets \n");
 
 
 	}
