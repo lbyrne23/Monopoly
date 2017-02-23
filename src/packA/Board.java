@@ -67,8 +67,8 @@ public class Board extends JPanel {
 			info = tmpProperty.returnName() + "\n";
 		}
 		else if(tmpProperty.returnOwner() < 0){
-			info = tmpProperty.returnName() + " ; \n-This property is on the market for Â£"
-				+ tmpProperty.returnPrice() + "\n-It has rent of Â£" + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
+				+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){
@@ -76,8 +76,8 @@ public class Board extends JPanel {
 		}
 
 		else{
-			info = tmpProperty.returnName() + " ; \n -Player " + tmpProperty.returnOwner()
-				+ " owns this property.\n You must pay rent of Â£" + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ; \n - " + playerList.get(tmpProperty.returnOwner()).getName()
+				+ " owns this property.\n You must pay rent of £" + tmpProperty.returnRent() + ".\n";
 			rentPaid = false;
 		}
 
@@ -233,7 +233,7 @@ public class Board extends JPanel {
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is Â£" + p.returnRent() +"\n");
+				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
 			}
 		}
 	}
@@ -252,7 +252,7 @@ public class Board extends JPanel {
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
-				output.append("\nYou have paid " + debtor.getName() + " Â£" + rent + "\n");
+				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
 				rentPaid = true;
 			}
 			else{
@@ -303,6 +303,7 @@ public class Board extends JPanel {
 	//adds assets and current balance
 	public static void highestPlayer(){
 		int[] houses = new int[numberOfPlayers]; //array to store the balances
+		boolean draw = false;
 
 
 		for(int i = 0; i < numberOfPlayers; i++){
@@ -321,13 +322,19 @@ public class Board extends JPanel {
 		output.append("\n"); //its for aesthetics plz trust me
 
 		for(int i = 0; i < numberOfPlayers; i++){
-			output.append(playerList.get(i).getName() + " : Â£" + playerList.get(i).getTotal() + " worth of properties "
-					+ "and Â£"+ playerList.get(i).getBalance() +" current balance\n"); //print balances to screen
+			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getTotal() + " worth of properties "
+					+ "and £"+ playerList.get(i).getBalance() +" current balance\n"
+							+ "Total: £" + (playerList.get(i).getTotal()+playerList.get(i).getBalance()) + "\n"); //print balances to screen
 		}
 
 
 		//sort balances from lowest to highest
 		Arrays.sort(houses);
+		
+		if (houses[numberOfPlayers-1] == houses[numberOfPlayers-2])
+		{
+			draw = true;
+		}
 
 
 		//go through list and determine which player's value matched the highest value
@@ -337,11 +344,13 @@ public class Board extends JPanel {
 			}
 		}
 
-
+		if(draw == false){
 		output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
-				+ " with Â£" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets \n");
-
+				+ " with £" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets \n");
+		}
+		if (draw == true){
+			output.append("No Winner! There is a draw. ");
+		}
 
 	}
 }
-

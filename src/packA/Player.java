@@ -149,7 +149,4 @@ public class Player extends JComponent{
 		propertyTotal = propertyTotal + value;
 	}
 	
-	public int getNum(){
-		return player;
-	}
 }
