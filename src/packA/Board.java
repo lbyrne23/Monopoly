@@ -167,6 +167,7 @@ public class Board extends JPanel {
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
+				output.append("\nYou've passed GO!\n£200 has been added to your balance.\n");
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
@@ -280,15 +281,16 @@ public class Board extends JPanel {
 		//this means the highest value is the last value in the array
 		//meaning whoever rolled this highest value goes first
 		Arrays.sort(firstRolls);
-
-		//go through list and determine which player's value matched the highest value
+		
+		
 		if (firstRolls[numberOfPlayers-1] == firstRolls[numberOfPlayers-2])
 		{
-			output.append("Re-roll..\n");
+			output.append("\nRe-roll..\n");
 			goFirst();
 		} else
 		{
 			int g = 0;
+			//go through list and determine which player's value matched the highest value
 			while(g < numberOfPlayers){ 
 				if(playerList.get(g).getFirstRoll() == firstRolls[numberOfPlayers-1]){
 					playerTurn = g;
