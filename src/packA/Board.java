@@ -144,7 +144,7 @@ public class Board extends JPanel {
 		}
 
 		else if(command.equalsIgnoreCase("balance")){
-			output.append("\nYour balance: " + playerList.get(playerTurn).getBalance() + "\n");
+			output.append("\nYour balance: £" + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
 		else if(command.equalsIgnoreCase("quit")){
@@ -167,7 +167,7 @@ public class Board extends JPanel {
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
-				output.append("\nYou've passed GO!\nÂ£200 has been added to your balance.\n");
+				output.append("\nYou've passed GO!\n £200 has been added to your balance.\n");
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
