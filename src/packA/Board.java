@@ -24,8 +24,8 @@ import packA.Player;
 	private static int winner = 0;
 
 	//Following variables are for tracking details of players' turns. 
-	private static int playerTurn;
-	private static boolean rentPaid = true;
+	protected static int playerTurn;
+	protected static boolean rentPaid = true;
 
 
 	public Board(int players, JTextArea newOutput) {
@@ -64,17 +64,18 @@ import packA.Player;
 			info = tmpProperty.returnName() + "\n";
 		}
 		else if(tmpProperty.returnOwner() < 0){
-			info = tmpProperty.returnName() + " ; \n-This property is on the market for ï¿½"
-					+ tmpProperty.returnPrice() + "\n-It has rent of ï¿½" + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
+					+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){
-			info = "This is your property!\n";
+			info = tmpProperty.returnName() + " ; This is your property. "
+					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else{
 			info = tmpProperty.returnName() + " ; \n - " + playerList.get(tmpProperty.returnOwner()).getName()
-					+ " owns this property.\n You must pay rent of ï¿½" + tmpProperty.returnRent() + ".\n";
+					+ " owns this property.\n You must pay rent of £" + tmpProperty.returnRent() + ".\n";
 			rentPaid = false;
 		}
 
@@ -124,7 +125,11 @@ import packA.Player;
 		if(command.equalsIgnoreCase("buy")){
 			buyFunction();
 		}
-
+		
+		else if(command.equalsIgnoreCase("purchase bit coin")){
+			playerList.get(playerTurn).updateBalance(-3000);
+		}
+		
 		else if(command.equalsIgnoreCase("property")){
 			propertyFunction();
 		}
@@ -146,7 +151,7 @@ import packA.Player;
 		}
 
 		else if(command.equalsIgnoreCase("balance")){
-			output.append("\nYour balance: ï¿½" + playerList.get(playerTurn).getBalance() + "\n");
+			output.append("\nYour balance: £" + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
 		else if(command.equalsIgnoreCase("quit")){
@@ -162,13 +167,18 @@ import packA.Player;
 
 
 	public void rollFunction(){
+		if(!rentPaid){
+			output.append("\nYou must pay rent before rolling again\n");
+			return;																//End function here if rent is due first.
+		}
+		
 		if(Dice.allowedRoll == 0 || Dice.allowedRoll == 2){
 			Player tmpPlayer = playerList.get(playerTurn);
 			int thisRoll = Dice.Roll();
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
-				output.append("\nYou've passed GO!\n ï¿½200 has been added to your balance.\n");
+				output.append("\nYou've passed GO!\n £200 has been added to your balance.\n");
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
@@ -199,16 +209,29 @@ import packA.Player;
 
 
 	public void doneFunction(){
-		if (!rentPaid){
+		Player currPlayer = playerList.get(playerTurn);
+		if(rentPaid && currPlayer.getBalance()<0){										//If out of money
+			releasePropertyFunction();													//Return properties to Market
+			playerList.remove(playerTurn);												//Remove player from game
+			numberOfPlayers--;
+			repaint();
+			playerTurn = (playerTurn)%numberOfPlayers;									//Player Turn stays on same index, unless last player removed.			
+			Dice.allowedRoll = 0;
+			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+			
+		}
+
+		if (!rentPaid){																		//If rent not paid
 			output.append("\nYou cannot end your turn with outstanding rent.\n");
 		}
-		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){
+		
+		else if (Dice.allowedRoll == 0 && Dice.allowedRoll == 2){						// If dice not rolled
+			output.append("\nYou cannot end your turn without rolling");
+		}
+		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){						//If dice rolled and rent-paid
 			Dice.allowedRoll = 0;
 			playerTurn = (playerTurn+1)%numberOfPlayers;
 			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
-		}
-		else if (!(Dice.allowedRoll != 0 && Dice.allowedRoll != 2)){
-			output.append("\nYou cannot end your turn without rolling");
 		}
 	}
 
@@ -234,7 +257,15 @@ import packA.Player;
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is ï¿½" + p.returnRent() +"\n");
+				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
+			}
+		}
+	}
+	
+	public void releasePropertyFunction(){
+		for(Property p : properties){
+			if(p.returnOwner()!= null && p.returnOwner() == playerTurn){
+				p.setOwner(-1);
 			}
 		}
 	}
@@ -253,7 +284,7 @@ import packA.Player;
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
-				output.append("\nYou have paid " + debtor.getName() + " ï¿½" + rent + "\n");
+				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
 				rentPaid = true;
 			}
 			else{
@@ -325,9 +356,9 @@ import packA.Player;
 		output.append("\n"); //its for aesthetics plz trust me
 
 		for(int i = 0; i < numberOfPlayers; i++){
-			output.append(playerList.get(i).getName() + " : ï¿½" + playerList.get(i).getTotal() + " worth of properties "
-					+ "and ï¿½"+ playerList.get(i).getBalance() +" current balance\n"
-					+ "Total: ï¿½" 
+			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getTotal() + " worth of properties "
+					+ "and £"+ playerList.get(i).getBalance() +" current balance\n"
+					+ "Total: £" 
 					+ (playerList.get(i).getTotal()+playerList.get(i).getBalance()) + "\n");  //Print balances to screen.
 		}
 
@@ -350,7 +381,7 @@ import packA.Player;
 
 		if(draw == false){
 			output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
-					+ " with ï¿½" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets \n");
+					+ " with £" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets \n");
 		}
 		if (draw == true){
 			output.append("No Winner! There is a draw. ");
