@@ -3,7 +3,7 @@ package packA;
 import java.util.ArrayList;
 
 public class PropertyList extends ArrayList<Property>{
-	
+
 	public PropertyList(){
 		add(new Property("GO"));
 		add(new Property("Old Kent Rd", -1, 60, 10));
@@ -46,6 +46,4 @@ public class PropertyList extends ArrayList<Property>{
 		add(new Property("Super Tax"));
 		add(new Property("Mayfair", -1, 400, 10));
 	}
-	
-	
 }
