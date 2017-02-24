@@ -7,9 +7,6 @@ package packA;
 
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.text.DefaultCaret;
-import javax.swing.JScrollPane;
 
 import packA.Board;
 import packA.InputBox;
@@ -22,11 +19,9 @@ public class Layout {
 
 
 		OutputBox outputPanel = new OutputBox();
-		Board monPanel = new Board(6, outputPanel.getJTextArea());									//Panel for displaying board and players.
-		InputBox inputPanel = new InputBox();									//Panel which takes in text.
-		inputPanel.setOutput(monPanel);									 		//Set 'output' to be the designated output destination for text input.
-		
-		
+		Board monPanel = new Board(6, outputPanel.getJTextArea());			//Panel for displaying board and players.
+		InputBox inputPanel = new InputBox();								//Panel which takes in text.
+		inputPanel.setOutput(monPanel);								 		//Set 'output' to be the designated output destination for text input.
 		
 
 
@@ -36,12 +31,10 @@ public class Layout {
 		frame.add(monPanel);
 
 
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1250, 750);											
 		frame.setVisible(true);	
-
-
-
-
+		
 	}
 }

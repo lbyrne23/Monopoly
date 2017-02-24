@@ -1,7 +1,5 @@
 package packA;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+// A class to calculate a dice roll.
 import java.util.Random;
 
 abstract class Dice {
@@ -11,12 +9,12 @@ abstract class Dice {
 	static int dice1, dice2;
 
 	public static int Roll(){
-		dice1 = rand.nextInt(6) + 1;
+		dice1 = rand.nextInt(6) + 1;		//Random number between 0 and 5, plus one.
 		dice2 = rand.nextInt(6) + 1;
 		
 		allowedRoll++;
 		
-		if(dice1 == dice2){
+		if(dice1 == dice2){					//Re-roll.
 			allowedRoll++;
 		}
 
