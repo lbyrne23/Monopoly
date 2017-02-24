@@ -210,14 +210,22 @@ import packA.Player;
 
 	public void doneFunction(){
 		Player currPlayer = playerList.get(playerTurn);
-		if(rentPaid && currPlayer.getBalance()<0){										//If out of money
-			releasePropertyFunction();													//Return properties to Market
-			playerList.remove(playerTurn);												//Remove player from game
-			numberOfPlayers--;
+		if(rentPaid && currPlayer.getBalance()<0){											//If out of money
+			releasePropertyFunction();														//Return properties to Market
+			playerList.remove(playerTurn);													//Remove player from game
+			numberOfPlayers--;																//Player Turn stays on same index, unless last player removed.
 			repaint();
-			playerTurn = (playerTurn)%numberOfPlayers;									//Player Turn stays on same index, unless last player removed.			
+			playerTurn = (playerTurn)%numberOfPlayers;		
+			if(numberOfPlayers == 1){															//If player is last remaining player
+				winner = playerTurn;
+				output.append("\nGame Over. Winner is " + playerList.get(winner).getName() + "\n");
+				playerList.clear();																//remove final player
+				repaint();
+			}
+			else{										
 			Dice.allowedRoll = 0;
 			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+			}
 			
 		}
 
@@ -335,7 +343,7 @@ import packA.Player;
 	}
 
 	//Adds assets and current balance.
-	public static void highestPlayer(){
+	public void highestPlayer(){
 		int[] houses = new int[numberOfPlayers];						 						//Array to store the balances.
 		boolean draw = false;
 
