@@ -86,7 +86,7 @@ public class Board extends JPanel {
 		//This class will call other functions depending on command given.
 		if(playerTurn == -1){
 
-			if(numberOfPlayers>1 && command.equalsIgnoreCase("done") || numberOfPlayers == 6){			//Case of sufficient players to begin.
+			if(numberOfPlayers>1 && command.equalsIgnoreCase("done")){			//Case of sufficient players to begin.
 				playerTurn++;
 				output.append("Roll to see who goes first\n");
 
@@ -107,6 +107,11 @@ public class Board extends JPanel {
 				switch(numberOfPlayers){																//Different message displayed once sufficient players added.
 				case 1:	output.append("Please enter a player name.\n");
 				break;
+				
+				case 6: output.append("Roll to see who goes first\n");
+						goFirst();
+						output.append(playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
+						break;
 
 				default : output.append("Please enter a player name, \nor type 'done' to begin.\n");
 				}
