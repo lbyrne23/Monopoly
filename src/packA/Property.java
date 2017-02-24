@@ -7,7 +7,7 @@ class Property {
 	private Integer owner;
 	private int price;
 	private int rent;	
-	
+
 	public Property(String nameIN){
 		name = nameIN;
 	}
@@ -26,7 +26,7 @@ class Property {
 	public Integer returnOwner(){
 		return owner;
 	}
-	
+
 	public void setOwner(int playerNum){
 		owner = playerNum;
 	}
@@ -44,11 +44,7 @@ class Property {
 	}
 
 	public ArrayList<Property> defaultProperties() {
-		ArrayList<Property> propertyList = new ArrayList<Property>();
-
-		// Owner initially set to -1 when there is no owner. Rent set to the constant 10 for Sprint 2.
-		
-		
+		ArrayList<Property> propertyList = new ArrayList<Property>();		
 		return propertyList;
 	}
 }
