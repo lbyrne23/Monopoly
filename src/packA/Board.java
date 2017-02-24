@@ -15,7 +15,7 @@ import javax.swing.JTextArea;
 import packA.Player;
 
 
-	public class Board extends JPanel {
+public class Board extends JPanel {
 	private BufferedImage  image = null;	
 	protected static ArrayList<Player> playerList = new ArrayList<Player>(6);			//Array list to store players.
 	protected static PropertyList properties = new PropertyList();
@@ -64,18 +64,18 @@ import packA.Player;
 			info = tmpProperty.returnName() + "\n";
 		}
 		else if(tmpProperty.returnOwner() < 0){
-			info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
-					+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ; \n-This property is on the market for ï¿½"
+					+ tmpProperty.returnPrice() + "\n-It has rent of ï¿½" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){
 			info = tmpProperty.returnName() + " ; This is your property. "
-					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+					+ "\n-It has rent of ï¿½" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else{
-			info = tmpProperty.returnName() + " ; \n - " + playerList.get(tmpProperty.returnOwner()).getName()
-					+ " owns this property.\n You must pay rent of £" + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()
+					+ " owns this property.\nYou must pay rent of ï¿½" + tmpProperty.returnRent() + ".\n";
 			rentPaid = false;
 		}
 
@@ -89,7 +89,7 @@ import packA.Player;
 
 			if(numberOfPlayers>1 && command.equalsIgnoreCase("done")){			//Case of sufficient players to begin.
 				playerTurn++;
-				output.append("Roll to see who goes first\n");
+				output.append("Roll to see who goes first.\n");
 
 				goFirst();
 
@@ -108,11 +108,11 @@ import packA.Player;
 				switch(numberOfPlayers){																//Different message displayed once sufficient players added.
 				case 1:	output.append("Please enter a player name.\n");
 				break;
-				
-				case 6: output.append("Roll to see who goes first\n");
-						goFirst();
-						output.append(playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
-						break;
+
+				case 6: output.append("Roll to see who goes first.\n");
+				goFirst();
+				output.append(playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
+				break;
 
 				default : output.append("Please enter a player name, \nor type 'done' to begin.\n");
 				}
@@ -125,11 +125,11 @@ import packA.Player;
 		if(command.equalsIgnoreCase("buy")){
 			buyFunction();
 		}
-		
+
 		else if(command.equalsIgnoreCase("purchase bit coin")){
 			playerList.get(playerTurn).updateBalance(-3000);
 		}
-		
+
 		else if(command.equalsIgnoreCase("property")){
 			propertyFunction();
 		}
@@ -151,7 +151,7 @@ import packA.Player;
 		}
 
 		else if(command.equalsIgnoreCase("balance")){
-			output.append("\nYour balance: £" + playerList.get(playerTurn).getBalance() + "\n");
+			output.append("\nYour balance: ï¿½" + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
 		else if(command.equalsIgnoreCase("quit")){
@@ -161,24 +161,24 @@ import packA.Player;
 		}
 
 		else {
-			output.append("\nInvalid command, enter 'help' for a list of commands. \n");
+			output.append("\nInvalid command, enter 'help' for a list of commands.\n");
 		}
 	}
 
 
 	public void rollFunction(){
 		if(!rentPaid){
-			output.append("\nYou must pay rent before rolling again\n");
+			output.append("\nYou must pay rent before rolling again.\n");
 			return;																//End function here if rent is due first.
 		}
-		
+
 		if(Dice.allowedRoll == 0 || Dice.allowedRoll == 2){
 			Player tmpPlayer = playerList.get(playerTurn);
 			int thisRoll = Dice.Roll();
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
-				output.append("\nYou've passed GO!\n £200 has been added to your balance.\n");
+				output.append("\nYou've passed GO!\nï¿½200 has been added to your balance.\n");
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
@@ -198,13 +198,13 @@ import packA.Player;
 
 
 	public void helpFunction(){
-		output.append("\n'roll' : Roll dice \n"
-				+ "'pay rent' : Pay rent of square you landed on \n"
-				+ "'buy' : Buy property of square you landed on \n"
-				+ "'property': Query the properties you currently own \n"
-				+ "'balance' : Query your current balance \n"
-				+ "'done' : Finish your turn \n"
-				+ "'quit' : Quit the game \n");
+		output.append("\n'roll' : Roll dice.\n"
+				+ "'pay rent' : Pay rent of square you landed on.\n"
+				+ "'buy' : Buy property of square you landed on.\n"
+				+ "'property' : Query the properties you currently own.\n"
+				+ "'balance' : Query your current balance.\n"
+				+ "'done' : Finish your turn.\n"
+				+ "'quit' : Quit the game.\n");
 	}
 
 
@@ -223,18 +223,18 @@ import packA.Player;
 				repaint();
 			}
 			else{										
-			Dice.allowedRoll = 0;
-			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+				Dice.allowedRoll = 0;
+				output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 			}
-			
+
 		}
 
 		if (!rentPaid){																		//If rent not paid
 			output.append("\nYou cannot end your turn with outstanding rent.\n");
 		}
-		
+
 		else if (Dice.allowedRoll == 0 && Dice.allowedRoll == 2){						// If dice not rolled
-			output.append("\nYou cannot end your turn without rolling");
+			output.append("\nYou cannot end your turn without rolling.\n");
 		}
 		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){						//If dice rolled and rent-paid
 			Dice.allowedRoll = 0;
@@ -248,13 +248,13 @@ import packA.Player;
 		Player currPlayer = playerList.get(playerTurn);
 		Property currProperty = properties.get(currPlayer.getPosition());
 		if(currProperty.returnOwner() == null || currProperty.returnOwner() >= 0){ 		//If property is owned or can't be purchased.
-			output.append("\n This property cannot be purchased. \n");
+			output.append("\nThis property cannot be purchased.\n");
 		}
 
 		else if (currPlayer.getBalance() >= currProperty.returnPrice()){				//If player can afford property, purchase.
 			currProperty.setOwner(playerTurn);											//Set Owner using whose turn it is.
 			currPlayer.updateBalance(-(currProperty.returnPrice()));					//Subtract cost from player Balance.
-			output.append("\n You have purchased '" + currProperty.returnName() + "'\n");
+			output.append("\nYou have purchased '" + currProperty.returnName() + "'\n");
 		}
 		else{
 			output.append("\nYou cannot afford this property.\n");
@@ -265,11 +265,11 @@ import packA.Player;
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
+				output.append("\n" + p.returnName() + " : \n-The current rent is ï¿½" + p.returnRent() +"\n");
 			}
 		}
 	}
-	
+
 	public void releasePropertyFunction(){
 		for(Property p : properties){
 			if(p.returnOwner()!= null && p.returnOwner() == playerTurn){
@@ -280,7 +280,7 @@ import packA.Player;
 
 	public void payRentFunction(){
 		if(rentPaid){
-			output.append("\n There is no rent owed.");
+			output.append("\nThere is no rent owed.");
 		}
 
 		else{
@@ -292,7 +292,7 @@ import packA.Player;
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
-				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
+				output.append("\nYou have paid " + debtor.getName() + " ï¿½" + rent + "\n");
 				rentPaid = true;
 			}
 			else{
@@ -326,7 +326,7 @@ import packA.Player;
 		if (firstRolls[numberOfPlayers-1] == firstRolls[numberOfPlayers-2])
 		{
 			output.append("\nRe-roll..\n");
-			goFirst();
+			goFirst();															//Using recursion to ensure there is a unique highest roll.
 		} else
 		{
 			int g = 0;
@@ -364,9 +364,9 @@ import packA.Player;
 		output.append("\n"); //its for aesthetics plz trust me
 
 		for(int i = 0; i < numberOfPlayers; i++){
-			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getTotal() + " worth of properties "
-					+ "and £"+ playerList.get(i).getBalance() +" current balance\n"
-					+ "Total: £" 
+			output.append(playerList.get(i).getName() + " : ï¿½" + playerList.get(i).getTotal() + " worth of properties "
+					+ "and ï¿½"+ playerList.get(i).getBalance() +" current balance.\n"
+					+ "Total: ï¿½" 
 					+ (playerList.get(i).getTotal()+playerList.get(i).getBalance()) + "\n");  //Print balances to screen.
 		}
 
@@ -389,7 +389,7 @@ import packA.Player;
 
 		if(draw == false){
 			output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
-					+ " with £" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets \n");
+					+ " with ï¿½" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets.\n");
 		}
 		if (draw == true){
 			output.append("No Winner! There is a draw. ");
