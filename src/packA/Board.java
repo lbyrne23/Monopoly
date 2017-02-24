@@ -15,12 +15,12 @@ import javax.swing.JTextArea;
 import packA.Player;
 
 
-public class Board extends JPanel {
+	public class Board extends JPanel {
 	private BufferedImage  image = null;	
-	private static ArrayList<Player> playerList = new ArrayList<Player>(6);			//Array list to store players.
-	private static PropertyList properties = new PropertyList();
-	private static int numberOfPlayers;
-	private static JTextArea output;
+	protected static ArrayList<Player> playerList = new ArrayList<Player>(6);			//Array list to store players.
+	protected static PropertyList properties = new PropertyList();
+	protected static int numberOfPlayers;
+	protected static JTextArea output;
 	private static int winner = 0;
 
 	//Following variables are for tracking details of players' turns. 
