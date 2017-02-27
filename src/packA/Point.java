@@ -1,4 +1,9 @@
 package packA;
+//Team : Cessna Skyhawk
+//Michael Jordan
+//Lucy Byrne
+//Fiachra Dunn
+//
 // A class that's used by Player.
 
 public class Point {
@@ -20,7 +25,7 @@ public class Point {
 		this.y = y;
 	}
 
-//	public Point() {}
+	//	public Point() {}
 
 	public Point(int x,int y) { 
 		this.x = x; 

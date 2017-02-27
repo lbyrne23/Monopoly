@@ -1,4 +1,9 @@
 package packA;
+//Team : Cessna Skyhawk
+//Michael Jordan
+//Lucy Byrne
+//Fiachra Dunn
+//
 // A class to store coordinates for player tokens and paint them. It provides other classes with useful methods without seeing what's happening on the inside.
 
 import java.awt.Color;
@@ -140,7 +145,7 @@ public class Player extends JComponent{
 	public void updateBalance(int amount){
 		money = money + amount;
 	}
-	
+
 	public int getTotal(){
 		return propertyTotal;
 	}
@@ -148,5 +153,5 @@ public class Player extends JComponent{
 	public void updateTotal(int value){
 		propertyTotal = propertyTotal + value;
 	}
-	
+
 }

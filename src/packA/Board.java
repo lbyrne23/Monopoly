@@ -1,4 +1,9 @@
 package packA;
+//Team : Cessna Skyhawk
+//Michael Jordan
+//Lucy Byrne
+//Fiachra Dunn
+//
 // A class to display the board and paint the player tokens.
 
 import java.awt.Graphics;
@@ -32,16 +37,16 @@ public class Board extends JPanel {
 
 
 	public Board(int players, JTextArea newOutput) {
-						
+
 		output = newOutput; 
 		//Try to load image from project files.
-			    URL url = getClass().getResource("Board2.gif");
-			    try {
-					image = ImageIO.read(url);
-				} catch (IOException e) {
-					output.append("ERROR : COULDN'T LOAD IMAGE");
-				}
-	
+		URL url = getClass().getResource("Board2.gif");
+		try {
+			image = ImageIO.read(url);
+		} catch (IOException e) {
+			output.append("ERROR : COULDN'T LOAD IMAGE");
+		}
+
 
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
@@ -71,18 +76,18 @@ public class Board extends JPanel {
 			info = tmpProperty.returnName() + "\n";
 		}
 		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
-			info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
-					+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ; \n-This property is on the market for ï¿½"
+					+ tmpProperty.returnPrice() + "\n-It has rent of ï¿½" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){														//owner is current player
 			info = tmpProperty.returnName() + " ; This is your property. "
-					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+					+ "\n-It has rent of ï¿½" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else{											
 			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//owner > 0, i.e. owned property.
-					+ " owns this property.\nYou must pay rent of £" + tmpProperty.returnRent() + ".\n";		// you must pay rent.
+					+ " owns this property.\nYou must pay rent of ï¿½" + tmpProperty.returnRent() + ".\n";		// you must pay rent.
 			rentPaid = false;																					//set rentPaid tracker to false.
 		}
 
@@ -157,7 +162,7 @@ public class Board extends JPanel {
 		}
 
 		else if(command.equalsIgnoreCase("balance")){
-			output.append("\nYour balance: £" + playerList.get(playerTurn).getBalance() + "\n");
+			output.append("\nYour balance: ï¿½" + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
 		else if(command.equalsIgnoreCase("quit")){
@@ -170,6 +175,7 @@ public class Board extends JPanel {
 			output.append("\nInvalid command, enter 'help' for a list of commands.\n");
 		}
 	}
+
 
 	//Function to roll dice and move player.
 	public void rollFunction(){
@@ -184,7 +190,7 @@ public class Board extends JPanel {
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
-				output.append("\nYou've passed GO!\n£200 has been added to your balance.\n");
+				output.append("\nYou've passed GO!\nï¿½200 has been added to your balance.\n");
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
@@ -266,18 +272,18 @@ public class Board extends JPanel {
 			output.append("\nYou cannot afford this property.\n");
 		}
 	}
-	
+
 	//Function to return owned properties for current Player.
 	public void propertyFunction(){
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
+				output.append("\n" + p.returnName() + " : \n-The current rent is ï¿½" + p.returnRent() +"\n");
 			}
 		}
 	}
-	
-	
+
+
 	// Function to return properties to market if player has lost.
 	public void releasePropertyFunction(){
 		for(Property p : properties){
@@ -302,7 +308,7 @@ public class Board extends JPanel {
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
-				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
+				output.append("\nYou have paid " + debtor.getName() + " ï¿½" + rent + "\n");
 				rentPaid = true;
 			}
 			else{
@@ -375,9 +381,9 @@ public class Board extends JPanel {
 		output.append("\n"); //its for aesthetics plz trust me
 
 		for(int i = 0; i < numberOfPlayers; i++){
-			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getTotal() + " worth of properties "
-					+ "and £"+ playerList.get(i).getBalance() +" current balance.\n"
-					+ "Total: £" 
+			output.append(playerList.get(i).getName() + " : ï¿½" + playerList.get(i).getTotal() + " worth of properties "
+					+ "and ï¿½"+ playerList.get(i).getBalance() +" current balance.\n"
+					+ "Total: ï¿½" 
 					+ (playerList.get(i).getTotal()+playerList.get(i).getBalance()) + "\n");  //Print balances to screen.
 		}
 
@@ -400,7 +406,7 @@ public class Board extends JPanel {
 
 		if(draw == false){
 			output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
-					+ " with £" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets.\n");
+					+ " with ï¿½" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets.\n");
 		}
 		if (draw == true){
 			output.append("No Winner! There is a draw. ");

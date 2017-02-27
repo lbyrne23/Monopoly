@@ -1,4 +1,9 @@
 package packA;
+//Team : Cessna Skyhawk
+//Michael Jordan
+//Lucy Byrne
+//Fiachra Dunn
+//
 // A class to take input from a text-box in a java frame and store it for future use.
 
 import java.awt.event.*;

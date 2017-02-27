@@ -22,7 +22,7 @@ public class Layout {
 		Board monPanel = new Board(6, outputPanel.getJTextArea());			//Panel for displaying board and players.
 		InputBox inputPanel = new InputBox();								//Panel which takes in text.
 		inputPanel.setOutput(monPanel);								 		//Set 'output' to be the designated output destination for text input.
-		
+
 
 
 		//Adding panels to frame.
@@ -31,10 +31,10 @@ public class Layout {
 		frame.add(monPanel);
 
 
-		
+
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1250, 750);											
 		frame.setVisible(true);	
-		
+
 	}
 }
