@@ -46,8 +46,8 @@ public class Board extends JPanel {
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
 		playerTurn = -1; 															//Indicates players have not yet been instantiated. 
-		playerList = new ArrayList<Player>(players);
-		numberOfPlayers = 0;
+		playerList = new ArrayList<Player>(players);								// List to hold players
+		numberOfPlayers = 0;														//tracks number of players, begins at zero.
 	}
 
 
@@ -67,23 +67,23 @@ public class Board extends JPanel {
 		Property tmpProperty = properties.get(tmpPlayer.getPosition());
 		String info;
 
-		if(tmpProperty.returnOwner() == null){
+		if(tmpProperty.returnOwner() == null){									 //ie unbuyable property, just return name for now
 			info = tmpProperty.returnName() + "\n";
 		}
-		else if(tmpProperty.returnOwner() < 0){
+		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
 			info = tmpProperty.returnName() + " ; \n-This property is on the market for £"
 					+ tmpProperty.returnPrice() + "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
 		}
 
-		else if(tmpProperty.returnOwner() == playerTurn){
+		else if(tmpProperty.returnOwner() == playerTurn){														//owner is current player
 			info = tmpProperty.returnName() + " ; This is your property. "
 					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
 		}
 
-		else{
-			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()
-					+ " owns this property.\nYou must pay rent of £" + tmpProperty.returnRent() + ".\n";
-			rentPaid = false;
+		else{											
+			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//owner > 0, i.e. owned property.
+					+ " owns this property.\nYou must pay rent of £" + tmpProperty.returnRent() + ".\n";		// you must pay rent.
+			rentPaid = false;																					//set rentPaid tracker to false.
 		}
 
 		return info;
@@ -98,13 +98,12 @@ public class Board extends JPanel {
 				playerTurn++;
 				output.append("Roll to see who goes first.\n");
 
-				goFirst();
+				goFirst();														//function to arrange players based on dice rolls.
 
 				output.append(playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
 				return;
 
 			}
-
 
 			if(numberOfPlayers < 6){																	//Adding players if there's room.
 				playerList.add(new Player(numberOfPlayers, command));
@@ -116,7 +115,7 @@ public class Board extends JPanel {
 				case 1:	output.append("Please enter a player name.\n");
 				break;
 
-				case 6: output.append("Roll to see who goes first.\n");
+				case 6: output.append("Roll to see who goes first.\n");									//If maximum players added, begin.
 				goFirst();
 				output.append(playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
 				break;
@@ -172,7 +171,7 @@ public class Board extends JPanel {
 		}
 	}
 
-
+	//Function to roll dice and move player.
 	public void rollFunction(){
 		if(!rentPaid){
 			output.append("\nYou must pay rent before rolling again.\n");
@@ -203,7 +202,7 @@ public class Board extends JPanel {
 		}
 	}
 
-
+	//Function to return legal commands.
 	public void helpFunction(){
 		output.append("\n'roll' : Roll dice.\n"
 				+ "'pay rent' : Pay rent of square you landed on.\n"
@@ -214,7 +213,7 @@ public class Board extends JPanel {
 				+ "'quit' : Quit the game.\n");
 	}
 
-
+	//Function to end turn.
 	public void doneFunction(){
 		Player currPlayer = playerList.get(playerTurn);
 		if(rentPaid && currPlayer.getBalance()<0){											//If out of money
@@ -236,21 +235,21 @@ public class Board extends JPanel {
 
 		}
 
-		if (!rentPaid){																		//If rent not paid
+		if (!rentPaid){																		//If rent not paid, not allowed end.
 			output.append("\nYou cannot end your turn with outstanding rent.\n");
 		}
 
-		else if (Dice.allowedRoll == 0 && Dice.allowedRoll == 2){						// If dice not rolled
+		else if (Dice.allowedRoll == 0 && Dice.allowedRoll == 2){						// If dice not rolled, not allowed end.
 			output.append("\nYou cannot end your turn without rolling.\n");
 		}
-		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){						//If dice rolled and rent-paid
+		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){						//If dice rolled and rent-paid allowed end turn
 			Dice.allowedRoll = 0;
 			playerTurn = (playerTurn+1)%numberOfPlayers;
 			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 		}
 	}
 
-
+	// Function to buy property that current Player is on.
 	public void buyFunction(){
 		Player currPlayer = playerList.get(playerTurn);
 		Property currProperty = properties.get(currPlayer.getPosition());
@@ -267,7 +266,8 @@ public class Board extends JPanel {
 			output.append("\nYou cannot afford this property.\n");
 		}
 	}
-
+	
+	//Function to return owned properties for current Player.
 	public void propertyFunction(){
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
@@ -276,7 +276,9 @@ public class Board extends JPanel {
 			}
 		}
 	}
-
+	
+	
+	// Function to return properties to market if player has lost.
 	public void releasePropertyFunction(){
 		for(Property p : properties){
 			if(p.returnOwner()!= null && p.returnOwner() == playerTurn){
@@ -285,6 +287,7 @@ public class Board extends JPanel {
 		}
 	}
 
+	//function to payrent on current square
 	public void payRentFunction(){
 		if(rentPaid){
 			output.append("\nThere is no rent owed.");

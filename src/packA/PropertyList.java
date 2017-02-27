@@ -6,6 +6,7 @@ public class PropertyList extends ArrayList<Property>{
 
 	public PropertyList(){
 		add(new Property("GO"));
+		add(new Property("Old Kent Road", -1, 60, 10));
 		add(new Property("Community Chest"));
 		add(new Property("Whitechapel Rd", -1, 60, 10));
 		add(new Property("Income Tax"));
