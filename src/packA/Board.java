@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -29,13 +32,17 @@ public class Board extends JPanel {
 
 
 	public Board(int players, JTextArea newOutput) {
-		try {																		//Try to load image from project files.
-			image = ImageIO.read(new File("src/packA/Board2.gif"));
-		} catch (IOException ie) {
-			System.out.println("Error: "+ie.getMessage());
-		}
+						
+		output = newOutput; 
+		//Try to load image from project files.
+			    URL url = getClass().getResource("Board2.gif");
+			    try {
+					image = ImageIO.read(url);
+				} catch (IOException e) {
+					output.append("ERROR : COULDN'T LOAD IMAGE");
+				}
+	
 
-		output = newOutput; 														//Give area for outputting info.
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
 		playerTurn = -1; 															//Indicates players have not yet been instantiated. 
