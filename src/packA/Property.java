@@ -49,6 +49,10 @@ class Property {
 	public void boughtProperty(int playerNum){
 		owner = playerNum;
 	}
+	
+	public int returnColour(){
+		return colour;
+	}
 
 	public ArrayList<Property> defaultProperties() {
 		ArrayList<Property> propertyList = new ArrayList<Property>();		
