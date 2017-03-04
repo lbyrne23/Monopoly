@@ -13,17 +13,19 @@ class Property {
 	private int price;
 	private int rent;
 	private int colour;
+	private int mortgage;
 
 	public Property(String nameIN){
 		name = nameIN;
 	}
 
-	public Property(String nameIN, int ownerIN, int priceIN, int rentIN, int colourIN){
+	public Property(String nameIN, int ownerIN, int priceIN, int rentIN, int colourIN, int mortgageIN){
 		name = nameIN;
 		owner = ownerIN;
 		price = priceIN;
 		rent = rentIN;
 		colour = colourIN;
+		mortgage = mortgageIN;
 	}
 
 	public String returnName(){
@@ -52,6 +54,10 @@ class Property {
 	
 	public int returnColour(){
 		return colour;
+	}
+	
+	public int returnMortgage(){
+		return mortgage;
 	}
 
 	public ArrayList<Property> defaultProperties() {
