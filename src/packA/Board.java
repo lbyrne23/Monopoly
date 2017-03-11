@@ -312,9 +312,9 @@ public class Board extends JPanel {
 				rentPaid = true;
 			}
 			else{
-				output.append("\nYou must pay your remaining balance as rent and leave the game.\n");		//just for this sprint
-				debtor.updateBalance(currPlayer.getBalance());
-				currPlayer.updateBalance(-((currPlayer.getBalance()) + 1));
+				output.append("\nYou are bankrupt, your properties will be returned to the market.\n");
+				
+				currPlayer.updateBalance(-((currPlayer.getBalance() + 1))); //indicate bankruptcy by -1 balance.
 				rentPaid = true;
 			}
 		}

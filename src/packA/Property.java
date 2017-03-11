@@ -11,10 +11,10 @@ class Property {
 	private String name;
 	private Integer owner;
 	private int price;
-	private int rent;
+	private int rent, rentIndex = 0;
 	private int colour;
 	private int mortgage;
-
+	private int[] rentArray;
 	public Property(String nameIN){
 		name = nameIN;
 	}
@@ -58,6 +58,12 @@ class Property {
 	
 	public int returnMortgage(){
 		return mortgage;
+	}
+	
+	public int updateRent(){
+		rentIndex++;
+		rent = rentArray[rentIndex];
+		return rent;
 	}
 
 	public ArrayList<Property> defaultProperties() {
