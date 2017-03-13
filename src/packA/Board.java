@@ -152,6 +152,10 @@ public class Board extends JPanel {
 		else if(command.equalsIgnoreCase("done")){
 			doneFunction();
 		}
+		
+		else if(command.equalsIgnoreCase("build")){
+			buildHouse();
+		}
 
 		else if(command.equalsIgnoreCase("roll")){
 			rollFunction();
@@ -283,7 +287,33 @@ public class Board extends JPanel {
 		}
 	}
 
-
+	//build a house on the property
+	public void buildHouse(){
+		Player currPlayer = playerList.get(playerTurn);
+		Property currProperty = properties.get(currPlayer.getPosition());
+		if(currProperty.returnOwner() == null || currProperty.returnOwner() != currPlayer.getNumber()){ //check ownership
+			output.append("\nYou don't own this property\n");
+		}
+		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
+			/*currProperty.BuildHouse*/	
+			currPlayer.updateBalance(-(currProperty.returnHousePrice()));
+			output.append("\nYou have built a house on '" + currProperty.returnName() + "'\n");
+		}
+		else{
+			output.append("\nYou cannot build a house on this property\n");
+		}
+	}
+	
+	//go through all properties of current colour, if player doesn't own one they can't build a house
+	public boolean canBuild(int colour){
+		for(Property p : properties){
+			if(p.returnOwner()!= null && p.returnOwner() != playerTurn && p.returnColour() == colour){
+				return false;
+			}	
+		}
+		return true;
+	}
+	
 	// Function to return properties to market if player has lost.
 	public void releasePropertyFunction(){
 		for(Property p : properties){
@@ -319,8 +349,7 @@ public class Board extends JPanel {
 			}
 		}
 	}
-
-
+		
 	//Function to determine who goes first.
 	public static void goFirst(){
 		int Roll;

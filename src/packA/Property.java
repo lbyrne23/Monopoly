@@ -15,17 +15,20 @@ class Property {
 	private int colour;
 	private int mortgage;
 	private int[] rentArray;
+	private int housePrice;
+	
 	public Property(String nameIN){
 		name = nameIN;
 	}
 
-	public Property(String nameIN, int ownerIN, int priceIN, int rentIN, int colourIN, int mortgageIN){
+	public Property(String nameIN, int ownerIN, int priceIN, int rentIN, int colourIN, int mortgageIN, int houseIN){
 		name = nameIN;
 		owner = ownerIN;
 		price = priceIN;
 		rent = rentIN;
 		colour = colourIN;
 		mortgage = mortgageIN;
+		housePrice = houseIN;
 	}
 
 	public String returnName(){
@@ -58,6 +61,10 @@ class Property {
 	
 	public int returnMortgage(){
 		return mortgage;
+	}
+	
+	public int returnHousePrice(){
+		return housePrice;
 	}
 	
 	public int updateRent(){
