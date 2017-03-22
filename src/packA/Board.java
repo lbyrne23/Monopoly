@@ -306,6 +306,10 @@ public class Board extends JPanel {
 			output.append("\nYou don't own this property\n");
 			return;
 		}
+		if(currProperty.returnHousePrice() < 0){	// house prices set to '-1' to indicate they can't be purchased.
+			output.append("\nYou cannot build houses on Stations or Utilities\n");
+			return;
+		}
 		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
 			if(currProperty.updateRent(1) != null){						//Move the rent index to the next level.
 				int houses = currProperty.returnHouses();
