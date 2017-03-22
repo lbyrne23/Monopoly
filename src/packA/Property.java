@@ -11,7 +11,7 @@ class Property {
 	private String name;
 	private Integer owner;
 	private int price;
-	private int rent, rentIndex = 0;
+	private int rentIndex = 0;
 	private int colour;
 	private int mortgage;
 	private int[] rentArray;
@@ -21,14 +21,19 @@ class Property {
 		name = nameIN;
 	}
 
-	public Property(String nameIN, int ownerIN, int priceIN, int rentIN, int colourIN, int mortgageIN, int houseIN){
+	public Property(String nameIN, int ownerIN, int priceIN, int[] rentIN, int colourIN, int mortgageIN, int houseIN){
 		name = nameIN;
 		owner = ownerIN;
 		price = priceIN;
-		rent = rentIN;
+		rentArray = rentIN;
 		colour = colourIN;
 		mortgage = mortgageIN;
 		housePrice = houseIN;
+	}
+	
+	public Property(String nameIN, int[] rentIN){
+		name = nameIN;
+		rentArray = rentIN;
 	}
 
 	public String returnName(){
@@ -48,7 +53,7 @@ class Property {
 	}
 
 	public int returnRent(){
-		return rent;
+		return rentArray[rentIndex];
 	}
 
 	public void boughtProperty(int playerNum){
@@ -67,10 +72,12 @@ class Property {
 		return housePrice;
 	}
 	
-	public int updateRent(){
-		rentIndex++;
-		rent = rentArray[rentIndex];
-		return rent;
+	public Integer updateRent(int update){
+		if((rentIndex + update) >= 0 && (rentIndex + update) < rentArray.length){
+		rentIndex = rentIndex + update;
+		return rentArray[rentIndex];
+		}
+		else return null;
 	}
 
 	public ArrayList<Property> defaultProperties() {

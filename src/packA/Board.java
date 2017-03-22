@@ -223,7 +223,7 @@ public class Board extends JPanel {
 				+ "'quit' : Quit the game.\n");
 	}
 
-	//Function to end turn.
+	//Function to end turn. Also takes bankruptcy into account.
 	public void doneFunction(){
 		Player currPlayer = playerList.get(playerTurn);
 		if(rentPaid && currPlayer.getBalance()<0){											//If out of money
@@ -249,7 +249,7 @@ public class Board extends JPanel {
 			output.append("\nYou cannot end your turn with outstanding rent.\n");
 		}
 
-		else if (Dice.allowedRoll == 0 && Dice.allowedRoll == 2){						// If dice not rolled, not allowed end.
+		else if (Dice.allowedRoll == 0 || Dice.allowedRoll == 2){						// If dice not rolled, not allowed end.
 			output.append("\nYou cannot end your turn without rolling.\n");
 		}
 		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){						//If dice rolled and rent-paid allowed end turn
@@ -329,23 +329,27 @@ public class Board extends JPanel {
 			output.append("\nThere is no rent owed.");
 		}
 
-		else{
+		else{	// Pay Rent
 			Player currPlayer = playerList.get(playerTurn);
 			Property currProperty = properties.get(currPlayer.getPosition());		//Get player, property and owner of property.
 			Player debtor = playerList.get(currProperty.returnOwner());
 			int rent = currProperty.returnRent();
 
+			//IF PLAYER CAN AFFORD RENT
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
 				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
 				rentPaid = true;
 			}
+			//IF PLAYER CAN'T AFFORD RENT
 			else{
-				output.append("\nYou are bankrupt, your properties will be returned to the market.\n");
+				output.append("\nYou are bankrupt...\nUpon ending your turn you will exit the game and your properties will be released.");
 				
 				currPlayer.updateBalance(-((currPlayer.getBalance() + 1))); //indicate bankruptcy by -1 balance.
 				rentPaid = true;
+				Dice.allowedRoll = 1;										//Not allowed roll again. (Edge case of rolling doubles).
+				
 			}
 		}
 	}
