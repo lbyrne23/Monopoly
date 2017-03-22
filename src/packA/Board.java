@@ -153,8 +153,9 @@ public class Board extends JPanel {
 			doneFunction();
 		}
 		
-		else if(command.equalsIgnoreCase("build")){
-			buildHouse();
+		else if(command.toLowerCase().startsWith("build ")){
+			String propertyName = command.substring(6);
+			buildHouse(propertyName);
 		}
 
 		else if(command.equalsIgnoreCase("roll")){
@@ -288,27 +289,52 @@ public class Board extends JPanel {
 	}
 
 	//build a house on the property
-	public void buildHouse(){
+	public void buildHouse(String propertyName){
 		Player currPlayer = playerList.get(playerTurn);
-		Property currProperty = properties.get(currPlayer.getPosition());
-		if(currProperty.returnOwner() == null || currProperty.returnOwner() != currPlayer.getNumber()){ //check ownership
+		Property currProperty = null;
+		for(Property p : properties){					//Iterate through properties until one matching entered name is found.
+			if(p.returnName().equalsIgnoreCase(propertyName)){
+				currProperty = p;
+				break;
+			}
+		}
+		if(currProperty == null){
+			output.append("\nEntered Property Name is not valid.\nHint : \nPlease type 'st' for street and 'rd' for road.\n");
+			return;
+		}
+		if(currProperty.returnOwner() == null || currProperty.returnOwner() != playerTurn ){ //check ownership
 			output.append("\nYou don't own this property\n");
+			return;
 		}
 		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
-			/*currProperty.BuildHouse*/	
-			currPlayer.updateBalance(-(currProperty.returnHousePrice()));
-			output.append("\nYou have built a house on '" + currProperty.returnName() + "'\n");
+			if(currProperty.updateRent(1) != null){						//Move the rent index to the next level.
+				int houses = currProperty.returnHouses();
+				if(houses != 1){										//Case of subsequent houses built
+				output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
+				}
+				else{													//Case of first house built
+					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
+				}
+				currPlayer.updateBalance(-(currProperty.returnHousePrice()));	//Update Player balance
+			}
+			else{
+				output.append("\nYou cannot build more houses on this property.\n");
+			}
+			return;
 		}
-		else{
-			output.append("\nYou cannot build a house on this property\n");
+		else if(currPlayer.getBalance() < currProperty.returnHousePrice()){	//Case that they can't afford to build
+			output.append("\nYou cannot afford to build here\n");
+		}
+		else{																// Case that they don't own all properties.
+			output.append("\nYou must own all properties of this colour group.\n");
 		}
 	}
 	
 	//go through all properties of current colour, if player doesn't own one they can't build a house
 	public boolean canBuild(int colour){
 		for(Property p : properties){
-			if(p.returnOwner()!= null && p.returnOwner() != playerTurn && p.returnColour() == colour){
-				return false;
+			if(p.returnOwner()!= null && p.returnOwner() != playerTurn && p.returnColour() == colour){ //If property can be owned, is owned by player and is of defined colour.
+				return false;																			
 			}	
 		}
 		return true;
