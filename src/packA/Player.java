@@ -11,9 +11,10 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 
-public class Player extends JComponent{
+public class Player extends JLabel{
 
 	ArrayList<Point> points = new ArrayList<Point>(); 					//Array of coordinates.
 	private int circleX;

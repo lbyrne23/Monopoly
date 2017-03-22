@@ -316,6 +316,9 @@ public class Board extends JPanel {
 				if(houses != 1){										//Case of subsequent houses built
 				output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
 				}
+				else if(houses == 6){
+				output.append("\nThere is now a hotel on " + currProperty.returnName() +"\n");
+				}
 				else{													//Case of first house built
 					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
 				}
