@@ -134,13 +134,23 @@ public class Board extends JPanel {
 			}
 		}
 		
+		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
 
 		//Assessing command.
 		if(command.equalsIgnoreCase("buy")){
 			buyFunction();
 		}
-
+		//TEST COMMAND USED TO PURCHASE ALL PROPERTY FOR DEBUGGING
+		else if (command.equalsIgnoreCase("Squatters Rights")){
+			for (Property p : properties){
+				if(p.returnOwner() != null){
+					p.setOwner(playerTurn);
+				}
+			}
+			output.append("\nYou own everything in sight, but do you feel any less empty?\n");
+		}
+		//TEST COMMAND USED TO ENTER BANKRUPTCY
 		else if(command.equalsIgnoreCase("purchase bit coin")){
 			playerList.get(playerTurn).updateBalance(-3000);
 		}
@@ -380,11 +390,12 @@ public class Board extends JPanel {
 		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
 			if(currProperty.updateRent(propertyNumber) != null){						//Adjust amount of houses to new level if possible.
 				int houses = currProperty.returnHouses();
-				if(houses != 1){										//Case of subsequent houses built
+				
+				if(houses == 5){
+						output.append("\nThere is now a hotel on " + currProperty.returnName() +"\n");
+						}
+				else if(houses != 1){										//Case of subsequent houses built
 				output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
-				}
-				else if(houses == 6){
-				output.append("\nThere is now a hotel on " + currProperty.returnName() +"\n");
 				}
 				else{													//Case of first house built
 					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
@@ -392,7 +403,8 @@ public class Board extends JPanel {
 				currPlayer.updateBalance(-(currProperty.returnHousePrice()));	//Update Player balance
 			}
 			else{
-				output.append("\nYou cannot build more houses on this property.\n");
+				output.append("\nYou cannot perform further developments on this property.\nMaximum Building Level : 6"
+			+ "Current Building Level : " +currProperty.returnHouses() + "\n");
 			}
 			return;
 		}
