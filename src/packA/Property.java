@@ -8,7 +8,7 @@ package packA;
 import java.util.ArrayList;
 
 class Property {
-	private String name;
+	private String name, shortName;
 	private Integer owner;
 	private int price;
 	private int houses = 0;
@@ -17,12 +17,14 @@ class Property {
 	private int[] rentArray;
 	private int housePrice;
 	
+	
 	public Property(String nameIN){
 		name = nameIN;
 	}
 
-	public Property(String nameIN, int ownerIN, int priceIN, int[] rentIN, int colourIN, int mortgageIN, int houseIN){
+	public Property(String nameIN, String shortNameIN, int ownerIN, int priceIN, int[] rentIN, int colourIN, int mortgageIN, int houseIN){
 		name = nameIN;
+		shortName = shortNameIN;
 		owner = ownerIN;
 		price = priceIN;
 		rentArray = rentIN;
@@ -38,6 +40,10 @@ class Property {
 
 	public String returnName(){
 		return name;
+	}
+	
+	public String returnShortName(){
+		return shortName;
 	}
 
 	public Integer returnOwner(){

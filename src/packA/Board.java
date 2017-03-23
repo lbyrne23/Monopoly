@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -131,6 +133,8 @@ public class Board extends JPanel {
 				return;
 			}
 		}
+		
+		output.append("\n------------------------------------------------------------------------------------------\n");
 
 		//Assessing command.
 		if(command.equalsIgnoreCase("buy")){
@@ -288,8 +292,8 @@ public class Board extends JPanel {
 		}
 	}
 
-	//build a house on the property
-	public void buildHouse(String propertyName){
+	
+	public void demolishHouse(String propertyName){
 		Player currPlayer = playerList.get(playerTurn);
 		Property currProperty = null;
 		for(Property p : properties){					//Iterate through properties until one matching entered name is found.
@@ -312,6 +316,69 @@ public class Board extends JPanel {
 		}
 		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
 			if(currProperty.updateRent(1) != null){						//Move the rent index to the next level.
+				int houses = currProperty.returnHouses();
+				if(houses != 1){										//Case of subsequent houses built
+				output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
+				}
+				else if(houses == 6){
+				output.append("\nThere is now a hotel on " + currProperty.returnName() +"\n");
+				}
+				else{													//Case of first house built
+					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
+				}
+				currPlayer.updateBalance(-(currProperty.returnHousePrice()));	//Update Player balance
+			}
+			else{
+				output.append("\nYou cannot build more houses on this property.\n");
+			}
+			return;
+		}
+		
+	}
+	
+	//build a house on the property
+	public void buildHouse(String buildInstructions){
+		final Pattern propertyAndNumber = Pattern.compile("(\\w+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
+		final Matcher m = propertyAndNumber.matcher(buildInstructions);
+		String propertyName;
+		int propertyNumber;
+		if(m.find()){
+			propertyName = m.group(1);
+			propertyNumber = Integer.parseInt(m.group(2));
+			if(propertyNumber < 1){
+				output.append("\nNumber of properties to build must be greater than 1\n");
+				return;
+			}
+			
+		}
+		else{
+			output.append("\nTo use build command, use the form;\n 'build Property_Name Number_As_Digit'\n");
+			return;
+		}
+		
+		Player currPlayer = playerList.get(playerTurn);
+		Property currProperty = null;
+		for(Property p : properties){					//Iterate through properties until one matching entered name is found.
+			if(p.returnShortName()!= null && p.returnShortName().equalsIgnoreCase(propertyName)){
+				currProperty = p;
+				break;
+			}
+		}
+		if(currProperty == null){
+			output.append("\nEntered Property Name is not valid.\nHint : Enter first part of name except; \nFor Pall Mall enter 'Mall'\nFor Old Kent Road enter 'kent'\n"
+					+ "For The Angel Islington type 'Islington'\n For King's Cross Station enter 'Kings'\n");
+			return;
+		}
+		if(currProperty.returnOwner() == null || currProperty.returnOwner() != playerTurn ){ //check ownership
+			output.append("\nYou don't own this property\n");
+			return;
+		}
+		if(currProperty.returnHousePrice() < 0){	// house prices set to '-1' to indicate they can't be purchased.
+			output.append("\nYou cannot build houses on Stations or Utilities\n");
+			return;
+		}
+		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
+			if(currProperty.updateRent(propertyNumber) != null){						//Adjust amount of houses to new level if possible.
 				int houses = currProperty.returnHouses();
 				if(houses != 1){										//Case of subsequent houses built
 				output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
