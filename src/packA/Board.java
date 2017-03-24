@@ -167,9 +167,8 @@ public class Board extends JPanel {
 			doneFunction();
 		}
 		
-		else if(command.toLowerCase().startsWith("build ")){
-			String propertyName = command.substring(6);
-			buildHouse(propertyName);
+		else if(command.toLowerCase().startsWith("build ") || command.toLowerCase().startsWith("demolish ") ){
+			buildHouse(command);
 		}
 
 		else if(command.equalsIgnoreCase("roll")){
@@ -348,21 +347,24 @@ public class Board extends JPanel {
 	
 	//build a house on the property
 	public void buildHouse(String buildInstructions){
-		final Pattern propertyAndNumber = Pattern.compile("(\\w+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
+		final Pattern propertyAndNumber = Pattern.compile("(\\w+).* (\\w+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
 		final Matcher m = propertyAndNumber.matcher(buildInstructions);
-		String propertyName;
+		String propertyName, command;
 		int propertyNumber;
 		if(m.find()){
-			propertyName = m.group(1);
-			propertyNumber = Integer.parseInt(m.group(2));
+			command = m.group(1);
+			propertyName = m.group(2);
+			propertyNumber = Integer.parseInt(m.group(3));
 			if(propertyNumber < 1){
 				output.append("\nNumber of properties to build must be greater than 1\n");
 				return;
 			}
+			if(command.equals("demolish"))
+				propertyNumber = -(propertyNumber);	//If demolishing, we must update houses with a negative number.
 			
 		}
 		else{
-			output.append("\nTo use build command, use the form;\n 'build Property_Name Number_As_Digit'\n");
+			output.append("\nTo use build or demolish commands, use the form;\n 'build/demolish Property_Name Number_As_Digit'\n");
 			return;
 		}
 		
@@ -384,10 +386,12 @@ public class Board extends JPanel {
 			return;
 		}
 		if(currProperty.returnHousePrice() < 0){	// house prices set to '-1' to indicate they can't be purchased.
-			output.append("\nYou cannot build houses on Stations or Utilities\n");
+			output.append("\nNeither Stations nor Utilities\n");
 			return;
 		}
 		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
+			
+			
 			if(currProperty.updateRent(propertyNumber) != null){						//Adjust amount of houses to new level if possible.
 				int houses = currProperty.returnHouses();
 				
@@ -400,11 +404,17 @@ public class Board extends JPanel {
 				else{													//Case of first house built
 					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
 				}
-				currPlayer.updateBalance(-(currProperty.returnHousePrice()));	//Update Player balance
+				if(command.equalsIgnoreCase("build")){
+					currPlayer.updateBalance(-(currProperty.returnHousePrice()));	//remove cost of house from player balance
+				}
+				else{
+					currPlayer.updateBalance(currProperty.returnHousePrice()/2);	//add half cost of house to balance.
+				}
+					
 			}
 			else{
-				output.append("\nYou cannot perform further developments on this property.\nMaximum Building Level : 6"
-			+ "Current Building Level : " +currProperty.returnHouses() + "\n");
+				output.append("\nYou cannot perform further developments on this property.\nMaximum Building Level : 5\n"
+			+ "Current Building Level : " + currProperty.returnHouses() + "\n");
 			}
 			return;
 		}
