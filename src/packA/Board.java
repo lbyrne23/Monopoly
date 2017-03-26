@@ -394,7 +394,7 @@ public class Board extends JPanel {
 			output.append("\nNeither Stations nor Utilities can be developed.\n");
 			return;
 		}
-		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
+		else if (currPlayer.getBalance() >= currProperty.returnHousePrice()*propertyNumber && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
 
 
 			if(currProperty.setHouses(currProperty.returnHouses() + propertyNumber) != null){						//Adjust amount of houses to new level if possible.
@@ -410,10 +410,12 @@ public class Board extends JPanel {
 					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
 				}
 				if(command.equalsIgnoreCase("build")){
-					currPlayer.updateBalance(-(currProperty.returnHousePrice()));	//remove cost of house from player balance
+					currPlayer.updateBalance(-(currProperty.returnHousePrice()*propertyNumber));	//remove cost of house from player balance
+					output.append("\nYou have spent £" + (currProperty.returnHousePrice()/2)*propertyNumber + ".\n");
 				}
 				else{
 					currPlayer.updateBalance(currProperty.returnHousePrice()/2);	//add half cost of house to balance.
+					output.append("\nYou have earned £" + (currProperty.returnHousePrice()/2)*propertyNumber + ".\n");
 				}
 
 			}
@@ -423,7 +425,7 @@ public class Board extends JPanel {
 			}
 			return;
 		}
-		else if(currPlayer.getBalance() < currProperty.returnHousePrice()){	//Case that they can't afford to build
+		else if(currPlayer.getBalance() < currProperty.returnHousePrice()*propertyNumber){	//Case that they can't afford to build
 			output.append("\nYou cannot afford to build here\n");
 		}
 		else{																// Case that they don't own all properties.
