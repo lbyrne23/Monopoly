@@ -350,7 +350,7 @@ public class Board extends JPanel {
 		}
 	}
 	
-	//build a house on the property
+	//build or demolish a house on the property
 	public void buildHouse(String buildInstructions){
 		final Pattern propertyAndNumber = Pattern.compile("(\\w+).* (\\w+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
 		final Matcher m = propertyAndNumber.matcher(buildInstructions);
@@ -391,7 +391,7 @@ public class Board extends JPanel {
 			return;
 		}
 		if(currProperty.returnHousePrice() < 0){	// house prices set to '-1' to indicate they can't be purchased.
-			output.append("\nNeither Stations nor Utilities\n");
+			output.append("\nNeither Stations nor Utilities can be developed.\n");
 			return;
 		}
 		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
