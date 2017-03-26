@@ -87,7 +87,7 @@ class Property {
 		return housePrice;
 	}
 	
-	public Integer setHouses(int newHouses){	//increments or decrements how many houses are on property.
+	public Integer setHouses(int newHouses){	//sets how many houses are on property.
 		if(newHouses >= 0 && newHouses < rentArray.length){
 			houses = newHouses;
 			return rentArray[houses];
@@ -95,8 +95,5 @@ class Property {
 		else return null;
 	}
 
-	/*public ArrayList<Property> defaultProperties() {
-		ArrayList<Property> propertyList = new ArrayList<Property>();		
-		return propertyList;
-	}*/
+	
 }
