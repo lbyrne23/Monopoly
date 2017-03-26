@@ -220,7 +220,9 @@ public class Board extends JPanel {
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
 			output.append("\n"+ Dice.words() + "\n");
 			repaint();
-
+			
+			diceMultiplier(thisRoll); //this checks if rent needs to be multiplied by the roll
+			
 			output.append(squareInfo());
 
 			if(Dice.allowedRoll == 2){
@@ -457,7 +459,7 @@ public class Board extends JPanel {
 		}
 	}
 
-	
+	//If player owns all of colour group, and a square has no houses, the rent of the square with no houses is doubled
 	public void colourMultiplier(){
 		if (doubled == false){ //this prevents the rent doubling after every turn
 			for(Property p : properties){ //iterate through properties and double the rent of any where all colours have same owner and there are no houses
@@ -473,8 +475,16 @@ public class Board extends JPanel {
 		}
 	}
 
-	public void diceMultiplier(){
-
+	//If player lands on a utility, check how many utilities are owned by the same player
+	//rent = diceRoll* 4 if onlt 1 is owned, and rent = diceRoll*10 if both are owned
+	public void diceMultiplier(int aRoll){
+		Player tmpPlayer = playerList.get(playerTurn);
+		Property currProperty = properties.get(tmpPlayer.getPosition());
+		
+		if(currProperty.returnColour() == 9){
+			currProperty.diceRent(aRoll);
+		}
+			
 	}
 
 	//Function to determine who goes first.
