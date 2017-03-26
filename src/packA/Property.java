@@ -62,6 +62,10 @@ class Property {
 	public int returnRent(){
 		return rentArray[houses];
 	}
+	
+	public void doubleRent(){
+		rentArray[houses] = (rentArray[houses])*2;
+	}
 
 	public void boughtProperty(int playerNum){
 		owner = playerNum;
@@ -85,8 +89,8 @@ class Property {
 	
 	public Integer setHouses(int newHouses){	//increments or decrements how many houses are on property.
 		if(newHouses >= 0 && newHouses < rentArray.length){
-		houses = newHouses;
-		return rentArray[houses];
+			houses = newHouses;
+			return rentArray[houses];
 		}
 		else return null;
 	}

@@ -32,6 +32,7 @@ public class Board extends JPanel {
 	protected static int numberOfPlayers;
 	protected static JTextArea output;
 	private static int winner = 0;
+	protected static boolean doubled = false;
 
 	//Following variables are for tracking details of players' turns. 
 	protected static int playerTurn;
@@ -133,7 +134,7 @@ public class Board extends JPanel {
 				return;
 			}
 		}
-		
+
 		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
 
@@ -146,10 +147,10 @@ public class Board extends JPanel {
 			int i;
 			Player currPlayer = playerList.get(playerTurn);
 			currPlayer.updateBalance(30000);
-			
+
 			for (i = 0; i < properties.size(); i++){
-					currPlayer.setLocation(i);
-					buyFunction();
+				currPlayer.setLocation(i);
+				buyFunction();
 			}
 			output.append("\nYou own everything in sight, but do you feel any less empty?\n");
 		}
@@ -167,15 +168,17 @@ public class Board extends JPanel {
 		}
 
 		else if(command.equalsIgnoreCase("done")){
+			colourMultiplier();
 			doneFunction();
 		}
-		
+
 		else if(command.toLowerCase().startsWith("build ") || command.toLowerCase().startsWith("demolish ") ){
 			buildHouse(command);
 		}
 
 		else if(command.equalsIgnoreCase("roll")){
 			rollFunction();
+
 		}
 
 		else if(command.equalsIgnoreCase("help")){
@@ -288,7 +291,7 @@ public class Board extends JPanel {
 			currProperty.setOwner(playerTurn);											//Set Owner using to player whose turn it is.
 			currPlayer.updateBalance(-(currProperty.returnPrice()));					//Subtract cost from player Balance.
 			output.append("\nYou have purchased '" + currProperty.returnName() + "'\n");
-			
+
 			if(currProperty.returnColour() == 8 || currProperty.returnColour() == 9){	//If property is a utility or station.
 				int numberOwned = 0;
 				ArrayList<Property> ownedProperties = new ArrayList<Property>();
@@ -301,7 +304,7 @@ public class Board extends JPanel {
 				for(Property p : ownedProperties){
 					p.setHouses(numberOwned - 1);										//Set owned properties to rent level depending on number owned.
 				}
-				
+
 
 			}
 		}
@@ -320,9 +323,9 @@ public class Board extends JPanel {
 		}
 	}
 
-	
 
-	
+
+
 	//build a house on the property
 	public void buildHouse(String buildInstructions){
 		final Pattern propertyAndNumber = Pattern.compile("(\\w+).* (\\w+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
@@ -339,13 +342,13 @@ public class Board extends JPanel {
 			}
 			if(command.equals("demolish"))
 				propertyNumber = -(propertyNumber);	//If demolishing, we must update houses with a negative number.
-			
+
 		}
 		else{
 			output.append("\nTo use build or demolish commands, use the form;\n 'build/demolish Property_Name Number_As_Digit'\n");
 			return;
 		}
-		
+
 		Player currPlayer = playerList.get(playerTurn);
 		Property currProperty = null;
 		for(Property p : properties){					//Iterate through properties until one matching entered name is found.
@@ -368,16 +371,16 @@ public class Board extends JPanel {
 			return;
 		}
 		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
-			
-			
+
+
 			if(currProperty.setHouses(currProperty.returnHouses() + propertyNumber) != null){						//Adjust amount of houses to new level if possible.
 				int houses = currProperty.returnHouses();
-				
+
 				if(houses == 5){
-						output.append("\nThere is now a hotel on " + currProperty.returnName() +"\n");
-						}
+					output.append("\nThere is now a hotel on " + currProperty.returnName() +"\n");
+				}
 				else if(houses != 1){										//Case of subsequent houses built
-				output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
+					output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
 				}
 				else{													//Case of first house built
 					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
@@ -388,11 +391,11 @@ public class Board extends JPanel {
 				else{
 					currPlayer.updateBalance(currProperty.returnHousePrice()/2);	//add half cost of house to balance.
 				}
-					
+
 			}
 			else{
 				output.append("\nYou cannot perform further developments on this property.\nMaximum Building Level : 5\n"
-			+ "Current Building Level : " + currProperty.returnHouses() + "\n");
+						+ "Current Building Level : " + currProperty.returnHouses() + "\n");
 			}
 			return;
 		}
@@ -403,7 +406,7 @@ public class Board extends JPanel {
 			output.append("\nYou must own all properties of this colour group.\n");
 		}
 	}
-	
+
 	//go through all properties of current colour, if player doesn't own one they can't build a house
 	public boolean canBuild(int colour){
 		for(Property p : properties){
@@ -413,7 +416,7 @@ public class Board extends JPanel {
 		}
 		return true;
 	}
-	
+
 	// Function to return properties to market if player has lost.
 	public void releasePropertyFunction(){
 		for(Property p : properties){
@@ -445,15 +448,35 @@ public class Board extends JPanel {
 			//IF PLAYER CAN'T AFFORD RENT
 			else{
 				output.append("\nYou are bankrupt...\nUpon ending your turn you will exit the game and your properties will be released.");
-				
+
 				currPlayer.updateBalance(-((currPlayer.getBalance() + 1))); //indicate bankruptcy by -1 balance.
 				rentPaid = true;
 				Dice.allowedRoll = 1;										//Not allowed roll again. (Edge case of rolling doubles).
-				
+
 			}
 		}
 	}
-		
+
+	
+	public void colourMultiplier(){
+		if (doubled == false){ //this prevents the rent doubling after every turn
+			for(Property p : properties){ //iterate through properties and double the rent of any where all colours have same owner and there are no houses
+				if(p.returnOwner()!= null && p.returnOwner() == playerTurn){
+					Property tmpProperty = p;
+					if(canBuild(tmpProperty.returnColour()) == true && tmpProperty.returnHouses() == 0){
+						tmpProperty.doubleRent();
+						doubled = true;
+					}												
+				}	
+			}
+
+		}
+	}
+
+	public void diceMultiplier(){
+
+	}
+
 	//Function to determine who goes first.
 	public static void goFirst(){
 		int Roll;
