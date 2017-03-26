@@ -48,7 +48,6 @@ class Property {
 
 	public Integer returnOwner(){
 		return owner;
-
 	}
 
 	public void setOwner(int playerNum){
