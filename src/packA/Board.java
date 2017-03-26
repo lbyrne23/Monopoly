@@ -143,10 +143,13 @@ public class Board extends JPanel {
 		}
 		//TEST COMMAND USED TO PURCHASE ALL PROPERTY FOR DEBUGGING
 		else if (command.equalsIgnoreCase("Squatters Rights")){
-			for (Property p : properties){
-				if(p.returnOwner() != null){
-					p.setOwner(playerTurn);
-				}
+			int i;
+			Player currPlayer = playerList.get(playerTurn);
+			currPlayer.updateBalance(30000);
+			
+			for (i = 0; i < properties.size(); i++){
+					currPlayer.setLocation(i);
+					buyFunction();
 			}
 			output.append("\nYou own everything in sight, but do you feel any less empty?\n");
 		}
@@ -282,9 +285,25 @@ public class Board extends JPanel {
 		}
 
 		else if (currPlayer.getBalance() >= currProperty.returnPrice()){				//If player can afford property, purchase.
-			currProperty.setOwner(playerTurn);											//Set Owner using whose turn it is.
+			currProperty.setOwner(playerTurn);											//Set Owner using to player whose turn it is.
 			currPlayer.updateBalance(-(currProperty.returnPrice()));					//Subtract cost from player Balance.
 			output.append("\nYou have purchased '" + currProperty.returnName() + "'\n");
+			
+			if(currProperty.returnColour() == 8 || currProperty.returnColour() == 9){	//If property is a utility or station.
+				int numberOwned = 0;
+				ArrayList<Property> ownedProperties = new ArrayList<Property>();
+				for(Property p : properties){
+					if (p.returnColour() == currProperty.returnColour()){
+						numberOwned++;													//Record number of Utilies or Stations owned
+						ownedProperties.add(p);											//Add these properties to a list for update after
+					}
+				}
+				for(Property p : ownedProperties){
+					p.setHouses(numberOwned - 1);										//Set owned properties to rent level depending on number owned.
+				}
+				
+
+			}
 		}
 		else{
 			output.append("\nYou cannot afford this property.\n");
@@ -302,48 +321,7 @@ public class Board extends JPanel {
 	}
 
 	
-	public void demolishHouse(String propertyName){
-		Player currPlayer = playerList.get(playerTurn);
-		Property currProperty = null;
-		for(Property p : properties){					//Iterate through properties until one matching entered name is found.
-			if(p.returnName().equalsIgnoreCase(propertyName)){
-				currProperty = p;
-				break;
-			}
-		}
-		if(currProperty == null){
-			output.append("\nEntered Property Name is not valid.\nHint : \nPlease type 'st' for street and 'rd' for road.\n");
-			return;
-		}
-		if(currProperty.returnOwner() == null || currProperty.returnOwner() != playerTurn ){ //check ownership
-			output.append("\nYou don't own this property\n");
-			return;
-		}
-		if(currProperty.returnHousePrice() < 0){	// house prices set to '-1' to indicate they can't be purchased.
-			output.append("\nYou cannot build houses on Stations or Utilities\n");
-			return;
-		}
-		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
-			if(currProperty.updateRent(1) != null){						//Move the rent index to the next level.
-				int houses = currProperty.returnHouses();
-				if(houses != 1){										//Case of subsequent houses built
-				output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
-				}
-				else if(houses == 6){
-				output.append("\nThere is now a hotel on " + currProperty.returnName() +"\n");
-				}
-				else{													//Case of first house built
-					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
-				}
-				currPlayer.updateBalance(-(currProperty.returnHousePrice()));	//Update Player balance
-			}
-			else{
-				output.append("\nYou cannot build more houses on this property.\n");
-			}
-			return;
-		}
-		
-	}
+
 	
 	//build a house on the property
 	public void buildHouse(String buildInstructions){
@@ -392,7 +370,7 @@ public class Board extends JPanel {
 		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
 			
 			
-			if(currProperty.updateRent(propertyNumber) != null){						//Adjust amount of houses to new level if possible.
+			if(currProperty.setHouses(currProperty.returnHouses() + propertyNumber) != null){						//Adjust amount of houses to new level if possible.
 				int houses = currProperty.returnHouses();
 				
 				if(houses == 5){

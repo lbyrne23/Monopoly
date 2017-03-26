@@ -83,9 +83,9 @@ class Property {
 		return housePrice;
 	}
 	
-	public Integer updateRent(int update){	//increments or decrements how many houses are on property.
-		if((houses + update) >= 0 && (houses + update) < rentArray.length){
-		houses = houses + update;
+	public Integer setHouses(int newHouses){	//increments or decrements how many houses are on property.
+		if(newHouses >= 0 && newHouses < rentArray.length){
+		houses = newHouses;
 		return rentArray[houses];
 		}
 		else return null;
