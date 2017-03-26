@@ -411,11 +411,11 @@ public class Board extends JPanel {
 				}
 				if(command.equalsIgnoreCase("build")){
 					currPlayer.updateBalance(-(currProperty.returnHousePrice()*propertyNumber));	//remove cost of house from player balance
-					output.append("\nYou have spent £" + (currProperty.returnHousePrice()/2)*propertyNumber + ".\n");
+					output.append("\nYou have spent £" + ((currProperty.returnHousePrice())*propertyNumber) + ".\n");
 				}
 				else{
-					currPlayer.updateBalance(currProperty.returnHousePrice()/2);	//add half cost of house to balance.
-					output.append("\nYou have earned £" + (currProperty.returnHousePrice()/2)*propertyNumber + ".\n");
+					currPlayer.updateBalance((currProperty.returnHousePrice()/2)*-1*propertyNumber);	//add half cost of houses to balance.
+					output.append("\nYou have earned £" + ((currProperty.returnHousePrice())*-1*propertyNumber)/2 + ".\n");
 				}
 
 			}
