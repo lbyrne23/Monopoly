@@ -80,20 +80,20 @@ public class Board extends JPanel {
 		}
 		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
 			info = tmpProperty.returnName() 
-					+ " ; \n-This property is on the market for £" + tmpProperty.returnPrice() 
-					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n"
+					+ " ; \n-This property is on the market for Â£" + tmpProperty.returnPrice() 
+					+ "\n-It has rent of Â£" + tmpProperty.returnRent() + ".\n"
 					+ "\nEnter 'buy' if you wish to purchase this property.\n"
 					+ "Enter 'help' for all other commands\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){														//owner is current player
 			info = tmpProperty.returnName() + " ; This is your property. "
-					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+					+ "\n-It has rent of Â£" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else{											
 			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//owner > 0, i.e. owned property.
-					+ " owns this property.\nYou must pay rent of £" + tmpProperty.returnRent() + ".\n";		// you must pay rent.
+					+ " owns this property.\nYou must pay rent of Â£" + tmpProperty.returnRent() + ".\n";		// you must pay rent.
 			rentPaid = false;																					//set rentPaid tracker to false.
 		}
 
@@ -170,6 +170,11 @@ public class Board extends JPanel {
 			String propInputName = command.substring(9);
 			mortgageFunction(propInputName);
 		}
+		
+		else if(command.toLowerCase().startsWith("redeem ")){
+			String propInputName = command.substring(7);
+			redeemFunction(propInputName);
+		}
 
 		else if(command.equalsIgnoreCase("pay rent")){
 			payRentFunction();
@@ -194,7 +199,7 @@ public class Board extends JPanel {
 		}
 
 		else if(command.equalsIgnoreCase("balance")){
-			output.append("\nYour balance: £" + playerList.get(playerTurn).getBalance() + "\n");
+			output.append("\nYour balance: Â£" + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
 		else if(command.equalsIgnoreCase("quit")){
@@ -222,7 +227,7 @@ public class Board extends JPanel {
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
-				output.append("\nYou've passed GO!\n£200 has been added to your balance.\n");
+				output.append("\nYou've passed GO!\nÂ£200 has been added to your balance.\n");
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
@@ -249,7 +254,8 @@ public class Board extends JPanel {
 				+ "'buy' : Buy property of square you landed on.\n"
 				+ "'property' : Query the properties you currently own.\n"
 				+ "'balance' : Query your current balance.\n"
-				+ "'mortgage *short name of property*' : Mortgage one of your properties.	(Incomplete function)\n"
+				+ "'mortgage <property short name>' : Mortgage one of your properties.\n"
+				+ "'redeem <property short name>' : Redeem a property you've mortgaged.\n"
 				+ "'done' : Finish your turn.\n"
 				+ "'quit' : Quit the game.\n");
 	}
@@ -308,7 +314,7 @@ public class Board extends JPanel {
 				ArrayList<Property> ownedProperties = new ArrayList<Property>();
 				for(Property p : properties){
 					if (p.returnColour() == currProperty.returnColour()){
-						numberOwned++;													//Record number of Utilies or Stations owned
+						numberOwned++;													//Record number of Utilities or Stations owned
 						ownedProperties.add(p);											//Add these properties to a list for update after
 					}
 				}
@@ -329,28 +335,71 @@ public class Board extends JPanel {
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
+				output.append("\n" + p.returnName() + " : \n-The current rent is Â£" + p.returnRent() +"\n");
 			}
 		}
 	}
 
 	//Function to mortgage a property for the current player.
 	public void mortgageFunction(String propInputName){
+		int count = 0;
 		Player currPlayer = playerList.get(playerTurn);
+		
 		for(Property p: properties){														//Cycle through all properties.
-			if(p.returnOwner() != null && p.returnOwner() == playerTurn){					//Condition to narrow the cycle to all properties the player owns.
-				if(propInputName.equalsIgnoreCase(p.returnShortName())){					//If the name entered by the user is equals the short name of a property.
-//					Property propObject =  Property.returnMortgage();
-					int mortgageValue = Property.returnMortgage();
-
-					playerList.get(playerTurn).updateBalance(mortgageValue);
-					output.append("You wishhh to mortgage " + p.returnShortName());
+			Property currProperty = properties.get(currPlayer.getPosition());
+			
+			if(p.returnOwner() != null 
+					&& p.returnOwner() == playerTurn 
+					&& propInputName.equalsIgnoreCase(p.returnShortName())){				//Condition to narrow the cycle to all properties the player owns that's short name equals the name inputed.
+				
+				if(currProperty.isMortgage() == 0){											//Checking the property hasn't been mortgaged yet.												//
+					currProperty.mortgage();
+					
+					playerList.get(playerTurn).updateBalance(currProperty.mortgage());		//Updating balance to the properties mortgage value.
+										
+					output.append("\nYou have mortgaged " + p.returnName() + "\n");
+					count++;
+				} else {
+					output.append("\nThis property has already been mortgaged.\n");
+					count++;
 				}
 			}
 		}
+		
+		if(count == 0){																		//Outputting for when nothing happens.
+			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
+		}
 	}
 	
-	//build or demolish a house on the property
+	//Function to redeem a property. (See mortgageFunction for similar comments)
+	public void redeemFunction(String propInputName){
+		int count = 0;
+		Player currPlayer = playerList.get(playerTurn);
+		
+		for(Property p: properties){
+			Property currProperty = properties.get(currPlayer.getPosition());
+			
+			if(p.returnOwner() != null && p.returnOwner() == playerTurn && propInputName.equalsIgnoreCase(p.returnShortName())){
+				if(currProperty.isMortgage() == 1){
+					playerList.get(playerTurn).updateBalance(currProperty.redeem());
+					
+					currProperty.redeem();
+					
+					output.append("\nYou have redeemed " + currProperty.returnName() + "\n");
+					count++;
+				} else {
+					output.append("\nThis property is not being mortgaged.\n");
+					count++;
+				}
+			}
+		}
+		
+		if(count == 0){
+			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
+		}
+	}
+	
+	//build a house on the property
 	public void buildHouse(String buildInstructions){
 		final Pattern propertyAndNumber = Pattern.compile("(\\w+).* (\\w+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
 		final Matcher m = propertyAndNumber.matcher(buildInstructions);
@@ -391,10 +440,10 @@ public class Board extends JPanel {
 			return;
 		}
 		if(currProperty.returnHousePrice() < 0){	// house prices set to '-1' to indicate they can't be purchased.
-			output.append("\nNeither Stations nor Utilities can be developed.\n");
+			output.append("\nNeither Stations nor Utilities\n");
 			return;
 		}
-		else if (currPlayer.getBalance() >= currProperty.returnHousePrice()*propertyNumber && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
+		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
 
 
 			if(currProperty.setHouses(currProperty.returnHouses() + propertyNumber) != null){						//Adjust amount of houses to new level if possible.
@@ -411,11 +460,11 @@ public class Board extends JPanel {
 				}
 				if(command.equalsIgnoreCase("build")){
 					currPlayer.updateBalance(-(currProperty.returnHousePrice()*propertyNumber));	//remove cost of house from player balance
-					output.append("\nYou have spent £" + ((currProperty.returnHousePrice())*propertyNumber) + ".\n");
+					output.append("\nYou have spent ï¿½" + ((currProperty.returnHousePrice())*propertyNumber) + ".\n");
 				}
 				else{
 					currPlayer.updateBalance((currProperty.returnHousePrice()/2)*-1*propertyNumber);	//add half cost of houses to balance.
-					output.append("\nYou have earned £" + ((currProperty.returnHousePrice())*-1*propertyNumber)/2 + ".\n");
+					output.append("\nYou have earned ï¿½" + ((currProperty.returnHousePrice())*-1*propertyNumber)/2 + ".\n");
 				}
 
 			}
@@ -425,7 +474,7 @@ public class Board extends JPanel {
 			}
 			return;
 		}
-		else if(currPlayer.getBalance() < currProperty.returnHousePrice()*propertyNumber){	//Case that they can't afford to build
+		else if(currPlayer.getBalance() < currProperty.returnHousePrice()){	//Case that they can't afford to build
 			output.append("\nYou cannot afford to build here\n");
 		}
 		else{																// Case that they don't own all properties.
@@ -468,7 +517,7 @@ public class Board extends JPanel {
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
-				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
+				output.append("\nYou have paid " + debtor.getName() + " Â£" + rent + "\n");
 				rentPaid = true;
 			}
 			//IF PLAYER CAN'T AFFORD RENT
@@ -508,6 +557,7 @@ public class Board extends JPanel {
 		if(currProperty.returnColour() == 9){
 			currProperty.diceRent(aRoll);
 		}
+			
 	}
 
 	//Function to determine who goes first.
@@ -572,9 +622,9 @@ public class Board extends JPanel {
 		output.append("\n"); //its for aesthetics plz trust me
 
 		for(int i = 0; i < numberOfPlayers; i++){
-			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getTotal() + " worth of properties "
-					+ "and £"+ playerList.get(i).getBalance() +" current balance.\n"
-					+ "Total: £" 
+			output.append(playerList.get(i).getName() + " : Â£" + playerList.get(i).getTotal() + " worth of properties "
+					+ "and Â£"+ playerList.get(i).getBalance() +" current balance.\n"
+					+ "Total: Â£" 
 					+ (playerList.get(i).getTotal()+playerList.get(i).getBalance()) + "\n");  //Print balances to screen.
 		}
 
@@ -597,7 +647,7 @@ public class Board extends JPanel {
 
 		if(draw == false){
 			output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
-					+ " with £" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets.\n");
+					+ " with Â£" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets.\n");
 		}
 		if (draw == true){
 			output.append("No Winner! There is a draw. ");

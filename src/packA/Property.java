@@ -5,8 +5,6 @@ package packA;
 //Fiachra Dunn
 //
 
-import java.util.ArrayList;
-
 class Property {
 	private String name, shortName;
 	private Integer owner;
@@ -14,6 +12,7 @@ class Property {
 	private int houses = 0;
 	private int colour;
 	private int mortgage;
+	private int mortgagedProperty;
 	private int[] rentArray;
 	private int housePrice;
 	
@@ -22,7 +21,7 @@ class Property {
 		name = nameIN;
 	}
 
-	public Property(String nameIN, String shortNameIN, int ownerIN, int priceIN, int[] rentIN, int colourIN, int mortgageIN, int houseIN){
+	public Property(String nameIN, String shortNameIN, int ownerIN, int priceIN, int[] rentIN, int colourIN, int mortgageIN, int mortgagedPropertyIN, int houseIN){
 		name = nameIN;
 		shortName = shortNameIN;
 		owner = ownerIN;
@@ -30,6 +29,7 @@ class Property {
 		rentArray = rentIN;
 		colour = colourIN;
 		mortgage = mortgageIN;
+		mortgagedProperty = mortgagedPropertyIN;		//If property is mortgaged, this value is changed from 0 to 1.
 		housePrice = houseIN;
 	}
 	
@@ -78,10 +78,21 @@ class Property {
 		return colour;
 	}
 	
-	public int returnMortgage(){
+	public int mortgage(){
+		mortgagedProperty = 1;
 		return mortgage;
 	}
 	
+	public int isMortgage(){
+		return mortgagedProperty;
+	}
+	
+	public int redeem(){
+		double temp = mortgage * 1.1;
+		int redeemValue = (int)temp * -1;
+		mortgagedProperty = 0;
+		return redeemValue;
+	}
 	public int returnHouses(){
 		return houses;
 	}
