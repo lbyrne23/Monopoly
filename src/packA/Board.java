@@ -75,7 +75,7 @@ public class Board extends JPanel {
 		Property tmpProperty = properties.get(tmpPlayer.getPosition());
 		String info;
 
-		if(tmpProperty.returnOwner() == null){									 //ie unbuyable property, just return name for now
+		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
 			info = tmpProperty.returnName() + "\n";
 		}
 		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
@@ -86,15 +86,15 @@ public class Board extends JPanel {
 					+ "Enter 'help' for all other commands\n";
 		}
 
-		else if(tmpProperty.returnOwner() == playerTurn){														//owner is current player
+		else if(tmpProperty.returnOwner() == playerTurn){														//Owner is current player.
 			info = tmpProperty.returnName() + " ; This is your property. "
 					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else{											
-			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//owner > 0, i.e. owned property.
-					+ " owns this property.\nYou must pay rent of £" + tmpProperty.returnRent() + ".\n";		// you must pay rent.
-			rentPaid = false;																					//set rentPaid tracker to false.
+			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
+					+ " owns this property.\nYou must pay rent of £" + tmpProperty.returnRent() + ".\n";		//You must pay rent.
+			rentPaid = false;																					//Set rentPaid tracker to false.
 		}
 
 		return info;
@@ -109,7 +109,7 @@ public class Board extends JPanel {
 				playerTurn++;
 				output.append("Roll to see who goes first.\n");
 
-				goFirst();														//function to arrange players based on dice rolls.
+				goFirst();														//Function to arrange players based on dice rolls.
 
 				output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
 				return;
@@ -145,7 +145,7 @@ public class Board extends JPanel {
 		if(command.equalsIgnoreCase("buy")){
 			buyFunction();
 		}
-		//TEST COMMAND USED TO PURCHASE ALL PROPERTY FOR DEBUGGING
+		//TEST COMMAND USED TO PURCHASE ALL PROPERTY FOR DEBUGGING.
 		else if (command.equalsIgnoreCase("Squatters Rights")){
 			int i;
 			Player currPlayer = playerList.get(playerTurn);
@@ -157,7 +157,7 @@ public class Board extends JPanel {
 			}
 			output.append("\nYou own everything in sight, but do you feel any less empty?\n");
 		}
-		//TEST COMMAND USED TO ENTER BANKRUPTCY
+		//TEST COMMAND USED TO ENTER BANKRUPTCY.
 		else if(command.equalsIgnoreCase("purchase bit coin")){
 			playerList.get(playerTurn).updateBalance(-3000);
 		}
@@ -234,7 +234,7 @@ public class Board extends JPanel {
 			output.append("\n"+ Dice.words() + "\n");
 			repaint();
 			
-			diceMultiplier(thisRoll); //this checks if rent needs to be multiplied by the roll
+			diceMultiplier(thisRoll); 											//This checks if rent needs to be multiplied by the roll.
 			
 			output.append(squareInfo());
 
@@ -263,16 +263,16 @@ public class Board extends JPanel {
 	//Function to end turn. Also takes bankruptcy into account.
 	public void doneFunction(){
 		Player currPlayer = playerList.get(playerTurn);
-		if(rentPaid && currPlayer.getBalance()<0){											//If out of money
-			releasePropertyFunction();														//Return properties to Market
-			playerList.remove(playerTurn);													//Remove player from game
-			numberOfPlayers--;																//Player Turn stays on same index, unless last player removed.
+		if(rentPaid && currPlayer.getBalance()<0){										//If out of money.
+			releasePropertyFunction();													//Return properties to Market.
+			playerList.remove(playerTurn);												//Remove player from game.
+			numberOfPlayers--;															//Player Turn stays on same index, unless last player removed.
 			repaint();
 			playerTurn = (playerTurn)%numberOfPlayers;		
-			if(numberOfPlayers == 1){															//If player is last remaining player
+			if(numberOfPlayers == 1){													//If player is last remaining player.
 				winner = playerTurn;
 				output.append("\nGame Over. Winner is " + playerList.get(winner).getName() + "\n");
-				playerList.clear();																//remove final player
+				playerList.clear();														//Remove final player.
 				repaint();
 			}
 			else{										
@@ -282,14 +282,14 @@ public class Board extends JPanel {
 
 		}
 
-		if (!rentPaid){																		//If rent not paid, not allowed end.
+		if (!rentPaid){																	//If rent not paid, not allowed end.
 			output.append("\nYou cannot end your turn with outstanding rent.\n");
 		}
 
 		else if (Dice.allowedRoll == 0 || Dice.allowedRoll == 2){						// If dice not rolled, not allowed end.
 			output.append("\nYou cannot end your turn without rolling.\n");
 		}
-		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){						//If dice rolled and rent-paid allowed end turn
+		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){						//If dice rolled and rent-paid allowed end turn.
 			Dice.allowedRoll = 0;
 			playerTurn = (playerTurn+1)%numberOfPlayers;
 			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
@@ -314,8 +314,8 @@ public class Board extends JPanel {
 				ArrayList<Property> ownedProperties = new ArrayList<Property>();
 				for(Property p : properties){
 					if (p.returnColour() == currProperty.returnColour()){
-						numberOwned++;													//Record number of Utilities or Stations owned
-						ownedProperties.add(p);											//Add these properties to a list for update after
+						numberOwned++;													//Record number of Utilities or Stations owned.
+						ownedProperties.add(p);											//Add these properties to a list for update after.
 					}
 				}
 				for(Property p : ownedProperties){
@@ -352,7 +352,7 @@ public class Board extends JPanel {
 					&& p.returnOwner() == playerTurn 
 					&& propInputName.equalsIgnoreCase(p.returnShortName())){				//Condition to narrow the cycle to all properties the player owns that's short name equals the name inputed.
 				
-				if(currProperty.isMortgage() == 0){											//Checking the property hasn't been mortgaged yet.												//
+				if(currProperty.isMortgage() == 0){											//Checking the property hasn't been mortgaged yet.
 					currProperty.mortgage();
 					
 					playerList.get(playerTurn).updateBalance(currProperty.mortgage());		//Updating balance to the properties mortgage value.
@@ -371,7 +371,7 @@ public class Board extends JPanel {
 		}
 	}
 	
-	//Function to redeem a property. (See mortgageFunction for similar comments)
+	//Function to redeem a property. (See mortgageFunction for equivalent comments. Layout is similar)
 	public void redeemFunction(String propInputName){
 		int count = 0;
 		Player currPlayer = playerList.get(playerTurn);
@@ -399,7 +399,7 @@ public class Board extends JPanel {
 		}
 	}
 	
-	//build a house on the property
+	//Build a house on the property.
 	public void buildHouse(String buildInstructions){
 		final Pattern propertyAndNumber = Pattern.compile("(\\w+).* (\\w+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
 		final Matcher m = propertyAndNumber.matcher(buildInstructions);
@@ -414,7 +414,7 @@ public class Board extends JPanel {
 				return;
 			}
 			if(command.equals("demolish"))
-				propertyNumber = -(propertyNumber);	//If demolishing, we must update houses with a negative number.
+				propertyNumber = -(propertyNumber);												//If demolishing, we must update houses with a negative number.
 
 		}
 		else{
@@ -424,68 +424,73 @@ public class Board extends JPanel {
 
 		Player currPlayer = playerList.get(playerTurn);
 		Property currProperty = null;
-		for(Property p : properties){					//Iterate through properties until one matching entered name is found.
+		for(Property p : properties){															//Iterate through properties until one matching entered name is found.
 			if(p.returnShortName()!= null && p.returnShortName().equalsIgnoreCase(propertyName)){
 				currProperty = p;
 				break;
 			}
 		}
 		if(currProperty == null){
-			output.append("\nEntered Property Name is not valid.\nHint : Enter first part of name except; \nFor Pall Mall enter 'Mall'\nFor Old Kent Road enter 'kent'\n"
-					+ "For The Angel Islington type 'Islington'\n For King's Cross Station enter 'Kings'\n");
+			output.append("\nEntered Property Name is not valid.\n"
+					+ "Hint : Enter first part of name except;\n"
+					+ "For Pall Mall enter 'Mall'\n"
+					+ "For Old Kent Road enter 'kent'\n"
+					+ "For The Angel Islington type 'Islington'\n"
+					+ "For King's Cross Station enter 'Kings'\n");
 			return;
 		}
-		if(currProperty.returnOwner() == null || currProperty.returnOwner() != playerTurn ){ //check ownership
+		if(currProperty.returnOwner() == null || currProperty.returnOwner() != playerTurn ){ 		//Check ownership.
 			output.append("\nYou don't own this property\n");
 			return;
 		}
-		if(currProperty.returnHousePrice() < 0){	// house prices set to '-1' to indicate they can't be purchased.
+		if(currProperty.returnHousePrice() < 0){													//House prices set to '-1' to indicate they can't be purchased.
 			output.append("\nNeither Stations nor Utilities\n");
 			return;
 		}
-		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ // check if they can afford it and if they own all the colour group
+		else if (currPlayer.getBalance() >= currProperty.returnHousePrice() && canBuild(currProperty.returnColour()) == true){ //Check if they can afford it and if they own all the colour group.
 
 
-			if(currProperty.setHouses(currProperty.returnHouses() + propertyNumber) != null){						//Adjust amount of houses to new level if possible.
+			if(currProperty.setHouses(currProperty.returnHouses() + propertyNumber) != null){		//Adjust amount of houses to new level if possible.
 				int houses = currProperty.returnHouses();
 
 				if(houses == 5){
 					output.append("\nThere is now a hotel on " + currProperty.returnName() +"\n");
 				}
-				else if(houses != 1){										//Case of subsequent houses built
+				else if(houses != 1){																										//Case of subsequent houses built.
 					output.append("\nThere are now " + currProperty.returnHouses() + " houses on " + currProperty.returnName() +"\n");
 				}
-				else{													//Case of first house built
+				else{																														//Case of first house built.
 					output.append("\nThere is now " + currProperty.returnHouses() + " house on " + currProperty.returnName() +"\n");
 				}
 				if(command.equalsIgnoreCase("build")){
-					currPlayer.updateBalance(-(currProperty.returnHousePrice()*propertyNumber));	//remove cost of house from player balance
-					output.append("\nYou have spent �" + ((currProperty.returnHousePrice())*propertyNumber) + ".\n");
+					currPlayer.updateBalance(-(currProperty.returnHousePrice()*propertyNumber));											//Remove cost of house from player balance.
+					output.append("\nYou have spent £" + ((currProperty.returnHousePrice())*propertyNumber) + ".\n");
 				}
 				else{
-					currPlayer.updateBalance((currProperty.returnHousePrice()/2)*-1*propertyNumber);	//add half cost of houses to balance.
-					output.append("\nYou have earned �" + ((currProperty.returnHousePrice())*-1*propertyNumber)/2 + ".\n");
+					currPlayer.updateBalance((currProperty.returnHousePrice()/2)*-1*propertyNumber);										//Add half cost of houses to balance.
+					output.append("\nYou have earned £" + ((currProperty.returnHousePrice())*-1*propertyNumber)/2 + ".\n");
 				}
 
 			}
 			else{
-				output.append("\nYou cannot perform further developments on this property.\nMaximum Building Level : 5\n"
+				output.append("\nYou cannot perform further developments on this property.\n"
+						+ "Maximum Building Level : 5\n"
 						+ "Current Building Level : " + currProperty.returnHouses() + "\n");
 			}
 			return;
 		}
-		else if(currPlayer.getBalance() < currProperty.returnHousePrice()){	//Case that they can't afford to build
+		else if(currPlayer.getBalance() < currProperty.returnHousePrice()){				//Case that they can't afford to build.
 			output.append("\nYou cannot afford to build here\n");
 		}
-		else{																// Case that they don't own all properties.
+		else{																			//Case that they don't own all properties.
 			output.append("\nYou must own all properties of this colour group.\n");
 		}
 	}
 
-	//go through all properties of current colour, if player doesn't own one they can't build a house
+	//Go through all properties of current colour, if player doesn't own one they can't build a house.
 	public boolean canBuild(int colour){
 		for(Property p : properties){
-			if(p.returnOwner()!= null && p.returnOwner() != playerTurn && p.returnColour() == colour){ //If property can be owned, is owned by player and is of defined colour.
+			if(p.returnOwner()!= null && p.returnOwner() != playerTurn && p.returnColour() == colour){ 		//If property can be owned, is owned by player and is of defined colour.
 				return false;																			
 			}	
 		}
@@ -501,41 +506,41 @@ public class Board extends JPanel {
 		}
 	}
 
-	//function to payrent on current square
+	//Function to payRent on current square.
 	public void payRentFunction(){
 		if(rentPaid){
 			output.append("\nThere is no rent owed.");
 		}
 
-		else{	// Pay Rent
+		else{	//Pay Rent
 			Player currPlayer = playerList.get(playerTurn);
 			Property currProperty = properties.get(currPlayer.getPosition());		//Get player, property and owner of property.
 			Player debtor = playerList.get(currProperty.returnOwner());
 			int rent = currProperty.returnRent();
 
-			//IF PLAYER CAN AFFORD RENT
+			//IF PLAYER CAN AFFORD RENT.
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
 				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
 				rentPaid = true;
 			}
-			//IF PLAYER CAN'T AFFORD RENT
+			//IF PLAYER CAN'T AFFORD RENT.
 			else{
 				output.append("\nYou are bankrupt...\nUpon ending your turn you will exit the game and your properties will be released.");
 
-				currPlayer.updateBalance(-((currPlayer.getBalance() + 1))); //indicate bankruptcy by -1 balance.
+				currPlayer.updateBalance(-((currPlayer.getBalance() + 1))); 		//Indicate bankruptcy by -1 balance.
 				rentPaid = true;
-				Dice.allowedRoll = 1;										//Not allowed roll again. (Edge case of rolling doubles).
+				Dice.allowedRoll = 1;												//Not allowed roll again. (Edge case of rolling doubles)
 
 			}
 		}
 	}
 
-	//If player owns all of colour group, and a square has no houses, the rent of the square with no houses is doubled
+	//If player owns all of colour group, and a square has no houses, the rent of the square with no houses is doubled.
 	public void colourMultiplier(){
-		if (doubled == false){ //this prevents the rent doubling after every turn
-			for(Property p : properties){ //iterate through properties and double the rent of any where all colours have same owner and there are no houses
+		if (doubled == false){ 														//This prevents the rent doubling after every turn.
+			for(Property p : properties){ 											//Iterate through properties and double the rent of any where all colours have same owner and there are no houses.
 				if(p.returnOwner()!= null && p.returnOwner() == playerTurn){
 					Property tmpProperty = p;
 					if(canBuild(tmpProperty.returnColour()) == true && tmpProperty.returnHouses() == 0){
@@ -548,8 +553,8 @@ public class Board extends JPanel {
 		}
 	}
 
-	//If player lands on a utility, check how many utilities are owned by the same player
-	//rent = diceRoll* 4 if onlt 1 is owned, and rent = diceRoll*10 if both are owned
+	//If player lands on a utility, check how many utilities are owned by the same player.
+	//rent=diceRoll*4 if only one is owned, and rent=diceRoll*10 if both are owned.
 	public void diceMultiplier(int aRoll){
 		Player tmpPlayer = playerList.get(playerTurn);
 		Property currProperty = properties.get(tmpPlayer.getPosition());

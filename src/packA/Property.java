@@ -101,13 +101,11 @@ class Property {
 		return housePrice;
 	}
 	
-	public Integer setHouses(int newHouses){	//sets how many houses are on property.
+	public Integer setHouses(int newHouses){	//Sets how many houses are on property.
 		if(newHouses >= 0 && newHouses < rentArray.length){
 			houses = newHouses;
 			return rentArray[houses];
 		}
 		else return null;
 	}
-
-	
 }
