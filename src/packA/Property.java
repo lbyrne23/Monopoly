@@ -21,16 +21,16 @@ class Property {
 		name = nameIN;
 	}
 
-	public Property(String nameIN, String shortNameIN, int ownerIN, int priceIN, int[] rentIN, int colourIN, int mortgageIN, int mortgagedPropertyIN, int houseIN){
-		name = nameIN;
-		shortName = shortNameIN;
-		owner = ownerIN;
-		price = priceIN;
-		rentArray = rentIN;
-		colour = colourIN;
-		mortgage = mortgageIN;
-		mortgagedProperty = mortgagedPropertyIN;		//If property is mortgaged, this value is changed from 0 to 1.
-		housePrice = houseIN;
+	public Property(String name, String shortName, int owner, int price, int[] rent, int colour, int mortgage, int mortgagedProperty, int housePrice){
+		this.name = name;
+		this.shortName = shortName;
+		this.owner = owner;
+		this.price = price;
+		this.rentArray = rent;
+		this.colour = colour;
+		this.mortgage = mortgage;
+		this.mortgagedProperty = mortgagedProperty;			//If property is mortgaged, this value is changed from 0 to 1.
+		this.housePrice = housePrice;
 	}
 	
 	public Property(String nameIN, int[] rentIN){
