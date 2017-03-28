@@ -147,8 +147,9 @@ public class Player extends JLabel{
 		return money;
 	}
 
-	public void updateBalance(int amount){
+	public int updateBalance(int amount){
 		money = money + amount;
+		return money;
 	}
 
 	public int getTotal(){

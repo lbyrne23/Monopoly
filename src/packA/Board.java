@@ -25,7 +25,7 @@ import javax.swing.JTextArea;
 import packA.Player;
 
 
-public class Board extends JPanel {
+public final class Board extends JPanel {
 	private BufferedImage  image = null;	
 	protected static ArrayList<Player> playerList = new ArrayList<Player>(6);			//Array list to store players.
 	protected static PropertyList properties = new PropertyList();
@@ -141,9 +141,11 @@ public class Board extends JPanel {
 
 		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
-
+		if(bankrupt &&  ! command.equalsIgnoreCase("done")){
+			output.append("\nYou are bankrupt, please end your turn.\nTry entering 'done'\n");
+		}
 		//Assessing command.
-		if(command.equalsIgnoreCase("buy")){
+		else if(command.equalsIgnoreCase("buy")){
 			buyFunction();
 		}
 		//TEST COMMAND USED TO PURCHASE ALL PROPERTY FOR DEBUGGING.
@@ -160,7 +162,7 @@ public class Board extends JPanel {
 		}
 		//TEST COMMAND USED TO ENTER BANKRUPTCY.
 		else if(command.equalsIgnoreCase("purchase bit coin")){
-			playerList.get(playerTurn).updateBalance(-3000);
+			playerList.get(playerTurn).updateBalance(-1499);
 		}
 
 		else if(command.equalsIgnoreCase("property")){
@@ -271,37 +273,46 @@ public class Board extends JPanel {
 	//Function to handle bankruptcy.
 	public void bankruptFunction(){
 		Player currPlayer = playerList.get(playerTurn);
-		if(currPlayer.getBalance() < 0){
+		Property currProperty = properties.get(currPlayer.getPosition());
+		if(currPlayer.getBalance() < currProperty.returnRent()){
 			bankrupt = true;
 			output.append("\nYou have declared bankruptcy, upon ending your turn you will leave the game.\n");
 		}
 		else{
 			bankrupt = false;
-			output.append("\nYou cannot declare bankruptcy if your balance is above 0\n");
+			output.append("\nYou cannot declare bankruptcy if you can afford the rent.\n");
 		}
 	}
 
 	//Function to end turn. Also takes bankruptcy into account.
 	public void doneFunction(){
 		Player currPlayer = playerList.get(playerTurn);
-		if(bankrupt){										//If out of money.
+		if(bankrupt){										//If out of money.								
 			releasePropertyFunction();													//Return properties to Market.
 			playerList.remove(playerTurn);												//Remove player from game.
 			numberOfPlayers--;															//Player Turn stays on same index, unless last player removed.
+			output.append("\n" + currPlayer.getName()	+ " has been removed from the game\n");		
 			repaint();
-			playerTurn = (playerTurn)%numberOfPlayers;		
+			playerTurn = (playerTurn)%numberOfPlayers;	
+			
+			
 			if(numberOfPlayers == 1){													//If player is last remaining player.
 				winner = playerTurn;
 				output.append("\nGame Over. Winner is " + playerList.get(winner).getName() + "\n");
 				playerList.clear();														//Remove final player.
 				repaint();
+				return;
 			}
-			else{										
-				Dice.allowedRoll = 0;
+			else{
+				rentPaid = true;														//reset rentPaid
+				bankrupt = false; 														//reset bankruptcy
+				Dice.allowedRoll = 0;													//Allow player to roll again.
 				output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 			}
+			return;
 
 		}
+		
 
 		if (!rentPaid){																	//If rent not paid, not allowed end.
 			output.append("\nYou cannot end your turn with outstanding rent.\n");
@@ -541,19 +552,17 @@ public class Board extends JPanel {
 
 			//IF PLAYER CAN AFFORD RENT.
 			if(currPlayer.getBalance() >= rent){
-				currPlayer.updateBalance(-(rent));
+				if(currPlayer.updateBalance(-(rent)) < 0){
+				}
+				else{
 				debtor.updateBalance(rent);
 				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
 				rentPaid = true;
+				}
 			}
 			//IF PLAYER CAN'T AFFORD RENT.
 			else{
-				output.append("\nYou are bankrupt...\nUpon ending your turn you will exit the game and your properties will be released.");
-
-				currPlayer.updateBalance(-((currPlayer.getBalance() + 1))); 		//Indicate bankruptcy by -1 balance.
-				rentPaid = true;
-				Dice.allowedRoll = 1;												//Not allowed roll again. (Edge case of rolling doubles)
-
+				output.append("\nYou cannot afford this.  Please raise additional funds, \nor declare bankruptcy.\n\nCommand : 'bankrupt'\n");
 			}
 		}
 	}
