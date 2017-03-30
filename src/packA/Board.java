@@ -374,7 +374,7 @@ public class Board extends JPanel {
 					&& propInputName.equalsIgnoreCase(p.returnShortName())){				//Condition to narrow the cycle to all properties the player owns that's short name equals the name inputed.
 				
 				if(currProperty.isMortgage() == 0){											//Checking the property hasn't been mortgaged yet.
-					if (currProperty.returnHouses() == 0){
+					if (currProperty.returnHouses() == 0){										//Making sure there aren't houses.
 						currProperty.mortgage();
 						
 						playerList.get(playerTurn).updateBalance(currProperty.mortgage());		//Updating balance to the properties mortgage value.
