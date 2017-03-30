@@ -81,20 +81,20 @@ public class Board extends JPanel {
 		}
 		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
 			info = tmpProperty.returnName() 
-					+ " ; \n-This property is on the market for £" + tmpProperty.returnPrice() 
-					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n"
+					+ " ; \n-This property is on the market for ï¿½" + tmpProperty.returnPrice() 
+					+ "\n-It has rent of ï¿½" + tmpProperty.returnRent() + ".\n"
 					+ "\nEnter 'buy' if you wish to purchase this property.\n"
 					+ "Enter 'help' for all other commands\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){														//Owner is current player.
 			info = tmpProperty.returnName() + " ; This is your property. "
-					+ "\n-It has rent of £" + tmpProperty.returnRent() + ".\n";
+					+ "\n-It has rent of ï¿½" + tmpProperty.returnRent() + ".\n";
 		}
 
 		else{											
 			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
-					+ " owns this property.\nYou must pay rent of £" + tmpProperty.returnRent() + ".\n";		//You must pay rent.
+					+ " owns this property.\nYou must pay rent of ï¿½" + tmpProperty.returnRent() + ".\n";		//You must pay rent.
 			rentPaid = false;																					//Set rentPaid tracker to false.
 		}
 
@@ -200,7 +200,7 @@ public class Board extends JPanel {
 		}
 
 		else if(command.equalsIgnoreCase("balance")){
-			output.append("\nYour balance: £" + playerList.get(playerTurn).getBalance() + "\n");
+			output.append("\nYour balance: ï¿½" + playerList.get(playerTurn).getBalance() + "\n");
 		}
 
 		else if(command.equalsIgnoreCase("bankrupt")){
@@ -232,7 +232,7 @@ public class Board extends JPanel {
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
-				output.append("\nYou've passed GO!\n£200 has been added to your balance.\n");
+				output.append("\nYou've passed GO!\nï¿½200 has been added to your balance.\n");
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
@@ -356,7 +356,7 @@ public class Board extends JPanel {
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is £" + p.returnRent() +"\n");
+				output.append("\n" + p.returnName() + " : \n-The current rent is ï¿½" + p.returnRent() +"\n");
 			}
 		}
 	}
@@ -374,11 +374,16 @@ public class Board extends JPanel {
 					&& propInputName.equalsIgnoreCase(p.returnShortName())){				//Condition to narrow the cycle to all properties the player owns that's short name equals the name inputed.
 				
 				if(currProperty.isMortgage() == 0){											//Checking the property hasn't been mortgaged yet.
-					currProperty.mortgage();
+					if (currProperty.returnHouses() == 0){
+						currProperty.mortgage();
+						
+						playerList.get(playerTurn).updateBalance(currProperty.mortgage());		//Updating balance to the properties mortgage value.
+											
+						output.append("\nYou have mortgaged " + p.returnName() + "\n");
+					} else {
+						output.append("You must sell all houses first.\n");
+					}
 					
-					playerList.get(playerTurn).updateBalance(currProperty.mortgage());		//Updating balance to the properties mortgage value.
-										
-					output.append("\nYou have mortgaged " + p.returnName() + "\n");
 					count++;
 				} else {
 					output.append("\nThis property has already been mortgaged.\n");
@@ -403,9 +408,7 @@ public class Board extends JPanel {
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn && propInputName.equalsIgnoreCase(p.returnShortName())){
 				if(currProperty.isMortgage() == 1){
 					playerList.get(playerTurn).updateBalance(currProperty.redeem());
-					
 					currProperty.redeem();
-					
 					output.append("\nYou have redeemed " + currProperty.returnName() + "\n");
 					count++;
 				} else {
@@ -485,11 +488,11 @@ public class Board extends JPanel {
 				}
 				if(command.equalsIgnoreCase("build")){
 					currPlayer.updateBalance(-(currProperty.returnHousePrice()*propertyNumber));											//Remove cost of house from player balance.
-					output.append("\nYou have spent £" + ((currProperty.returnHousePrice())*propertyNumber) + ".\n");
+					output.append("\nYou have spent ï¿½" + ((currProperty.returnHousePrice())*propertyNumber) + ".\n");
 				}
 				else{
 					currPlayer.updateBalance((currProperty.returnHousePrice()/2)*-1*propertyNumber);										//Add half cost of houses to balance.
-					output.append("\nYou have earned £" + ((currProperty.returnHousePrice())*-1*propertyNumber)/2 + ".\n");
+					output.append("\nYou have earned ï¿½" + ((currProperty.returnHousePrice())*-1*propertyNumber)/2 + ".\n");
 				}
 
 			}
@@ -543,7 +546,7 @@ public class Board extends JPanel {
 			if(currPlayer.getBalance() >= rent){
 				currPlayer.updateBalance(-(rent));
 				debtor.updateBalance(rent);
-				output.append("\nYou have paid " + debtor.getName() + " £" + rent + "\n");
+				output.append("\nYou have paid " + debtor.getName() + " ï¿½" + rent + "\n");
 				rentPaid = true;
 			}
 			//IF PLAYER CAN'T AFFORD RENT.
@@ -647,9 +650,9 @@ public class Board extends JPanel {
 		output.append("\n"); //its for aesthetics plz trust me
 
 		for(int i = 0; i < numberOfPlayers; i++){
-			output.append(playerList.get(i).getName() + " : £" + playerList.get(i).getTotal() + " worth of properties "
-					+ "and £"+ playerList.get(i).getBalance() +" current balance.\n"
-					+ "Total: £" 
+			output.append(playerList.get(i).getName() + " : ï¿½" + playerList.get(i).getTotal() + " worth of properties "
+					+ "and ï¿½"+ playerList.get(i).getBalance() +" current balance.\n"
+					+ "Total: ï¿½" 
 					+ (playerList.get(i).getTotal()+playerList.get(i).getBalance()) + "\n");  //Print balances to screen.
 		}
 
@@ -672,7 +675,7 @@ public class Board extends JPanel {
 
 		if(draw == false){
 			output.append("\nGame Over. Winner is " + playerList.get(winner).getName()
-					+ " with £" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets.\n");
+					+ " with ï¿½" + (playerList.get(winner).getTotal()+playerList.get(winner).getBalance()) + " worth of assets.\n");
 		}
 		if (draw == true){
 			output.append("No Winner! There is a draw. ");
