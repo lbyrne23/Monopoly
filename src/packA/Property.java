@@ -80,6 +80,7 @@ class Property {
 	
 	public int mortgage(){
 		mortgagedProperty = 1;
+		rentArray[houses] = 0;
 		return mortgage;
 	}
 	
