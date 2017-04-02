@@ -167,12 +167,12 @@ public class Board extends JPanel {
 		else if(command.equalsIgnoreCase("property")){
 			propertyFunction();
 		}
-		
+
 		else if(command.toLowerCase().startsWith("mortgage ")){
 			String propInputName = command.substring(9);
 			mortgageFunction(propInputName);
 		}
-		
+
 		else if(command.toLowerCase().startsWith("redeem ")){
 			String propInputName = command.substring(7);
 			redeemFunction(propInputName);
@@ -207,11 +207,19 @@ public class Board extends JPanel {
 		else if(command.equalsIgnoreCase("bankrupt")){
 			bankruptFunction();
 		}
-		
+
 		else if(command.equalsIgnoreCase("quit")){
 			highestPlayer();
 			playerList.clear();
 			repaint();
+		}
+
+		else if(command.equalsIgnoreCase("pay")){
+			payBail();
+		}
+		
+		else if(command.equalsIgnoreCase("jail")){
+			goToJail();
 		}
 
 		else {
@@ -219,6 +227,23 @@ public class Board extends JPanel {
 		}
 	}
 
+	public void checkJail(){
+		Player tmpPlayer = playerList.get(playerTurn);
+		if(Dice.allowedRoll == 0 && tmpPlayer.inJail() == true){
+			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn.\n");
+			output.append("You are in jail \n"
+					+ "To be released you must do one of these:\n"
+					+ "1) Use a 'get out of jail free' card \n"
+					+ "2) Pay a fine of £50 \n"
+					+ "3) Roll doubles \n"
+					+ "If you do not roll doubles by your 3rd turn in jail you must pay the fine of £50.\n"
+					+ "Enter 'roll', 'card', or 'pay' to proceed\n");
+
+			if(tmpPlayer.getJailRoll() > 0 && tmpPlayer.getJailRoll() <= 2){
+				output.append("You have " + tmpPlayer.getJailRoll() +" attempts left to roll doubles before you must pay the fine. \n");
+			}
+		}
+	}
 
 	//Function to roll dice and move player.
 	public void rollFunction(){
@@ -226,26 +251,81 @@ public class Board extends JPanel {
 			output.append("\nYou must pay rent before rolling again.\n");
 			return;																//End function here if rent is due first.
 		}
+		if (playerList.get(playerTurn).inJail() == true){
+			Player tmpPlayer = playerList.get(playerTurn);
+			int thisRoll = Dice.Roll();
 
-		if(Dice.allowedRoll == 0 || Dice.allowedRoll == 2){
+			if(Dice.allowedRoll == 2){ //if the player rolled doubles while in jail
+				output.append("\n"+ Dice.words() + "\n");
+				output.append("Congratulations, you rolled doubles! You're free to go. \n");
+				tmpPlayer.setJail(false);
+				tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
+				repaint();
+				diceMultiplier(thisRoll); 											//This checks if rent needs to be multiplied by the roll.
+				output.append(squareInfo());
+				Dice.allowedRoll = 1;
+			}
+			else {
+				output.append("\n"+ Dice.words() + "\n");
+				tmpPlayer.failedJailRoll(); //reduce number of attempts left
+				output.append("\nYou failed to roll doubles.");
+				if(tmpPlayer.getJailRoll() == 0){ //if all attempts are used up
+					output.append("You have no more attempts left.\n ");
+					payBail();
+					Dice.allowedRoll = 0;
+				}
+				else {
+					output.append("You have " + tmpPlayer.getJailRoll() +" attempts left to roll doubles before you must pay the £50 fine. \n");
+					//move to next player
+					Dice.allowedRoll = 0;
+					playerTurn = (playerTurn+1)%numberOfPlayers;
+					if(playerList.get(playerTurn).inJail() == false){
+						output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+					}
+					checkJail();
+				}
+			}
+		}
+		else if(Dice.allowedRoll == 0 || Dice.allowedRoll == 2 || Dice.allowedRoll == 4){
 			Player tmpPlayer = playerList.get(playerTurn);
 			int thisRoll = Dice.Roll();
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
 				tmpPlayer.updateBalance(200);
-				output.append("\nYou've passed GO!\nï¿½200 has been added to your balance.\n");
+				output.append("\nYou've passed GO!\n £200 has been added to your balance.\n");
 			}
 
 			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
 			output.append("\n"+ Dice.words() + "\n");
 			repaint();
-			
-			diceMultiplier(thisRoll); 											//This checks if rent needs to be multiplied by the roll.
-			
-			output.append(squareInfo());
 
-			if(Dice.allowedRoll == 2){
-				output.append("\nYou are able to roll again!\n");
+			if(tmpPlayer.getPosition() == 30){
+				goToJail();
+				Dice.allowedRoll = 0;
+				playerTurn = (playerTurn+1)%numberOfPlayers;
+				if(playerList.get(playerTurn).inJail() == false){
+					output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+				}
+				checkJail();
+			}
+			else{
+				diceMultiplier(thisRoll); 											//This checks if rent needs to be multiplied by the roll.
+
+				if(Dice.allowedRoll != 6){ //If not sent to jail, show the information about buying houses. 
+					output.append(squareInfo());
+				}
+				if(Dice.allowedRoll == 2 || Dice.allowedRoll == 4){
+					output.append("\nYou are able to roll again!\n");
+				}
+				else if (Dice.allowedRoll == 6){
+					goToJail();
+					Dice.allowedRoll = 0;
+					playerTurn = (playerTurn+1)%numberOfPlayers;
+					if(playerList.get(playerTurn).inJail() == false){
+						output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+					}
+					checkJail();
+				}
 			}
 		}
 		else{
@@ -267,8 +347,8 @@ public class Board extends JPanel {
 				+ "'done' : Finish your turn.\n"
 				+ "'quit' : Quit the game.\n");
 	}
-	
-	
+
+
 	//Function to handle bankruptcy.
 	public void bankruptFunction(){
 		Player currPlayer = playerList.get(playerTurn);
@@ -299,7 +379,10 @@ public class Board extends JPanel {
 			}
 			else{										
 				Dice.allowedRoll = 0;
-				output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+				if(playerList.get(playerTurn).inJail() == false){
+					output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+				}
+				checkJail();
 			}
 
 		}
@@ -308,13 +391,48 @@ public class Board extends JPanel {
 			output.append("\nYou cannot end your turn with outstanding rent.\n");
 		}
 
-		else if (Dice.allowedRoll == 0 || Dice.allowedRoll == 2){						// If dice not rolled, not allowed end.
+		else if (Dice.allowedRoll == 0 || Dice.allowedRoll == 2 || Dice.allowedRoll == 4){						// If dice not rolled, not allowed end.
 			output.append("\nYou cannot end your turn without rolling.\n");
 		}
-		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2){						//If dice rolled and rent-paid allowed end turn.
+		else if(Dice.allowedRoll != 0 && Dice.allowedRoll != 2 && Dice.allowedRoll != 4){						//If dice rolled and rent-paid allowed end turn.
 			Dice.allowedRoll = 0;
 			playerTurn = (playerTurn+1)%numberOfPlayers;
+			if(playerList.get(playerTurn).inJail() == false){
+				output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+			}
+			checkJail();
+		}
+	}
+
+	//Function to send player to Jail
+	public void goToJail(){
+		Dice.allowedRoll = 1;
+		Player currPlayer = playerList.get(playerTurn);
+		output.append("\nYou have been sent to jail \n");
+		currPlayer.setLocation(10); //move to jail square
+		currPlayer.setJail(true); //record player as in jail
+		currPlayer.setJailRoll(); //give 3 attempts to roll doubles
+		repaint(); //move token to jail
+		
+		//move to next player
+		playerTurn = (playerTurn+1)%numberOfPlayers;
+		Dice.allowedRoll = 0;
+		if(playerList.get(playerTurn).inJail() == false){
 			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
+		}
+		checkJail();
+	}
+
+	public void payBail(){
+		Player currPlayer = playerList.get(playerTurn);
+		if(currPlayer.inJail() == true){
+			currPlayer.updateBalance(-50);
+			currPlayer.setJail(false);
+			output.append("You have paid a £50 bail and are now free\n"
+					+ "Roll to proceed.\n");
+		}
+		else {
+			output.append("You are not in jail \n");
 		}
 	}
 
@@ -366,25 +484,25 @@ public class Board extends JPanel {
 	public void mortgageFunction(String propInputName){
 		int count = 0;
 		Player currPlayer = playerList.get(playerTurn);
-		
+
 		for(Property p: properties){														//Cycle through all properties.
 			Property currProperty = properties.get(currPlayer.getPosition());
-			
+
 			if(p.returnOwner() != null 
 					&& p.returnOwner() == playerTurn 
 					&& propInputName.equalsIgnoreCase(p.returnShortName())){				//Condition to narrow the cycle to all properties the player owns that's short name equals the name inputed.
-				
+
 				if(currProperty.isMortgage() == 0){											//Checking the property hasn't been mortgaged yet.
 					if (currProperty.returnHouses() == 0){										//Making sure there aren't houses.
 						currProperty.mortgage();
-						
+
 						playerList.get(playerTurn).updateBalance(currProperty.mortgage());		//Updating balance to the properties mortgage value.
-											
+
 						output.append("\nYou have mortgaged " + p.returnName() + "\n");
 					} else {
 						output.append("You must sell all houses first.\n");
 					}
-					
+
 					count++;
 				} else {
 					output.append("\nThis property has already been mortgaged.\n");
@@ -392,20 +510,20 @@ public class Board extends JPanel {
 				}
 			}
 		}
-		
+
 		if(count == 0){																		//Outputting for when nothing happens.
 			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
 		}
 	}
-	
+
 	//Function to redeem a property. (See mortgageFunction for equivalent comments. Layout is similar)
 	public void redeemFunction(String propInputName){
 		int count = 0;
 		Player currPlayer = playerList.get(playerTurn);
-		
+
 		for(Property p: properties){
 			Property currProperty = properties.get(currPlayer.getPosition());
-			
+
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn && propInputName.equalsIgnoreCase(p.returnShortName())){
 				if(currProperty.isMortgage() == 1){
 					playerList.get(playerTurn).updateBalance(currProperty.redeem());
@@ -418,12 +536,12 @@ public class Board extends JPanel {
 				}
 			}
 		}
-		
+
 		if(count == 0){
 			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
 		}
 	}
-	
+
 	//Build a house on the property.
 	public void buildHouse(String buildInstructions){
 		final Pattern propertyAndNumber = Pattern.compile("(\\w+).* (\\w+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
@@ -582,20 +700,20 @@ public class Board extends JPanel {
 	public void diceMultiplier(int aRoll){
 		Player tmpPlayer = playerList.get(playerTurn);
 		Property currProperty = properties.get(tmpPlayer.getPosition());
-		
+
 		if(currProperty.returnColour() == 9){
 			currProperty.diceRent(aRoll);
 		}
-			
+
 	}
 
 	//Function to determine who goes first.
 	public static void goFirst(){
 		int Roll;
 		int[] firstRolls = new int[numberOfPlayers]; 							//Array to store the first roll.
-		
+
 		output.append("\nRoll results:\n");
-		
+
 		for(int i = 0; i < numberOfPlayers; i++){
 			Roll = Dice.Roll();
 			playerList.get(i).setFirstRoll(Roll); 								//Set value of first roll.
@@ -615,7 +733,7 @@ public class Board extends JPanel {
 			output.append("\nRe-roll..\n");
 			goFirst();															//Using recursion to ensure there is a unique highest roll.
 		} else
-		{
+		{ 
 			int g = 0;
 			//Go through list and determine which player's value matched the highest value.
 			while(g < numberOfPlayers){ 

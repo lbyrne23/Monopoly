@@ -28,6 +28,8 @@ public class Player extends JLabel{
 	private int firstRoll;
 	private int money;
 	private int propertyTotal;
+	private boolean inJail;
+	private int jailRoll;
 
 
 	public Player(int playernum, String playerName){
@@ -36,6 +38,7 @@ public class Player extends JLabel{
 		name = playerName;
 		place = player*10;												//Calculate place on square.
 		money = 1500;
+		inJail = false;
 
 		//Bottom Squares 
 		points.add(new Point(665, (635+place)));
@@ -157,6 +160,26 @@ public class Player extends JLabel{
 
 	public void updateTotal(int value){
 		propertyTotal = propertyTotal + value;
+	}
+	
+	public void setJail(boolean condition){
+		inJail = condition;
+	}
+	
+	public boolean inJail(){
+		return inJail;
+	}
+	
+	public void setJailRoll(){
+		jailRoll = 3;
+	}
+	
+	public void failedJailRoll(){
+		jailRoll--;
+	}
+	
+	public int getJailRoll(){
+		return jailRoll;
 	}
 
 }
