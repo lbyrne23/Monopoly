@@ -12,16 +12,17 @@ class Property {
 	private int houses = 0;
 	private int colour;
 	private int mortgage;
-	private int mortgagedProperty;
+	private boolean mortgagedProperty;
 	private int[] rentArray;
 	private int housePrice;
+	private int squareNumber;
 	
-	
-	public Property(String nameIN){
-		name = nameIN;
+	public Property(String name, int squareNumber){
+		this.name = name;
+		this.squareNumber = squareNumber;
 	}
 
-	public Property(String name, String shortName, int owner, int price, int[] rent, int colour, int mortgage, int mortgagedProperty, int housePrice){
+	public Property(String name, String shortName, int owner, int price, int[] rent, int colour, int mortgage, boolean mortgagedProperty, int housePrice, int squareNumber){
 		this.name = name;
 		this.shortName = shortName;
 		this.owner = owner;
@@ -31,11 +32,13 @@ class Property {
 		this.mortgage = mortgage;
 		this.mortgagedProperty = mortgagedProperty;			//If property is mortgaged, this value is changed from 0 to 1.
 		this.housePrice = housePrice;
+		this.squareNumber = squareNumber;
 	}
 	
-	public Property(String nameIN, int[] rentIN){
-		name = nameIN;
-		rentArray = rentIN;
+	public Property(String name, int[] rent, int squareNumber){
+		this.name = name;
+		this.rentArray = rent;
+		this.squareNumber = squareNumber;
 	}
 
 	public String returnName(){
@@ -79,27 +82,32 @@ class Property {
 	}
 	
 	public int mortgage(){
-		mortgagedProperty = 1;
+		mortgagedProperty = true;
 		rentArray[houses] = 0;
 		return mortgage;
 	}
 	
-	public int isMortgage(){
+	public boolean isMortgage(){
 		return mortgagedProperty;
 	}
 	
 	public int redeem(){
 		double temp = mortgage * 1.1;
 		int redeemValue = (int)temp * -1;
-		mortgagedProperty = 0;
+		mortgagedProperty = false;
 		return redeemValue;
 	}
+	
 	public int returnHouses(){
 		return houses;
 	}
 	
 	public int returnHousePrice(){
 		return housePrice;
+	}
+	
+	public int returnSquareNumber(){
+		return squareNumber;
 	}
 	
 	public Integer setHouses(int newHouses){	//Sets how many houses are on property.
@@ -109,4 +117,8 @@ class Property {
 		}
 		else return null;
 	}
+	
+//	public void moveSquare(int toSquare){
+//		this.squareNumber = toSquare;
+//	}
 }
