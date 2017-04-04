@@ -674,15 +674,9 @@ public class Board extends JPanel {
 			else if(colourMultiplier()){
 				rent = rent*2;
 			}
-			
-			//IF PAYING RENT
-			if(currPlayer.getBalance() >= rent){
-				if(currPlayer.updateBalance(-(rent)) < 0){
-				}
-				else{
+				currPlayer.updateBalance(-(rent));	
 				debtor.updateBalance(rent);
-				}
-			}
+			
 
 			return rent;
 	}
