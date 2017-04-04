@@ -32,11 +32,9 @@ public class Board extends JPanel {
 	protected static int numberOfPlayers;
 	protected static JTextArea output;
 	private static int winner = 0;
-	protected static boolean doubled = false;
 
 	//Following variables are for tracking details of players' turns. 
 	protected static int playerTurn;
-	protected static boolean rentPaid = true;
 	protected static boolean bankrupt = false;
 
 
@@ -73,12 +71,12 @@ public class Board extends JPanel {
 
 	public String squareInfo(){
 		//Get property at location of current players turn.
-		Player tmpPlayer = playerList.get(playerTurn);
-		Property tmpProperty = properties.get(tmpPlayer.getPosition());
+		Player currPlayer = playerList.get(playerTurn);
+		Property tmpProperty = properties.get(currPlayer.getPosition());
 		String info;
 
 		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
-			info = tmpProperty.returnName() + "\n";
+			info = "\n" + tmpProperty.returnName() + "\n";
 		}
 		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
 			info = tmpProperty.returnName() 
@@ -89,16 +87,17 @@ public class Board extends JPanel {
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){														//Owner is current player.
-			info = tmpProperty.returnName() + " ; This is your property. "
-					+ "\n-It has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " ; This is your property, "
+					+ "it has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n";
 		}
 
 		else{											
 			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
-					+ " owns this property.\nYou must pay rent of " + (char)POUND + tmpProperty.returnRent() + ".\n";		//You must pay rent.
-			rentPaid = false;																					//Set rentPaid tracker to false.
+					+ " owns this property, you have paid them "+ (char)POUND + payRentFunction() + ".\n"
+							+ "\nYour balance is now " + (char)POUND + currPlayer.getBalance() +".\n";																				//
+			
 		}
-
+		
 		return info;
 	}
 
@@ -183,12 +182,8 @@ public class Board extends JPanel {
 			redeemFunction(propInputName);
 		}
 
-		else if(command.equalsIgnoreCase("pay rent")){
-			payRentFunction();
-		}
 
 		else if(command.equalsIgnoreCase("done")){
-			colourMultiplier();
 			doneFunction();
 		}
 
@@ -252,10 +247,6 @@ public class Board extends JPanel {
 
 	//Function to roll dice and move player.
 	public void rollFunction(){
-		if(!rentPaid){
-			output.append("\nYou must pay rent before rolling again.\n");
-			return;																//End function here if rent is due first.
-		}
 		if (playerList.get(playerTurn).inJail() == true){
 			Player tmpPlayer = playerList.get(playerTurn);
 			int thisRoll = Dice.Roll();
@@ -266,7 +257,6 @@ public class Board extends JPanel {
 				tmpPlayer.setJail(false);
 				tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
 				repaint();
-				diceMultiplier(thisRoll); 											//This checks if rent needs to be multiplied by the roll.
 				output.append(squareInfo());
 				Dice.allowedRoll = 1;
 			}
@@ -314,7 +304,6 @@ public class Board extends JPanel {
 				checkJail();
 			}
 			else{
-				diceMultiplier(thisRoll); 											//This checks if rent needs to be multiplied by the roll.
 
 				if(Dice.allowedRoll != 6){ //If not sent to jail, show the information about buying houses. 
 					output.append(squareInfo());
@@ -357,20 +346,20 @@ public class Board extends JPanel {
 	//Function to handle bankruptcy.
 	public void bankruptFunction(){
 		Player currPlayer = playerList.get(playerTurn);
-		Property currProperty = properties.get(currPlayer.getPosition());
-		if(currPlayer.getBalance() < currProperty.returnRent()){
+		if(currPlayer.getBalance() < 0){
 			bankrupt = true;
 			output.append("\nYou have declared bankruptcy, upon ending your turn you will leave the game.\n");
 		}
 		else{
 			bankrupt = false;
-			output.append("\nYou cannot declare bankruptcy if you can afford the rent.\n");
+			output.append("\nYou cannot declare bankruptcy if you have a positive balance.\n");
 		}
 	}
 
 	//Function to end turn. Also takes bankruptcy into account.
 	public void doneFunction(){
 		Player currPlayer = playerList.get(playerTurn);
+		//If bankruptcy declared, remove player, check if game is finished otherwise carry on.
 		if(bankrupt){										//If out of money.								
 			releasePropertyFunction();													//Return properties to Market.
 			playerList.remove(playerTurn);												//Remove player from game.
@@ -389,7 +378,6 @@ public class Board extends JPanel {
 			}
 
 			else{
-				rentPaid = true;														//reset rentPaid
 				bankrupt = false; 														//reset bankruptcy
 				Dice.allowedRoll = 0;													//Allow player to roll again.
 				if(playerList.get(playerTurn).inJail() == false){
@@ -403,8 +391,9 @@ public class Board extends JPanel {
 		}
 		
 
-		if (!rentPaid){																	//If rent not paid, not allowed end.
-			output.append("\nYou cannot end your turn with outstanding rent.\n");
+		if (currPlayer.getBalance() < 0){																	//If rent not paid, not allowed end.
+			output.append("\nYou are in arrears of " + (char)POUND + currPlayer.getBalance() + "\nYou must sell assets or declare bankruptcy.\n");
+			return;
 		}
 
 		else if (Dice.allowedRoll == 0 || Dice.allowedRoll == 2 || Dice.allowedRoll == 4){						// If dice not rolled, not allowed end.
@@ -648,12 +637,15 @@ public class Board extends JPanel {
 
 	//Go through all properties of current colour, if player doesn't own one they can't build a house.
 	public boolean canBuild(int colour){
+		if(colour < 1 && colour > 7){
+			return false;
+		}
 		for(Property p : properties){
-			if(p.returnOwner()!= null && p.returnOwner() != playerTurn && p.returnColour() == colour){ 		//If property can be owned, is owned by player and is of defined colour.
-				return false;																			
+			if(p.returnOwner()!= null && p.returnOwner() != playerTurn && p.returnColour() == colour){ 		
+				return false;		//If any property of given colour isn't owned by current player, he can't build.																	
 			}	
 		}
-		return true;
+		return true;				//Otherwise he can.
 	}
 
 	// Function to return properties to market if player has lost.
@@ -666,60 +658,47 @@ public class Board extends JPanel {
 	}
 
 	//Function to payRent on current square.
-	public void payRentFunction(){
-		if(rentPaid){
-			output.append("\nThere is no rent owed.");
-		}
+	public int payRentFunction(){
 
-		else{	//Pay Rent
-			Player currPlayer = playerList.get(playerTurn);
-			Property currProperty = properties.get(currPlayer.getPosition());		//Get player, property and owner of property.
-			Player debtor = playerList.get(currProperty.returnOwner());
+			Player currPlayer = playerList.get(playerTurn);							//Get player
+			Property currProperty = properties.get(currPlayer.getPosition());		//Get property
+			Player debtor = playerList.get(currProperty.returnOwner());				//Get owner of property
 			int rent = currProperty.returnRent();
-
-			//IF PLAYER CAN AFFORD RENT.
+			
+			//If Property is utility, rent is multiplied by dice roll
+			if(currProperty.returnColour() == 9){
+				rent = rent*Dice.total();
+			}
+			//If all properties of colour owned, but no houses on this property, double rent.
+			else if(colourMultiplier()){
+				rent = rent*2;
+			}
+			
+			//IF PAYING RENT
 			if(currPlayer.getBalance() >= rent){
 				if(currPlayer.updateBalance(-(rent)) < 0){
 				}
 				else{
 				debtor.updateBalance(rent);
-				output.append("\nYou have paid " + debtor.getName() + " " + (char)POUND + rent + "\n");
-				rentPaid = true;
 				}
 			}
-			//IF PLAYER CAN'T AFFORD RENT.
-			else{
-				output.append("\nYou cannot afford this.  Please raise additional funds, \nor declare bankruptcy.\n\nCommand : 'bankrupt'\n");
-			}
-		}
+
+			return rent;
 	}
+
 
 	//If player owns all of colour group, and a square has no houses, the rent of the square with no houses is doubled.
-	public void colourMultiplier(){
-		if (doubled == false){ 														//This prevents the rent doubling after every turn.
-			for(Property p : properties){ 											//Iterate through properties and double the rent of any where all colours have same owner and there are no houses.
-				if(p.returnOwner()!= null && p.returnOwner() == playerTurn){
-					Property tmpProperty = p;
-					if(canBuild(tmpProperty.returnColour()) == true && tmpProperty.returnHouses() == 0){
-						tmpProperty.doubleRent();
-						doubled = true;
-					}												
-				}	
-			}
+	public boolean colourMultiplier(){
+		Player currPlayer = playerList.get(playerTurn);	
+		Property currProperty = properties.get(currPlayer.getPosition());
+		int colour = currProperty.returnColour();
+		if(canBuild(colour) && currProperty.returnHouses() == 0 ){				//Return true if allowed build houses, but none on square.
+			return true;
 		}
+		else return false;														//Else return false
+				
 	}
 
-	//If player lands on a utility, check how many utilities are owned by the same player.
-	//rent=diceRoll*4 if only one is owned, and rent=diceRoll*10 if both are owned.
-	public void diceMultiplier(int aRoll){
-		Player tmpPlayer = playerList.get(playerTurn);
-		Property currProperty = properties.get(tmpPlayer.getPosition());
-
-		if(currProperty.returnColour() == 9){
-			currProperty.diceRent(aRoll);
-		}
-
-	}
 
 	//Function to determine who goes first.
 	public static void goFirst(){

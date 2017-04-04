@@ -65,13 +65,6 @@ class Property {
 		return rentArray[houses];
 	}
 	
-	public void doubleRent(){
-		rentArray[houses] = (rentArray[houses])*2;
-	}
-	
-	public void diceRent(int diceRoll){
-		rentArray[houses] = (rentArray[houses])*diceRoll;
-	}
 
 	public void boughtProperty(int playerNum){
 		owner = playerNum;
