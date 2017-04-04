@@ -7,6 +7,7 @@ package packA;
 // A class to display the board, paint the player tokens and interpret commands.
 
 import java.awt.Graphics;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
@@ -41,8 +42,9 @@ public final class Board extends JPanel {
 
 
 	public Board(int players, JTextArea newOutput) {
-
-		output = newOutput; 
+		
+		output = newOutput;
+		
 		//Try to load image from project files.
 		URL url = getClass().getResource("Board2.gif");
 		try {
@@ -103,6 +105,9 @@ public final class Board extends JPanel {
 
 
 	public void playerAction(String command){
+		
+		
+		
 		//This class will call other functions depending on command given.
 		if(playerTurn == -1){
 
@@ -691,4 +696,5 @@ public final class Board extends JPanel {
 		}
 
 	}
+
 }

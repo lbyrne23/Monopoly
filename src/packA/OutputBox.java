@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
-public class OutputBox extends JPanel {
+public final class OutputBox extends JPanel {
 
 	public OutputBox(){
 		output = new JTextArea(40, 40);
@@ -23,6 +23,11 @@ public class OutputBox extends JPanel {
 
 	public  JTextArea getJTextArea(){
 		return output;
+	}
+	
+	public void resetCaret(){
+		DefaultCaret caret = (DefaultCaret)output.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 	}
 
 	private JTextArea output;
