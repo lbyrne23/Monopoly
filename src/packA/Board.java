@@ -636,9 +636,9 @@ public class Board extends JPanel {
 		}
 	}
 
-	//Go through all properties of current colour, if player doesn't own one they can't build a house.
+	//If player owns all of colour and it is not a station or utility, he can build.
 	public boolean canBuild(int colour){
-		if(colour < 1 && colour > 7){
+		if(colour > 7){ //If Utility or Station
 			return false;
 		}
 		for(Property p : properties){
