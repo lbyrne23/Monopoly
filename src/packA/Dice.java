@@ -17,7 +17,7 @@ abstract class Dice {
 	public static int Roll(){
 		dice1 = rand.nextInt(6) + 1;		//Random number between 0 and 5, plus one.
 		dice2 = rand.nextInt(6) + 1;
-
+		
 		allowedRoll++;
 
 		if(dice1 == dice2){					//Re-roll.
