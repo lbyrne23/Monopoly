@@ -92,7 +92,8 @@ public class Board extends JPanel {
 		}
 
 		else{											
-			info = tmpProperty.returnName() + " ;\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
+			info = tmpProperty.returnName() + "\n------------------------------------------------------------------------------------------\n"
+					+ "\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
 					+ " owns this property, you have paid them "+ (char)POUND + payRentFunction() + ".\n"
 							+ "\nYour balance is now " + (char)POUND + currPlayer.getBalance() +".\n";																				//
 			
