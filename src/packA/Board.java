@@ -69,7 +69,7 @@ public class Board extends JPanel {
 	}
 
 
-	public String squareInfo(){
+	public void squareInfo(){
 		//Get property at location of current players turn.
 		Player currPlayer = playerList.get(playerTurn);
 		Property tmpProperty = properties.get(currPlayer.getPosition());
@@ -77,6 +77,11 @@ public class Board extends JPanel {
 
 		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
 			info = "\n" + tmpProperty.returnName() + "\n";
+			
+			if(tmpProperty.returnRent() != 0){//if rent exists (Rent & Unbuyable means it is a tax square.)
+				payRentFunction();
+				info = "\nYou have paid a fine of " + (char)POUND + tmpProperty.returnRent() + ".\n";
+			}
 		}
 		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
 			info = tmpProperty.returnName() 
@@ -99,7 +104,7 @@ public class Board extends JPanel {
 			
 		}
 		
-		return info;
+		output.append(info);
 	}
 
 
@@ -258,7 +263,7 @@ public class Board extends JPanel {
 				tmpPlayer.setJail(false);
 				tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
 				repaint();
-				output.append(squareInfo());
+				squareInfo();
 				Dice.allowedRoll = 1;
 			}
 			else {
@@ -307,7 +312,7 @@ public class Board extends JPanel {
 			else{
 
 				if(Dice.allowedRoll != 6){ //If not sent to jail, show the information about buying houses. 
-					output.append(squareInfo());
+					squareInfo();
 				}
 				if(Dice.allowedRoll == 2 || Dice.allowedRoll == 4){
 					output.append("\nYou are able to roll again!\n");
@@ -347,14 +352,23 @@ public class Board extends JPanel {
 	//Function to handle bankruptcy.
 	public void bankruptFunction(){
 		Player currPlayer = playerList.get(playerTurn);
-		if(currPlayer.getBalance() < 0){
+		if(currPlayer.getBalance() < 0 && ! playerOwnsAssets()){	//If player has a negative balance and owns no property.
 			bankrupt = true;
 			output.append("\nYou have declared bankruptcy, upon ending your turn you will leave the game.\n");
 		}
 		else{
 			bankrupt = false;
-			output.append("\nYou cannot declare bankruptcy if you have a positive balance.\n");
+			output.append("\nCannot declare bankruptcy if balance is positive or if assets are owned.\n");
 		}
+	}
+	
+	public boolean playerOwnsAssets(){
+		for(Property p : properties){
+			if(p.returnOwner() != null && p.returnOwner() == playerTurn && ! p.isMortgage()){//Property is ownable, owned by this palyer and not mortgaged.
+				return true;
+			}
+		}
+		return false;
 	}
 
 	//Function to end turn. Also takes bankruptcy into account.
@@ -663,7 +677,6 @@ public class Board extends JPanel {
 
 			Player currPlayer = playerList.get(playerTurn);							//Get player
 			Property currProperty = properties.get(currPlayer.getPosition());		//Get property
-			Player debtor = playerList.get(currProperty.returnOwner());				//Get owner of property
 			int rent = currProperty.returnRent();
 			
 			//If Property is utility, rent is multiplied by dice roll
@@ -674,8 +687,12 @@ public class Board extends JPanel {
 			else if(colourMultiplier()){
 				rent = rent*2;
 			}
-				currPlayer.updateBalance(-(rent));	
-				debtor.updateBalance(rent);
+				currPlayer.updateBalance(-(rent));
+				if(currProperty.returnOwner() != null){										//If owner exists
+					Player debtor = playerList.get(currProperty.returnOwner());				//Get owner of property
+					debtor.updateBalance(rent);												//Pay rent to owner
+				}
+			
 			
 
 			return rent;

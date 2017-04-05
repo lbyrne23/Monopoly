@@ -62,6 +62,9 @@ class Property {
 	}
 
 	public int returnRent(){
+		if (rentArray == null){
+			return 0;			//return 0 if rent doesn't exist.
+		}
 		return rentArray[houses];
 	}
 	
