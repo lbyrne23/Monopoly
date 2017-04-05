@@ -713,6 +713,10 @@ public class Board extends JPanel {
 
 
 	//Function to determine who goes first.
+	//If two players roll the highest value, the dice is rolled again
+	//It does not matter if two players roll the non-highest value
+	//If player 4 Rolls the highest, they go first, then player 5, 6, 1, 2, 3...
+	//Turns do not go in order of highest-lowest dice roll
 	public static void goFirst(){
 		int Roll;
 		int[] firstRolls = new int[numberOfPlayers]; 							//Array to store the first roll.

@@ -31,6 +31,7 @@ abstract class Dice {
 	public static String words() {
 		return dice1 + " + " + dice2 + " = " + (dice1+dice2) + "\n"; 
 	}
+	
 	public static int total(){
 		return dice1 + dice2;
 	}
