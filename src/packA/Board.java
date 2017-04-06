@@ -54,8 +54,8 @@ public class Board extends JPanel {
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
 		playerTurn = -1; 															//Indicates players have not yet been instantiated. 
-		playerList = new ArrayList<Player>(players);								// List to hold players
-		numberOfPlayers = 0;														//tracks number of players, begins at zero.
+		playerList = new ArrayList<Player>(players);								//List to hold players/
+		numberOfPlayers = 0;														//Tracks number of players, begins at zero.
 	}
 
 
@@ -288,12 +288,12 @@ public class Board extends JPanel {
 			//This would avoid declaring many 'ArrayList<Card>'s
 			break;
 			
-			//Move a set amount of steps.
+		//Move a set amount of steps.
 		case 6 :
 			currPlayer.setLocation(currPlayer.getPosition() + card.returnSteps());
 			break;
 			
-			//Pay
+		//Pay
 		case 7 :
 			int houseRepairs, hotelRepairs;
 			Pattern repairCosts = Pattern.compile("(\\d+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
@@ -596,12 +596,10 @@ public class Board extends JPanel {
 					} else {
 						output.append("You must sell all houses first.\n");
 					}
-
-					found = true;
 				} else {
 					output.append("\nThis property has already been mortgaged.\n" + p.isMortgage());
-					found = true;
 				}
+				found = true;
 			}
 		}
 
