@@ -150,11 +150,8 @@ public class Board extends JPanel {
 
 		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
-		if(bankrupt &&  ! command.equalsIgnoreCase("done")){
-			output.append("\nYou are bankrupt, please end your turn.\nTry entering 'done'\n");
-		}
 		//Assessing command.
-		else if(command.equalsIgnoreCase("buy")){
+		if(command.equalsIgnoreCase("buy")){
 			buyFunction();
 		}
 		//TEST COMMAND USED TO PURCHASE ALL PROPERTY FOR DEBUGGING.
@@ -354,7 +351,8 @@ public class Board extends JPanel {
 		Player currPlayer = playerList.get(playerTurn);
 		if(currPlayer.getBalance() < 0 && ! playerOwnsAssets()){	//If player has a negative balance and owns no property.
 			bankrupt = true;
-			output.append("\nYou have declared bankruptcy, upon ending your turn you will leave the game.\n");
+			output.append("\nYou have declared bankruptcy, you will be removed from the game.\n");
+			doneFunction();
 		}
 		else{
 			bankrupt = false;
