@@ -69,13 +69,7 @@ public class Board extends JPanel {
 	}
 
 
-	
-
-
 	public void playerAction(String command){
-		
-		
-		
 		//This class will call other functions depending on command given.
 		if(playerTurn == -1){
 
@@ -220,7 +214,11 @@ public class Board extends JPanel {
 			info = tmpProperty.returnName() + " ; This is your property, "
 					+ "it has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n";
 		}
-
+		
+		else if(tmpProperty.isMortgage() == true){																//Property is mortgaged.
+			info = tmpProperty.returnName() + " is currently mortggaed.\n";
+		}
+		
 		else{											
 			info = tmpProperty.returnName() + "\n------------------------------------------------------------------------------------------\n"
 					+ "\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.

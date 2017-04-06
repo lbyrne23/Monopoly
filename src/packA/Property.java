@@ -11,11 +11,12 @@ class Property {
 	private int price;
 	private int houses = 0;
 	private int colour;
-	private int mortgage;
+	private int mortgageValue;
 	private boolean mortgagedProperty;
 	private int[] rentArray;
 	private int housePrice;
 	private int squareNumber;
+	private int storeRentDuringMortgage;
 	
 	public Property(String name, int squareNumber){
 		this.name = name;
@@ -29,7 +30,7 @@ class Property {
 		this.price = price;
 		this.rentArray = rent;
 		this.colour = colour;
-		this.mortgage = mortgage;
+		this.mortgageValue = mortgage;
 		this.mortgagedProperty = mortgagedProperty;			//If property is mortgaged, this value is changed from 0 to 1.
 		this.housePrice = housePrice;
 		this.squareNumber = squareNumber;
@@ -79,8 +80,7 @@ class Property {
 	
 	public int mortgage(){
 		mortgagedProperty = true;
-		rentArray[houses] = 0;
-		return mortgage;
+		return mortgageValue;
 	}
 	
 	public boolean isMortgage(){
@@ -88,7 +88,7 @@ class Property {
 	}
 	
 	public int redeem(){
-		double temp = mortgage * 1.1;
+		double temp = mortgageValue * 1.1;
 		int redeemValue = (int)temp * -1;
 		mortgagedProperty = false;
 		return redeemValue;
