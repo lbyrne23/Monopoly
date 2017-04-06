@@ -216,12 +216,12 @@ public class Board extends JPanel {
 		}
 		
 		else if(tmpProperty.isMortgage() == true){																//Property is mortgaged.
-			info = tmpProperty.returnName() + " is currently mortggaed.\n";
+			info = tmpProperty.returnName() + " is currently mortgaged. No rent paid.\n";
 		}
 		
 		else{											
 			info = tmpProperty.returnName() + "\n------------------------------------------------------------------------------------------\n"
-					+ "\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
+					+ "\n" + playerList.get(tmpProperty.returnOwner()).getName()								//Owner > 0, i.e. owned property.
 					+ " owns this property, you have paid them "+ (char)POUND + payRentFunction() + ".\n"
 							+ "\nYour balance is now " + (char)POUND + currPlayer.getBalance() +".\n";																				//
 			
@@ -567,43 +567,45 @@ public class Board extends JPanel {
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is " + (char)POUND + p.returnRent() +"\n");
+				if (p.isMortgage() == true){
+					output.append("\n" + p.returnName() + " (Mortgaged) : \n-The rent is " + (char)POUND + p.returnRent() + "\n");
+				} else {
+					output.append("\n" + p.returnName() + " : \n-The rent is " + (char)POUND + p.returnRent() +"\n");
+				}
 			}
 		}
 	}
 
 	//Function to mortgage a property for the current player.
 	public void mortgageFunction(String propInputName){
-		int count = 0;
-		Player currPlayer = playerList.get(playerTurn);
+		boolean found = false;
 
 		for(Property p: properties){														//Cycle through all properties.
-			Property currProperty = properties.get(currPlayer.getPosition());
 
 			if(p.returnOwner() != null 
 					&& p.returnOwner() == playerTurn 
 					&& propInputName.equalsIgnoreCase(p.returnShortName())){				//Condition to narrow the cycle to all properties the player owns that's short name equals the name inputed.
 
-				if(currProperty.isMortgage() == false){											//Checking the property hasn't been mortgaged yet.
-					if (currProperty.returnHouses() == 0){										//Making sure there aren't houses.
-						currProperty.mortgage();
+				if(p.isMortgage() == false){												//Checking the property hasn't been mortgaged yet.
+					if (p.returnHousePrice() == -1 || p.returnHouses() == 0){				//Making sure it's either a station or has no houses.
+						p.mortgage();
 
-						playerList.get(playerTurn).updateBalance(currProperty.mortgage());		//Updating balance to the properties mortgage value.
+						playerList.get(playerTurn).updateBalance(p.mortgage());				//Updating balance to add the properties mortgage value.
 
 						output.append("\nYou have mortgaged " + p.returnName() + "\n");
 					} else {
 						output.append("You must sell all houses first.\n");
 					}
 
-					count++;
+					found = true;
 				} else {
-					output.append("\nThis property has already been mortgaged.\n");
-					count++;
+					output.append("\nThis property has already been mortgaged.\n" + p.isMortgage());
+					found = true;
 				}
 			}
 		}
 
-		if(count == 0){																		//Outputting for when nothing happens.
+		if(found == false){																		//Outputting for when nothing happens.
 			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
 		}
 	}
