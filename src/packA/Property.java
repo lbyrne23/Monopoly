@@ -114,6 +114,8 @@ class Property {
 		else return null;
 	}
 	
+	
+	
 //	public void moveSquare(int toSquare){
 //		this.squareNumber = toSquare;
 //	}
