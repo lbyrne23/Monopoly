@@ -30,7 +30,7 @@ public class Player extends JLabel{
 	private int propertyTotal;
 	private boolean inJail;
 	private int jailRoll;
-
+	private int gooJ;													//Tracks amount of gooJ cards (Max 2)
 
 	public Player(int playernum, String playerName){
 		location = 0; 													//Start at GO.
@@ -39,7 +39,7 @@ public class Player extends JLabel{
 		place = player*10;												//Calculate place on square.
 		money = 1500;
 		inJail = false;
-
+		gooJ = 0;
 		//Bottom Squares 
 		points.add(new Point(665, (635+place)));
 		points.add(new Point(605, (635+place)));

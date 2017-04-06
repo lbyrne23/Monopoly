@@ -69,43 +69,7 @@ public class Board extends JPanel {
 	}
 
 
-	public void squareInfo(){
-		//Get property at location of current players turn.
-		Player currPlayer = playerList.get(playerTurn);
-		Property tmpProperty = properties.get(currPlayer.getPosition());
-		String info;
-
-		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
-			info = "\n" + tmpProperty.returnName() + "\n";
-			
-			if(tmpProperty.returnRent() != 0){//if rent exists (Rent & Unbuyable means it is a tax square.)
-				payRentFunction();
-				info = "\nYou have paid a fine of " + (char)POUND + tmpProperty.returnRent() + ".\n";
-			}
-		}
-		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
-			info = tmpProperty.returnName() 
-					+ " ; \n-This property is on the market for " + (char)POUND + tmpProperty.returnPrice() 
-					+ "\n-It has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n"
-					+ "\nEnter 'buy' if you wish to purchase this property.\n"
-					+ "Enter 'help' for all other commands\n";
-		}
-
-		else if(tmpProperty.returnOwner() == playerTurn){														//Owner is current player.
-			info = tmpProperty.returnName() + " ; This is your property, "
-					+ "it has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n";
-		}
-
-		else{											
-			info = tmpProperty.returnName() + "\n------------------------------------------------------------------------------------------\n"
-					+ "\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
-					+ " owns this property, you have paid them "+ (char)POUND + payRentFunction() + ".\n"
-							+ "\nYour balance is now " + (char)POUND + currPlayer.getBalance() +".\n";																				//
-			
-		}
-		
-		output.append(info);
-	}
+	
 
 
 	public void playerAction(String command){
@@ -230,6 +194,43 @@ public class Board extends JPanel {
 		}
 	}
 
+	public void squareInfo(){
+		//Get property at location of current players turn.
+		Player currPlayer = playerList.get(playerTurn);
+		Property tmpProperty = properties.get(currPlayer.getPosition());
+		String info;
+
+		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
+			info = "\n" + tmpProperty.returnName() + "\n";
+			
+			if(tmpProperty.returnRent() != 0){//if rent exists (Rent & Unbuyable means it is a tax square.)
+				payRentFunction();
+				info = "\nYou have paid a fine of " + (char)POUND + tmpProperty.returnRent() + ".\n";
+			}
+		}
+		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
+			info = tmpProperty.returnName() 
+					+ " ; \n-This property is on the market for " + (char)POUND + tmpProperty.returnPrice() 
+					+ "\n-It has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n"
+					+ "\nEnter 'buy' if you wish to purchase this property.\n"
+					+ "Enter 'help' for all other commands\n";
+		}
+
+		else if(tmpProperty.returnOwner() == playerTurn){														//Owner is current player.
+			info = tmpProperty.returnName() + " ; This is your property, "
+					+ "it has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n";
+		}
+
+		else{											
+			info = tmpProperty.returnName() + "\n------------------------------------------------------------------------------------------\n"
+					+ "\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
+					+ " owns this property, you have paid them "+ (char)POUND + payRentFunction() + ".\n"
+							+ "\nYour balance is now " + (char)POUND + currPlayer.getBalance() +".\n";																				//
+			
+		}
+		
+		output.append(info);
+	}
 	public void checkJail(){
 		Player tmpPlayer = playerList.get(playerTurn);
 		if(Dice.allowedRoll == 0 && tmpPlayer.inJail() == true){
@@ -245,6 +246,81 @@ public class Board extends JPanel {
 			if(tmpPlayer.getJailRoll() > 0 && tmpPlayer.getJailRoll() <= 2){
 				output.append("You have " + tmpPlayer.getJailRoll() +" attempts left to roll doubles before you must pay the fine. \n");
 			}
+		}
+	}
+	
+	public void processCard(Card card){
+		int type = card.returnType();
+		Player currPlayer = playerList.get(playerTurn);
+		
+		output.append(card.returnMessage());								//Display card's message.
+		
+		switch(type){
+		//Move to specific square.
+		case 1 :																							
+			if(currPlayer.getPosition() > card.returnToSquare()){
+				currPlayer.updateBalance(200);
+				output.append("\nYou've passed GO!\n " + (char)POUND + "200 has been added to your balance.\n");
+			}
+			currPlayer.setLocation(card.returnToSquare());					//Move player to square given by card.
+			squareInfo();
+			break;
+		//Go To Jail
+		case 2 :
+			goToJail();
+			break;
+		// Receive Money or Pay a fine/expense.
+		case 3 :
+			currPlayer.updateBalance(card.returnMoney());
+			break;
+		//Collect money from every player.
+		case 4 :
+			
+			for(Player p : playerList){
+				if (p.getNumber() != playerTurn){							//If it isn't this player's turn
+					p.updateBalance(- card.returnMoney());					//Update player's balance with negative value of returnMoney()
+					currPlayer.updateBalance(card.returnMoney());			//Update currPlayer with positive value.
+				}
+			}
+			break;
+		
+		case 5 :
+			//IMPORTANT NEED GOOJ CARD FUNCTIONALITY FIRST.
+			//Possibly, have separate card stack for in use cards, and have players just store an integer for GooJ cards.
+			//This would avoid declaring many 'ArrayList<Card>'s
+			break;
+			
+			//Move a set amount of steps.
+		case 6 :
+			currPlayer.setLocation(currPlayer.getPosition() + card.returnSteps());
+			break;
+			
+			//Pay
+		case 7 :
+			int houseRepairs, hotelRepairs;
+			Pattern repairCosts = Pattern.compile("(\\d+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
+			Matcher m = repairCosts.matcher(card.returnMessage());
+			if(m.find()){
+				houseRepairs = Integer.parseInt(m.group(0));
+				hotelRepairs = Integer.parseInt(m.group(1));
+			}
+			else break;
+			int numberHouses = 0, numberHotels = 0;
+			for(Property p : properties){									//Increment through all properties.
+				if(p.returnOwner() != null && p.returnOwner() == playerTurn && p.returnHouses() > 0){
+					if (p.returnHouses() < 5){
+						currPlayer.updateBalance(- (houseRepairs*p.returnHouses()));	//Charge 'houseRepairs' per house built
+						numberHouses += p.returnHouses();					
+					}
+					if (p.returnHouses() == 5){
+						currPlayer.updateBalance(-hotelRepairs);						//Charge 'hotelRepairs' per hotel
+						numberHotels++;
+					}
+				}
+			}
+			
+			output.append("\nHouses : " + numberHouses + "\nYou have paid " + (char)POUND + houseRepairs*numberHouses + ".\n");
+			output.append("\nHotels : " + numberHotels + "\nYou have paid " + (char)POUND + hotelRepairs*numberHotels + ".\n");
 		}
 	}
 

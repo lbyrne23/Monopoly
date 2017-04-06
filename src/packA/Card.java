@@ -1,6 +1,6 @@
 package packA;
 
-import packA.Property;
+import java.util.ArrayList;
 
 public class Card {
 	private String name;						//Link between Card and Property.
