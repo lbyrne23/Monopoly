@@ -29,6 +29,12 @@ public class Board extends JPanel {
 	private BufferedImage  image = null;	
 	protected static ArrayList<Player> playerList = new ArrayList<Player>(6);			//Array list to store players.
 	protected static PropertyList properties = new PropertyList();
+	protected static CardList jailCards = new CardList();
+	protected static CardList communityCards = new CardList("community");
+	protected static CardList chanceCards = new CardList("chance");
+	long seed = System.nanoTime();
+	Collections.shuffle(communityCards, new Random(seed));
+	Collections.shuffle(chanceCards, new Random(seed));
 	protected static int numberOfPlayers;
 	protected static JTextArea output;
 	private static int winner = 0;

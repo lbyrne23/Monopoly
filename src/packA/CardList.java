@@ -3,7 +3,7 @@ package packA;
 import java.util.ArrayList;
 
 public class CardList extends ArrayList<Card>{
-	public CardList(){
+	public CardList(String typeCard){
 		// Types: 	1 Move to square, no condition for money.
 		//			2 Move to square, condition for money.
 		//			3 Pay fine/Collect money.
@@ -13,6 +13,7 @@ public class CardList extends ArrayList<Card>{
 		//			7 Repairs to houses/hotels.
 		// communityChance, id, steps, message, square, money
 		
+	if(typeCard.equalsIgnoreCase("community")){
 		add (new Card("Community", 1, 0, "\nAdvance to Go.\n", 0, 0));
 		add (new Card("Community", 1, 0, "\nGo back to Old Kent Road.\n", 1, 0));													//No need to be in condition for money.
 		add (new Card("Community", 2, 0, "\nGo to jail. Move directly to jail. Do not pass Go. Do not collect £200.\n", 10, 0));		
@@ -29,7 +30,9 @@ public class CardList extends ArrayList<Card>{
 		add (new Card("Community", 4, 0, "\nIt is your birthday. Collect £10 from each player.\n", -1, 10));
 		add (new Card("Community", 5, 0, "\nGet out of jail free. This card may be kept until needed or sold.\n", -1, 0));
 		//add (new Card("Community", 6, 0, "\nPay a £10 fine or take a Chance.\n", -1, 10)); NOT TYPE 6
-
+	}
+	
+	if(typeCard.equalsIgnoreCase("chance")){
 		add (new Card("Chance", 1, 0, "\nAdvance to Go.\n", 0, 0));		
 		add (new Card("Chance", 2, 0, "\nGo to jail. Move directly to jail. Do not pass Go. Do not collect £200.\n", 10, 0));
 		add (new Card("Chance", 1, 0, "\nAdvance to Pall Mall. Collect £200 if you pass go.\n", 11, 0));
@@ -46,7 +49,10 @@ public class CardList extends ArrayList<Card>{
 		add (new Card("Chance", 3, 0, "\nYou have won a crossword competition. Collect £100.\n", -1, 100));
 		add (new Card("Chance", 3, 0, "\nBank pays you dividend of £50.\n", -1, 50));
 		add (new Card("Chance", 5, 0, "\nGet out of jail free. This card may be kept until needed or sold.\n", -1, 0));
-		
+		}	
 	}
 
+	public CardList(){
+	}
+	
 }
