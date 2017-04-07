@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.IOException;
@@ -32,9 +33,6 @@ public class Board extends JPanel {
 	protected static CardList jailCards = new CardList();
 	protected static CardList communityCards = new CardList("community");
 	protected static CardList chanceCards = new CardList("chance");
-	long seed = System.nanoTime();
-	Collections.shuffle(communityCards, new Random(seed));
-	Collections.shuffle(chanceCards, new Random(seed));
 	protected static int numberOfPlayers;
 	protected static JTextArea output;
 	private static int winner = 0;
@@ -43,7 +41,7 @@ public class Board extends JPanel {
 	protected static int playerTurn;
 	protected static boolean bankrupt = false;
 	protected static boolean chooseFineOrChance = false;
-
+	
 
 	public Board(int players, JTextArea newOutput) {
 		
@@ -82,6 +80,8 @@ public class Board extends JPanel {
 				output.append("Roll to see who goes first.\n");
 
 				goFirst();														//Function to arrange players based on dice rolls.
+				Collections.shuffle(communityCards);							//Shuffle the decks
+				Collections.shuffle(chanceCards);
 
 				output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
 				return;
