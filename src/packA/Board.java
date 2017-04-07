@@ -7,7 +7,6 @@ package packA;
 // A class to display the board, paint the player tokens and interpret commands.
 
 import java.awt.Graphics;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
@@ -206,6 +205,14 @@ public class Board extends JPanel {
 		if(currPlayer.getPosition() == 30){
 			goToJail();
 		}
+		if (currPlayer.getPosition() == 2 || currPlayer.getPosition() == 17 || currPlayer.getPosition() == 33){	//Draw Community Chest.
+			output.append("Community Chest Card:\n");
+//PRINT COMMUNITY CHEST CARD
+		}
+		if (currPlayer.getPosition() ==  7|| currPlayer.getPosition() == 22 || currPlayer.getPosition() == 36){	//Draw Chance.
+			output.append("Chance Card:\n");
+//PRINT CHANCE CARD.
+		}
 		
 		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
 			info = "\n" + tmpProperty.returnName() + "\n";
@@ -237,11 +244,15 @@ public class Board extends JPanel {
 					+ "\n" + playerList.get(tmpProperty.returnOwner()).getName()								//Owner > 0, i.e. owned property.
 					+ " owns this property, you have paid them "+ (char)POUND + payRentFunction() + ".\n"
 							+ "\nYour balance is now " + (char)POUND + currPlayer.getBalance() +".\n";																				//
-			
 		}
 		
 		output.append(info);
 	}
+	
+//	public String getCommunity(){
+//
+//	}
+	
 	public void checkJail(){
 		Player tmpPlayer = playerList.get(playerTurn);
 		if(Dice.allowedRoll == 0 && tmpPlayer.inJail() == true){
@@ -260,7 +271,7 @@ public class Board extends JPanel {
 		}
 	}
 	
-	public void z(Card card){
+	public void processCard(Card card){
 		int type = card.returnType();
 		Player currPlayer = playerList.get(playerTurn);
 		
@@ -589,56 +600,56 @@ public class Board extends JPanel {
 	public void mortgageFunction(String propInputName){
 		boolean found = false;
 
-		for(Property p: properties){														//Cycle through all properties.
-
-			if(p.returnOwner() != null 
-					&& p.returnOwner() == playerTurn 
-					&& propInputName.equalsIgnoreCase(p.returnShortName())){				//Condition to narrow the cycle to all properties the player owns that's short name equals the name inputed.
-
-				if(p.isMortgage() == false){												//Checking the property hasn't been mortgaged yet.
-					if (p.returnHousePrice() == -1 || p.returnHouses() == 0){				//Making sure it's either a station or has no houses.
-						p.mortgage();
-
-						playerList.get(playerTurn).updateBalance(p.mortgage());				//Updating balance to add the properties mortgage value.
-
-						output.append("\nYou have mortgaged " + p.returnName() + " for " + (char)POUND + p.mortgage() + "\n");
+		for(Property p: properties){													//Cycle through all properties.
+			if(p.returnOwner() != null && propInputName.equalsIgnoreCase(p.returnShortName())){	//All properties owned that's short name equals the name inputed.
+				if(p.returnOwner() == playerTurn){													//Condition to make sure it's owned by current player. (Separated for else)
+					if(p.isMortgage() == false){														//Checking the property hasn't been mortgaged yet. (Separated for else)
+						if (p.returnHousePrice() == -1 || p.returnHouses() == 0){							//Making sure it's either a station or has no houses. (Separated for else)
+							p.mortgage();
+	
+							playerList.get(playerTurn).updateBalance(p.mortgage());								//Updating balance to add the properties mortgage value.
+	
+							output.append("\nYou have mortgaged " + p.returnName() + " for " + (char)POUND + p.mortgage() + "\n");
+						} else {
+							output.append("You must sell all houses first.\n");
+						}
 					} else {
-						output.append("You must sell all houses first.\n");
+						output.append("\nThis property has already been mortgaged.\n" + p.isMortgage());
 					}
 				} else {
-					output.append("\nThis property has already been mortgaged.\n" + p.isMortgage());
+					output.append("\nYou do not own this property.\n");
 				}
 				found = true;
 			}
 		}
 
-		if(found == false){																		//Outputting for when nothing happens.
-			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
+		if(found == false){															//Outputting for when property wasn't found.
+			output.append("\nProperty not found.\nEnter the short name for a property you've mortgaged.\n");
 		}
 	}
 
-	//Function to redeem a property. (See mortgageFunction for equivalent comments. Layout is similar)
+	//Function to redeem a property. (Similar layout as mortgage. If confused, look at corresponding lines for comments.)
 	public void redeemFunction(String propInputName){
-		int count = 0;
-		Player currPlayer = playerList.get(playerTurn);
+		boolean found = false;
 
 		for(Property p: properties){
-			Property currProperty = properties.get(currPlayer.getPosition());
-
-			if(p.returnOwner() != null && p.returnOwner() == playerTurn && propInputName.equalsIgnoreCase(p.returnShortName())){
-				if(currProperty.isMortgage() == true){
-					playerList.get(playerTurn).updateBalance(currProperty.redeem());
-					currProperty.redeem();
-					output.append("\nYou have redeemed " + currProperty.returnName() + "\n");
-					count++;
+			if(p.returnOwner() != null && propInputName.equalsIgnoreCase(p.returnShortName())){
+				if (p.returnOwner() == playerTurn){
+					if(p.isMortgage() == true){
+						playerList.get(playerTurn).updateBalance(p.redeem());
+						p.redeem();
+						output.append("\nYou have redeemed " + p.returnName() + "\n");
+					} else {
+						output.append("\nThis property is not currently mortgaged.\n");
+					}
+					found = true;
 				} else {
-					output.append("\nThis property is not currently mortgaged.\n");
-					count++;
+					output.append("\nYou do not own this property.\n");
 				}
 			}
 		}
 
-		if(count == 0){
+		if(found == false){
 			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
 		}
 	}

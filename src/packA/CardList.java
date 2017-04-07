@@ -18,8 +18,8 @@ public class CardList extends ArrayList<Card>{
 		
 	if(typeCard.equalsIgnoreCase("community")){
 		add (new Card("Community", 1, 0, "\nAdvance to Go.\n", 0, 0));
-		add (new Card("Community", 1, 0, "\nGo back to Old Kent Road.\n", 1, 0));													//No need to be in condition for money.
-		add (new Card("Community", 2, 0, "\nGo to jail. Move directly to jail. Do not pass Go. Do not collect " + (char)POUND + "200.\n", 10, 0));		
+		add (new Card("Community", 1, 0, "\nGo back to Old Kent Road.\n", 1, 0));
+		add (new Card("Community", 2, 0, "\nGo to jail. Move directly to jail. Do not pass Go. Do not collect " + (char)POUND + "200.\n", 10, 0));
 		add (new Card("Community", 3, 0, "\nPay hospital " + (char)POUND + "100.\n", -1, -100));
 		add (new Card("Community", 3, 0, "\nDoctor's fee. Pay " + (char)POUND + "50.\n", -1, -50));
 		add (new Card("Community", 3, 0, "\nPay your insurance premium " + (char)POUND + "50.\n", -1, -50));
