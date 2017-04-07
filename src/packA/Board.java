@@ -115,6 +115,9 @@ public class Board extends JPanel {
 		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
 		//Assessing command.
+		if(chooseFineOrChance && (command.equalsIgnoreCase("pay") || command.equalsIgnoreCase("chance")) ){
+			
+		}
 		if(command.equalsIgnoreCase("buy")){
 			buyFunction();
 		}
@@ -257,7 +260,7 @@ public class Board extends JPanel {
 		}
 	}
 	
-	public void processCard(Card card){
+	public void z(Card card){
 		int type = card.returnType();
 		Player currPlayer = playerList.get(playerTurn);
 		
@@ -332,7 +335,8 @@ public class Board extends JPanel {
 			break;
 			
 		case 8 : 
-			
+			chooseFineOrChance = true;
+			output.append("\nEnter 'Chance' to take a chance or 'Pay' to pay the fine.\n");
 		}
 	}
 
@@ -524,6 +528,15 @@ public class Board extends JPanel {
 		}
 	}
 
+	public void fineOrChance(String command){
+		if(command.equalsIgnoreCase("pay")){
+			output.append("\nYou have paid the fine.\n");
+		}
+		if(command.equalsIgnoreCase("chance")){
+			output.append("\nYou have drawn a Chance Card.\n");
+			
+		}
+	}
 	// Function to buy property that current Player is on.
 	public void buyFunction(){
 		Player currPlayer = playerList.get(playerTurn);
