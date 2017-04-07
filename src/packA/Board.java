@@ -194,6 +194,10 @@ public class Board extends JPanel {
 		Property tmpProperty = properties.get(currPlayer.getPosition());
 		String info;
 
+		if(currPlayer.getPosition() == 30){
+			goToJail();
+		}
+		
 		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
 			info = "\n" + tmpProperty.returnName() + "\n";
 			
@@ -371,16 +375,8 @@ public class Board extends JPanel {
 			output.append("\n"+ Dice.words() + "\n");
 			repaint();
 
-			if(tmpPlayer.getPosition() == 30){
-				goToJail();
-				Dice.allowedRoll = 0;
-				playerTurn = (playerTurn+1)%numberOfPlayers;
-				if(playerList.get(playerTurn).inJail() == false){
-					output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
-				}
-				checkJail();
-			}
-			else{
+			
+		
 
 				if(Dice.allowedRoll != 6){ //If not sent to jail, show the information about buying houses. 
 					squareInfo();
@@ -397,7 +393,7 @@ public class Board extends JPanel {
 					}
 					checkJail();
 				}
-			}
+			
 		}
 		else{
 			output.append("\nYou cannot roll again.\n");
@@ -505,14 +501,6 @@ public class Board extends JPanel {
 		currPlayer.setJail(true); //record player as in jail
 		currPlayer.setJailRoll(); //give 3 attempts to roll doubles
 		repaint(); //move token to jail
-		
-		//move to next player
-		playerTurn = (playerTurn+1)%numberOfPlayers;
-		Dice.allowedRoll = 0;
-		if(playerList.get(playerTurn).inJail() == false){
-			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
-		}
-		checkJail();
 	}
 
 	public void payBail(){
