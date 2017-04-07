@@ -226,11 +226,7 @@ public class Board extends JPanel {
 		}
 		
 		else if(tmpProperty.isMortgage() == true){																//Property is mortgaged.
-<<<<<<< HEAD
-			info = tmpProperty.returnName() + " is currently mortgaged.\n";
-=======
 			info = tmpProperty.returnName() + " is currently mortgaged. No rent paid.\n";
->>>>>>> d1733f834a8bfa7dcc8fe245660a69cc274d6595
 		}
 		
 		else{											
