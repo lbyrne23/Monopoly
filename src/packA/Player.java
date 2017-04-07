@@ -7,11 +7,15 @@ package packA;
 // A class to store coordinates for player tokens and paint them. It provides other classes with useful methods without seeing what's happening on the inside.
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.Timer;
 
 
 public class Player extends JLabel{
@@ -33,6 +37,8 @@ public class Player extends JLabel{
 	private int gooJ;													//Tracks amount of gooJ cards (Max 2)
 
 	public Player(int playernum, String playerName){
+		this.setPreferredSize(new Dimension(15,15));
+		
 		location = 0; 													//Start at GO.
 		player = playernum;
 		name = playerName;
@@ -87,17 +93,15 @@ public class Player extends JLabel{
 		points.add(new Point(630+place, 485));
 		points.add(new Point(630+place, 545));
 		points.add(new Point(630+place, 605));
+		
+		this.setPosition(0);
 	}
 
-
+	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g); 										//Erase old tokens.
-		gX = points.get(location).getX(); 								//Get point on array list.
-		gY = points.get(location).getY();
-		circleX = (int) gX; 											//Casting.
-		circleY = (int) gY;
-
-
+		setPosition(location);
+		
 		//Different colors depending on player number.
 		if(player == 0){
 			g.setColor(Color.GREEN);
@@ -117,13 +121,31 @@ public class Player extends JLabel{
 		if(player == 5){
 			g.setColor(Color.BLACK);
 		}
-		g.fillOval(circleX, circleY, 10, 10); 
+		g.fillOval(0, 0, 10, 10); 
 	}
 
 
 	//Classes used when drawing on image of board.
-	public void setLocation(int newLocation){
-		location = newLocation;
+	public void setPosition(int newLocation){
+		
+//		setLocation(points.get(location));
+		int delay = 300; //milliseconds
+		  new Timer(delay, new ActionListener() {
+			  int i = location;
+		      public void actionPerformed(ActionEvent evt) {
+		    		  if(i != newLocation){
+		    	  	  i = (i++)%40;
+		    		  setLocation(points.get(i));
+		    		  }
+		    		  else{
+		    			  setLocation(points.get(newLocation));
+		    			  ((Timer)evt.getSource()).stop();
+		    		  }
+		      }
+		  }).start();
+		  
+		  location = newLocation;
+		
 	}
 
 	public int getPosition(){

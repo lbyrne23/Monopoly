@@ -36,6 +36,7 @@ public class Board extends JPanel {
 	//Following variables are for tracking details of players' turns. 
 	protected static int playerTurn;
 	protected static boolean bankrupt = false;
+	protected static boolean chooseFineOrChance = false;
 
 
 	public Board(int players, JTextArea newOutput) {
@@ -63,9 +64,6 @@ public class Board extends JPanel {
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.drawImage( image, 0, 0, 700, 704, null); 									//Draw image of board.
-		for(Player p : playerList){													//Loop to draw each player.
-			p.paintComponent(g);
-		}
 	}
 
 
@@ -86,7 +84,9 @@ public class Board extends JPanel {
 
 			if(numberOfPlayers < 6){																	//Adding players if there's room.
 				playerList.add(new Player(numberOfPlayers, command));
+				add(playerList.get(numberOfPlayers));
 				output.append("Player " + numberOfPlayers + " name : " + command + "\n");
+				revalidate();
 				repaint();
 				numberOfPlayers++;
 
@@ -119,7 +119,7 @@ public class Board extends JPanel {
 			currPlayer.updateBalance(30000);
 
 			for (i = 0; i < properties.size(); i++){
-				currPlayer.setLocation(i);
+				currPlayer.setPosition(i);
 				buyFunction();
 			}
 			output.append("\nYou own everything in sight, but do you feel any less empty?\n");
@@ -216,7 +216,7 @@ public class Board extends JPanel {
 		}
 		
 		else if(tmpProperty.isMortgage() == true){																//Property is mortgaged.
-			info = tmpProperty.returnName() + " is currently mortggaed.\n";
+			info = tmpProperty.returnName() + " is currently mortgaged.\n";
 		}
 		
 		else{											
@@ -260,7 +260,7 @@ public class Board extends JPanel {
 				currPlayer.updateBalance(200);
 				output.append("\nYou've passed GO!\n " + (char)POUND + "200 has been added to your balance.\n");
 			}
-			currPlayer.setLocation(card.returnToSquare());					//Move player to square given by card.
+			currPlayer.setPosition(card.returnToSquare());					//Move player to square given by card.
 			squareInfo();
 			break;
 		//Go To Jail
@@ -290,7 +290,7 @@ public class Board extends JPanel {
 			
 			//Move a set amount of steps.
 		case 6 :
-			currPlayer.setLocation(currPlayer.getPosition() + card.returnSteps());
+			currPlayer.setPosition(currPlayer.getPosition() + card.returnSteps());
 			break;
 			
 			//Pay
@@ -304,7 +304,7 @@ public class Board extends JPanel {
 			}
 			else break;
 			int numberHouses = 0, numberHotels = 0;
-			for(Property p : properties){									//Increment through all properties.
+			for(Property p : properties){												//Increment through all properties.
 				if(p.returnOwner() != null && p.returnOwner() == playerTurn && p.returnHouses() > 0){
 					if (p.returnHouses() < 5){
 						currPlayer.updateBalance(- (houseRepairs*p.returnHouses()));	//Charge 'houseRepairs' per house built
@@ -313,12 +313,16 @@ public class Board extends JPanel {
 					if (p.returnHouses() == 5){
 						currPlayer.updateBalance(-hotelRepairs);						//Charge 'hotelRepairs' per hotel
 						numberHotels++;
-					}
+					}		
 				}
 			}
 			
 			output.append("\nHouses : " + numberHouses + "\nYou have paid " + (char)POUND + houseRepairs*numberHouses + ".\n");
 			output.append("\nHotels : " + numberHotels + "\nYou have paid " + (char)POUND + hotelRepairs*numberHotels + ".\n");
+			break;
+			
+		case 8 : 
+			
 		}
 	}
 
@@ -332,8 +336,7 @@ public class Board extends JPanel {
 				output.append("\n"+ Dice.words() + "\n");
 				output.append("Congratulations, you rolled doubles! You're free to go. \n");
 				tmpPlayer.setJail(false);
-				tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
-				repaint();
+				tmpPlayer.setPosition((tmpPlayer.getPosition()+ thisRoll)%40);
 				squareInfo();
 				Dice.allowedRoll = 1;
 			}
@@ -367,9 +370,8 @@ public class Board extends JPanel {
 				output.append("\nYou've passed GO!\n " + (char)POUND + "200 has been added to your balance.\n");
 			}
 
-			tmpPlayer.setLocation((tmpPlayer.getPosition()+ thisRoll)%40);
+			tmpPlayer.setPosition((tmpPlayer.getPosition()+ thisRoll)%40);
 			output.append("\n"+ Dice.words() + "\n");
-			repaint();
 
 			if(tmpPlayer.getPosition() == 30){
 				goToJail();
@@ -501,7 +503,7 @@ public class Board extends JPanel {
 		Dice.allowedRoll = 1;
 		Player currPlayer = playerList.get(playerTurn);
 		output.append("\nYou have been sent to jail \n");
-		currPlayer.setLocation(10); //move to jail square
+		currPlayer.setPosition(10); //move to jail square
 		currPlayer.setJail(true); //record player as in jail
 		currPlayer.setJailRoll(); //give 3 attempts to roll doubles
 		repaint(); //move token to jail
