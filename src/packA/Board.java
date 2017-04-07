@@ -602,7 +602,7 @@ public class Board extends JPanel {
 
 						playerList.get(playerTurn).updateBalance(p.mortgage());				//Updating balance to add the properties mortgage value.
 
-						output.append("\nYou have mortgaged " + p.returnName() + "\n");
+						output.append("\nYou have mortgaged " + p.returnName() + " for " + (char)POUND + p.mortgage() + "\n");
 					} else {
 						output.append("You must sell all houses first.\n");
 					}

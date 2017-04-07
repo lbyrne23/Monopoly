@@ -127,24 +127,8 @@ public class Player extends JLabel{
 
 	//Classes used when drawing on image of board.
 	public void setPosition(int newLocation){
-		
-//		setLocation(points.get(location));
-		int delay = 300; //milliseconds
-		  new Timer(delay, new ActionListener() {
-			  int i = location;
-		      public void actionPerformed(ActionEvent evt) {
-		    		  if(i != newLocation){
-		    	  	  i = (i++)%40;
-		    		  setLocation(points.get(i));
-		    		  }
-		    		  else{
-		    			  setLocation(points.get(newLocation));
-		    			  ((Timer)evt.getSource()).stop();
-		    		  }
-		      }
-		  }).start();
-		  
 		  location = newLocation;
+		  setLocation(points.get(location));
 		
 	}
 
