@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class CardList extends ArrayList<Card>{
 	public static final int POUND = 163;	
-	public CardList(){
+
+	public CardList(String typeCard){
 		// Types: 	1 Move to square, no condition for money.
 		//			2 Move to square, condition for money.
 		//			3 Pay fine/Collect money.
@@ -15,6 +16,7 @@ public class CardList extends ArrayList<Card>{
 		//			8 Fine or Chance
 		// communityChance, id, steps, message, square, money
 		
+	if(typeCard.equalsIgnoreCase("community")){
 		add (new Card("Community", 1, 0, "\nAdvance to Go.\n", 0, 0));
 		add (new Card("Community", 1, 0, "\nGo back to Old Kent Road.\n", 1, 0));													//No need to be in condition for money.
 		add (new Card("Community", 2, 0, "\nGo to jail. Move directly to jail. Do not pass Go. Do not collect " + (char)POUND + "200.\n", 10, 0));		
@@ -30,8 +32,11 @@ public class CardList extends ArrayList<Card>{
 		add (new Card("Community", 3, 0, "\nYou have won second prize in a beauty contest. Collect " + (char)POUND + "10.\n", -1, 10));
 		add (new Card("Community", 4, 0, "\nIt is your birthday. Collect " + (char)POUND + "10 from each player.\n", -1, 10));
 		add (new Card("Community", 5, 0, "\nGet out of jail free. This card may be kept until needed or sold.\n", -1, 0));
-		add (new Card("Community", 8, 0, "\nPay a " + (char)POUND + "10 fine or take a Chance. 'pay' or 'take'\n", -1, 10));
 
+		add (new Card("Community", 8, 0, "\nPay a " + (char)POUND + "10 fine or take a Chance. 'pay' or 'take'\n", -1, 10));
+	}
+	
+	if(typeCard.equalsIgnoreCase("chance")){
 		add (new Card("Chance", 1, 0, "\nAdvance to Go.\n", 0, 0));		
 		add (new Card("Chance", 2, 0, "\nGo to jail. Move directly to jail. Do not pass Go. Do not collect " + (char)POUND + "200.\n", 10, 0));
 		add (new Card("Chance", 1, 0, "\nAdvance to Pall Mall. Collect " + (char)POUND + "200 if you pass go.\n", 11, 0));
@@ -48,7 +53,10 @@ public class CardList extends ArrayList<Card>{
 		add (new Card("Chance", 3, 0, "\nYou have won a crossword competition. Collect " + (char)POUND + "100.\n", -1, 100));
 		add (new Card("Chance", 3, 0, "\nBank pays you dividend of " + (char)POUND + "50.\n", -1, 50));
 		add (new Card("Chance", 5, 0, "\nGet out of jail free. This card may be kept until needed or sold.\n", -1, 0));
-		
+		}	
 	}
 
+	public CardList(){
+	}
+	
 }

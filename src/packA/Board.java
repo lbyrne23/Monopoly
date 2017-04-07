@@ -29,6 +29,12 @@ public class Board extends JPanel {
 	private BufferedImage  image = null;	
 	protected static ArrayList<Player> playerList = new ArrayList<Player>(6);			//Array list to store players.
 	protected static PropertyList properties = new PropertyList();
+	protected static CardList jailCards = new CardList();
+	protected static CardList communityCards = new CardList("community");
+	protected static CardList chanceCards = new CardList("chance");
+	long seed = System.nanoTime();
+	Collections.shuffle(communityCards, new Random(seed));
+	Collections.shuffle(chanceCards, new Random(seed));
 	protected static int numberOfPlayers;
 	protected static JTextArea output;
 	private static int winner = 0;
@@ -55,8 +61,8 @@ public class Board extends JPanel {
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
 		playerTurn = -1; 															//Indicates players have not yet been instantiated. 
-		playerList = new ArrayList<Player>(players);								// List to hold players
-		numberOfPlayers = 0;														//tracks number of players, begins at zero.
+		playerList = new ArrayList<Player>(players);								//List to hold players/
+		numberOfPlayers = 0;														//Tracks number of players, begins at zero.
 	}
 
 
@@ -194,6 +200,10 @@ public class Board extends JPanel {
 		Property tmpProperty = properties.get(currPlayer.getPosition());
 		String info;
 
+		if(currPlayer.getPosition() == 30){
+			goToJail();
+		}
+		
 		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
 			info = "\n" + tmpProperty.returnName() + "\n";
 			
@@ -216,12 +226,16 @@ public class Board extends JPanel {
 		}
 		
 		else if(tmpProperty.isMortgage() == true){																//Property is mortgaged.
+<<<<<<< HEAD
 			info = tmpProperty.returnName() + " is currently mortgaged.\n";
+=======
+			info = tmpProperty.returnName() + " is currently mortgaged. No rent paid.\n";
+>>>>>>> d1733f834a8bfa7dcc8fe245660a69cc274d6595
 		}
 		
 		else{											
 			info = tmpProperty.returnName() + "\n------------------------------------------------------------------------------------------\n"
-					+ "\n- " + playerList.get(tmpProperty.returnOwner()).getName()	//Owner > 0, i.e. owned property.
+					+ "\n" + playerList.get(tmpProperty.returnOwner()).getName()								//Owner > 0, i.e. owned property.
 					+ " owns this property, you have paid them "+ (char)POUND + payRentFunction() + ".\n"
 							+ "\nYour balance is now " + (char)POUND + currPlayer.getBalance() +".\n";																				//
 			
@@ -288,12 +302,12 @@ public class Board extends JPanel {
 			//This would avoid declaring many 'ArrayList<Card>'s
 			break;
 			
-			//Move a set amount of steps.
+		//Move a set amount of steps.
 		case 6 :
 			currPlayer.setPosition(currPlayer.getPosition() + card.returnSteps());
 			break;
 			
-			//Pay
+		//Pay
 		case 7 :
 			int houseRepairs, hotelRepairs;
 			Pattern repairCosts = Pattern.compile("(\\d+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
@@ -373,16 +387,8 @@ public class Board extends JPanel {
 			tmpPlayer.setPosition((tmpPlayer.getPosition()+ thisRoll)%40);
 			output.append("\n"+ Dice.words() + "\n");
 
-			if(tmpPlayer.getPosition() == 30){
-				goToJail();
-				Dice.allowedRoll = 0;
-				playerTurn = (playerTurn+1)%numberOfPlayers;
-				if(playerList.get(playerTurn).inJail() == false){
-					output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
-				}
-				checkJail();
-			}
-			else{
+			
+		
 
 				if(Dice.allowedRoll != 6){ //If not sent to jail, show the information about buying houses. 
 					squareInfo();
@@ -399,7 +405,7 @@ public class Board extends JPanel {
 					}
 					checkJail();
 				}
-			}
+			
 		}
 		else{
 			output.append("\nYou cannot roll again.\n");
@@ -507,14 +513,6 @@ public class Board extends JPanel {
 		currPlayer.setJail(true); //record player as in jail
 		currPlayer.setJailRoll(); //give 3 attempts to roll doubles
 		repaint(); //move token to jail
-		
-		//move to next player
-		playerTurn = (playerTurn+1)%numberOfPlayers;
-		Dice.allowedRoll = 0;
-		if(playerList.get(playerTurn).inJail() == false){
-			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
-		}
-		checkJail();
 	}
 
 	public void payBail(){
@@ -569,43 +567,43 @@ public class Board extends JPanel {
 		output.append("\nThe properties you own are as follow;\n");
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
-				output.append("\n" + p.returnName() + " : \n-The current rent is " + (char)POUND + p.returnRent() +"\n");
+				if (p.isMortgage() == true){
+					output.append("\n" + p.returnName() + " (Mortgaged) : \n-The rent is " + (char)POUND + p.returnRent() + "\n");
+				} else {
+					output.append("\n" + p.returnName() + " : \n-The rent is " + (char)POUND + p.returnRent() +"\n");
+				}
 			}
 		}
 	}
 
 	//Function to mortgage a property for the current player.
 	public void mortgageFunction(String propInputName){
-		int count = 0;
-		Player currPlayer = playerList.get(playerTurn);
+		boolean found = false;
 
 		for(Property p: properties){														//Cycle through all properties.
-			Property currProperty = properties.get(currPlayer.getPosition());
 
 			if(p.returnOwner() != null 
 					&& p.returnOwner() == playerTurn 
 					&& propInputName.equalsIgnoreCase(p.returnShortName())){				//Condition to narrow the cycle to all properties the player owns that's short name equals the name inputed.
 
-				if(currProperty.isMortgage() == false){											//Checking the property hasn't been mortgaged yet.
-					if (currProperty.returnHouses() == 0){										//Making sure there aren't houses.
-						currProperty.mortgage();
+				if(p.isMortgage() == false){												//Checking the property hasn't been mortgaged yet.
+					if (p.returnHousePrice() == -1 || p.returnHouses() == 0){				//Making sure it's either a station or has no houses.
+						p.mortgage();
 
-						playerList.get(playerTurn).updateBalance(currProperty.mortgage());		//Updating balance to the properties mortgage value.
+						playerList.get(playerTurn).updateBalance(p.mortgage());				//Updating balance to add the properties mortgage value.
 
 						output.append("\nYou have mortgaged " + p.returnName() + "\n");
 					} else {
 						output.append("You must sell all houses first.\n");
 					}
-
-					count++;
 				} else {
-					output.append("\nThis property has already been mortgaged.\n");
-					count++;
+					output.append("\nThis property has already been mortgaged.\n" + p.isMortgage());
 				}
+				found = true;
 			}
 		}
 
-		if(count == 0){																		//Outputting for when nothing happens.
+		if(found == false){																		//Outputting for when nothing happens.
 			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
 		}
 	}
