@@ -494,6 +494,7 @@ public class Board extends JPanel {
 				bankrupt = false; 														//reset bankruptcy
 				Dice.allowedRoll = 0;													//Allow player to roll again.
 				if(playerList.get(playerTurn).inJail() == false){
+					propertyCard.setIcon(null);
 					output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 				}
 				checkJail();
@@ -516,6 +517,7 @@ public class Board extends JPanel {
 			Dice.allowedRoll = 0;
 			playerTurn = (playerTurn+1)%numberOfPlayers;
 			if(playerList.get(playerTurn).inJail() == false){
+				propertyCard.setIcon(null);
 				output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 			}
 			checkJail();
