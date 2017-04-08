@@ -52,7 +52,7 @@ public class Board extends JPanel {
 		output = newOutput;
 		
 		//Try to load image from project files.
-		URL url = getClass().getResource("Board2.gif");
+		URL url = getClass().getResource("Board3.gif");
 		try {
 			image = ImageIO.read(url);
 		} catch (IOException e) {
