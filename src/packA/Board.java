@@ -6,6 +6,7 @@ package packA;
 //
 // A class to display the board, paint the player tokens and interpret commands.
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -33,6 +35,7 @@ public class Board extends JPanel {
 	protected static CardList jailCards = new CardList();
 	protected static CardList communityCards = new CardList("community");
 	protected static CardList chanceCards = new CardList("chance");
+	protected static JLabel propertyCard = new JLabel();
 	protected static int numberOfPlayers;
 	protected static JTextArea output;
 	private static int winner = 0;
@@ -44,7 +47,9 @@ public class Board extends JPanel {
 	
 
 	public Board(int players, JTextArea newOutput) {
-		
+		add(propertyCard);
+		propertyCard.setSize(new Dimension(200, 229));
+		propertyCard.setLocation(260, 80);
 		output = newOutput;
 		
 		//Try to load image from project files.
@@ -203,6 +208,8 @@ public class Board extends JPanel {
 		Property tmpProperty = properties.get(currPlayer.getPosition());
 		String info;
 
+		propertyCard.setIcon(tmpProperty.getImage());
+		
 		if(currPlayer.getPosition() == 30){
 			goToJail();
 		}

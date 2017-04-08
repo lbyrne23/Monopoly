@@ -10,12 +10,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.Timer;
 
 
 public class Player extends JLabel{
@@ -37,6 +33,7 @@ public class Player extends JLabel{
 	private int gooJ;													//Tracks amount of gooJ cards (Max 2)
 
 	public Player(int playernum, String playerName){
+		this.setSize(new Dimension(15,15));
 		this.setPreferredSize(new Dimension(15,15));
 		
 		location = 0; 													//Start at GO.

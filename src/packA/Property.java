@@ -1,4 +1,21 @@
 package packA;
+
+
+
+import java.awt.image.BufferedImage;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+
 //Team : Cessna Skyhawk
 //Michael Jordan
 //Lucy Byrne
@@ -17,6 +34,7 @@ class Property {
 	private int housePrice;
 	private int squareNumber;
 	private int storeRentDuringMortgage;
+	private ImageIcon cardImage;
 	
 	public Property(String name, int squareNumber){
 		this.name = name;
@@ -110,6 +128,19 @@ class Property {
 		if(newHouses >= 0 && newHouses < rentArray.length){
 			houses = newHouses;
 			return rentArray[houses];
+		}
+		else return null;
+	}
+	
+	public void setImage(String url){
+			if(url != null)
+			cardImage = new ImageIcon ((this.getClass().getResource(url)));
+			else
+			cardImage = null;
+	}
+	public ImageIcon getImage(){
+		if(cardImage != null){
+			return cardImage;
 		}
 		else return null;
 	}

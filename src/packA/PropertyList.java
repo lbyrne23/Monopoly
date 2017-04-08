@@ -11,7 +11,7 @@ public class PropertyList extends ArrayList<Property>{
 	public PropertyList(){
 		// name, shortName, owner, price, rent[], colour, mortgage, mortgagedProperty, housePrice, squareNumber
 		add(new Property("GO", 0));
-		add(new Property("Old Kent Road","Kent", -1, 60, SITE_RENTS[0], 0, 50, false, 50, 1));
+		add(new Property("Old Kent Rd","Kent", -1, 60, SITE_RENTS[0], 0, 50, false, 50, 1));
 		add(new Property("Community Chest", 2));
 		add(new Property("Whitechapel Rd","Whitechapel", -1, 60, SITE_RENTS[1], 0, 50, false, 50, 3));
 		add(new Property("Income Tax", SITE_RENTS[2], 4));
@@ -31,7 +31,7 @@ public class PropertyList extends ArrayList<Property>{
 		add(new Property("Marlborough St","Marlborough", -1, 180, SITE_RENTS[13], 3, 90, false, 100, 18));
 		add(new Property("Vine St","Vine", -1, 200, SITE_RENTS[14], 3, 90, false, 100, 19));
 		add(new Property("Free Parking", 20));
-		add(new Property("Strand","Strand", -1, 220, SITE_RENTS[15], 4, 100, false, 150, 21));
+		add(new Property("The Strand","Strand", -1, 220, SITE_RENTS[15], 4, 100, false, 150, 21));
 		add(new Property("Chance", 22));
 		add(new Property("Fleet St","Fleet", -1, 220, SITE_RENTS[16], 4, 110, false, 150, 23));
 		add(new Property("Trafalgar Sq","Trafalgar", -1, 240, SITE_RENTS[17], 4, 110, false, 150, 24));
@@ -50,6 +50,18 @@ public class PropertyList extends ArrayList<Property>{
 		add(new Property("Park Lane","Park", -1, 350, SITE_RENTS[27], 7, 175, false, 200, 37));
 		add(new Property("Super Tax", SITE_RENTS[28], 38));
 		add(new Property("Mayfair","Mayfair", -1, 400, SITE_RENTS[29], 7, 200, false, 200, 39));
+		
+		String currName;
+		for(Property p : this){
+			if(p.returnColour() > 0 && p.returnColour() < 8){
+				currName = p.returnName();
+				currName = currName.concat(".jpg");
+				p.setImage(currName);
+				
+
+			}
+			else p.setImage(null);
+		}
 	}
 	
 	private static final int[][] SITE_RENTS = {
