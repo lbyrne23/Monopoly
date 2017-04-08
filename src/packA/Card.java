@@ -1,9 +1,6 @@
 package packA;
 
-import java.util.ArrayList;
-
 public class Card {
-	private String name;						//Link between Card and Property.
 	private String communityChance;
 	private int type;
 	private int steps;
