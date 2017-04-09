@@ -410,12 +410,15 @@ public class Board extends JPanel {
 			output.append("\nYou cannot roll again while in debt.\n");
 			return;
 		}
-		
-		if (playerList.get(playerTurn).inJail() == true){
-			
-			int thisRoll = Dice.Roll();
 
-			if(Dice.allowedRoll == 2){ //if the player rolled doubles while in jail
+		else if (playerList.get(playerTurn).inJail() == true){
+			tmpPlayer = playerList.get(playerTurn);
+			int thisRoll = Dice.Roll();
+			
+			if(Dice.allowedRoll == 8 || Dice.allowedRoll == 9){ //If player tries to roll after just been sent to jail
+				output.append("\nYou can't roll as you have been sent to jail\n");
+			}
+			else if(Dice.allowedRoll == 2){ //if the player rolled doubles while in jail
 				output.append("\n"+ Dice.words() + "\n");
 				output.append("Congratulations, you rolled doubles! You're free to go. \n");
 				tmpPlayer.setJail(false);
@@ -583,7 +586,7 @@ public class Board extends JPanel {
 
 	//Function to send player to Jail
 	public void goToJail(){
-		Dice.allowedRoll = 1;
+		Dice.allowedRoll = 7;
 		Player currPlayer = playerList.get(playerTurn);
 		output.append("\nYou have been sent to jail \n");
 		currPlayer.setPosition(10); //move to jail square
