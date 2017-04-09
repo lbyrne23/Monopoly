@@ -119,9 +119,10 @@ public class Board extends JPanel {
 		}
 		//TEST COMMAND TO TAKE COMMUNITY CARD.
 		else if(command.equalsIgnoreCase("gambino")){
-			//takeCard(communityCards);
+			takeCard(communityCards);
+		}
+		else if(command.equalsIgnoreCase("family reunion")){
 			goToJail();
-			playerList.get(playerTurn).updateGooJ(1);
 		}
 		
 		else if(command.equalsIgnoreCase("card")){
@@ -195,7 +196,7 @@ public class Board extends JPanel {
 	}
 
 	public void setupGame(String command){
-		if(playersEntered>1 && command.equalsIgnoreCase("done")){			//Case of sufficient players to begin.
+		if(playersEntered>1){			//Case of sufficient players to begin.
 			playerTurn++;
 			output.append("Roll to see who goes first.\n");
 
@@ -230,22 +231,20 @@ public class Board extends JPanel {
 			}
 		}
 
-		if(playersEntered != numberOfPlayers){												//Adding players until they're all in.
-			playerList.add(new Player(playersEntered, command));
-			add(playerList.get(playersEntered));
-			output.append("Player " + (playersEntered+1) + " name : " + command + "\n");
-			revalidate();
-			repaint();
-			playersEntered++;
+		playerList.add(new Player(playersEntered, command));
+		add(playerList.get(playersEntered));
+		output.append("Player " + (playersEntered+1) + " name : " + command + "\n");
+		revalidate();
+		repaint();
+		playersEntered++;
 
-			if(playersEntered == numberOfPlayers){											//If all players added, begin.
-				output.append("Roll to see who goes first.\n");
-				goFirst();
-				output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\n\nEnter 'roll'.\n");
-			}
-
-			return;
+		if(playersEntered == numberOfPlayers){											//If all players added, begin.
+			output.append("Roll to see who goes first.\n");
+			goFirst();
+			output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\n\nEnter 'roll'.\n");
 		}
+
+		return;
 	}
 	
 	public void squareInfo(){
@@ -307,16 +306,16 @@ public class Board extends JPanel {
 		Player tmpPlayer = playerList.get(playerTurn);
 		if(Dice.allowedRoll == 0 && tmpPlayer.inJail() == true){
 			output.append("\n" + playerList.get(playerTurn).getName() +"'s turn.\n");
-			output.append("You are in jail \n"
+			output.append("You are in jail\n\n"
 					+ "To be released you must do one of these:\n"
-					+ "1) Use a 'get out of jail free' card \n"
-					+ "2) Pay a fine of " + (char)POUND + "50 \n"
-					+ "3) Roll doubles \n"
-					+ "If you do not roll doubles by your 3rd turn in jail you must pay the fine of " + (char)POUND + "50.\n"
-					+ "Enter 'roll', 'card', or 'pay' to proceed\n");
+					+ "1) Use a 'get out of jail free' card\n"
+					+ "2) Pay a fine of " + (char)POUND + "50\n"
+					+ "3) Roll doubles\n"
+					+ "If you do not roll doubles by your 3rd turn in jail you must pay the fine of " + (char)POUND + "50.\n\n"
+					+ "Enter 'card', 'roll', or 'pay' to proceed.\n");
 
 			if(tmpPlayer.getJailRoll() > 0 && tmpPlayer.getJailRoll() <= 2){
-				output.append("You have " + tmpPlayer.getJailRoll() +" attempts left to roll doubles before you must pay the fine. \n");
+				output.append("You have " + tmpPlayer.getJailRoll() +" attempts left to roll doubles before you must pay the fine.\n");
 			}
 		}
 	}
@@ -434,7 +433,7 @@ public class Board extends JPanel {
 			int thisRoll = Dice.Roll();
 			
 			if(Dice.allowedRoll == 8 || Dice.allowedRoll == 9){ //If player tries to roll after just been sent to jail
-				output.append("\nYou can't roll as you have been sent to jail\n");
+				output.append("\nYou can't roll as you have just been sent to jail\n");
 			}
 			else if(Dice.allowedRoll == 2){ //if the player rolled doubles while in jail
 				output.append("\n"+ Dice.words() + "\n");
@@ -605,26 +604,32 @@ public class Board extends JPanel {
 	public void goToJail(){
 		Dice.allowedRoll = 7;
 		Player currPlayer = playerList.get(playerTurn);
-		output.append("\nYou have been sent to jail \n");
-		currPlayer.setPosition(10); //move to jail square
-		currPlayer.setJail(true); //record player as in jail
-		currPlayer.setJailRoll(); //give 3 attempts to roll doubles
-		repaint(); //move token to jail
+		output.append("\nYou have been sent to jail.\n\n"
+				+ "To be released you must do one of these:\n"
+				+ "1) Use a 'get out of jail free' card \n"
+				+ "2) Pay a fine of " + (char)POUND + "50 \n"
+				+ "3) Roll doubles \n"
+				+ "If you do not roll doubles by your 3rd turn in jail you must pay the fine of " + (char)POUND + "50.\n\n"
+				+ "Enter 'roll', 'card', or 'pay' to proceed\n");
+		currPlayer.setPosition(10); 	//Move to jail square.
+		currPlayer.setJail(true); 		//Record player as in jail.
+		currPlayer.setJailRoll(); 		//Give 3 attempts to roll doubles.
+		repaint(); 						//Move token to jail.
 	}
 	
 	//Function to get out of jail if you have a Card.
 	public void gooJ(){
 		Player currPlayer = playerList.get(playerTurn);
 		if (currPlayer.inJail()){
-			if(currPlayer.returnGooJ() > 0){		//If player has Get out of Jail Card.
-				currPlayer.setJail(false);				//Release from Jail.
-				currPlayer.updateGooJ(-1);				//Remove get out of jail card.
+			if(currPlayer.returnGooJ() > 0){		//If player has GooJ Card.
+				currPlayer.setJail(false);			//Release from jail.
+				currPlayer.updateGooJ(-1);			//Remove GooJ card.
 				
-				if (jailCards.get(0).returncommunityChance().equalsIgnoreCase("Chance")){//If Gooj card is a chance card return to chance deck.
+				if (jailCards.get(0).returncommunityChance().equalsIgnoreCase("Chance")){	//If GooJ card is a chance card return to chance deck.
 					chanceCards.add(jailCards.remove(0));
 				}
 				else{
-				communityCards.add(jailCards.remove(0));	//Else return Gooj card to Community Deck.
+					communityCards.add(jailCards.remove(0));								//Else return GooJ card to Community Deck.
 				}
 				
 				output.append("\nYou have used a GooJ Card, you're free to go!\n You now have " + currPlayer.returnGooJ() + " cards.\n");
@@ -632,7 +637,7 @@ public class Board extends JPanel {
 			else output.append("\nYou do not have a GooJ card.\n");
 		}
 		else{
-			output.append("\nYou are not in Jail, you cannot use a GooJ card.\n");	//If player not in jail.
+			output.append("\nYou are not in Jail, you cannot use a GooJ card.\n");
 		}
 		
 	}
