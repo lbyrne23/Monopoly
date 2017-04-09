@@ -312,11 +312,10 @@ public class Board extends JPanel {
 				}
 			}
 			break;
-		
+		//Give player a Get out of Jail free card, (recorded as int).
 		case 5 :
-			//IMPORTANT NEED GOOJ CARD FUNCTIONALITY FIRST.
-			//Possibly, have separate card stack for in use cards, and have players just store an integer for GooJ cards.
-			//This would avoid declaring many 'ArrayList<Card>'s
+			currPlayer.updateGooJ(1);
+			
 			break;
 			
 		//Move a set amount of steps.
@@ -360,6 +359,11 @@ public class Board extends JPanel {
 
 	//Function to roll dice and move player.
 	public void rollFunction(){
+		if(chooseFineOrChance){
+			output.append("\nYou cannot roll without choosing to pay a fine or draw a card.\nType 'pay' or 'fine'.\n");
+			return;
+		}
+		
 		if (playerList.get(playerTurn).inJail() == true){
 			Player tmpPlayer = playerList.get(playerTurn);
 			int thisRoll = Dice.Roll();
@@ -471,6 +475,12 @@ public class Board extends JPanel {
 
 	//Function to end turn. Also takes bankruptcy into account.
 	public void doneFunction(){
+		//If player has drawn a card of type 8, they must choose to pay a fine or draw a chance card before ending turn or rolling.
+		if(chooseFineOrChance){
+			output.append("\nYou cannot end your turn without choosing to pay a fine or draw a card.\nType 'pay' or 'fine'.\n");
+			return;
+		}
+		
 		Player currPlayer = playerList.get(playerTurn);
 		//If bankruptcy declared, remove player, check if game is finished otherwise carry on.
 		if(bankrupt){										//If out of money.								
@@ -547,15 +557,20 @@ public class Board extends JPanel {
 			output.append("You are not in jail \n");
 		}
 	}
-
+	
+	//Function to allow player to pay a fine or else draw another card if a type 8 card is draw.
 	public void fineOrChance(String command){
+		Player currPlayer = playerList.get(playerTurn);
 		if(command.equalsIgnoreCase("pay")){
 			output.append("\nYou have paid the fine.\n");
+			currPlayer.updateBalance(-10);
 		}
 		if(command.equalsIgnoreCase("chance")){
 			output.append("\nYou have drawn a Chance Card.\n");
-			
+			drawACard(chanceCards);
 		}
+		
+		chooseFineOrChance = false;
 	}
 	// Function to buy property that current Player is on.
 	public void buyFunction(){

@@ -185,5 +185,14 @@ public class Player extends JLabel{
 	public int getJailRoll(){
 		return jailRoll;
 	}
+	
+	//update how many gooj cards player has
+	public void updateGooJ(int amount){
+		gooJ = gooJ + amount;
+	}
+	//return amount of get out of jail cards.
+	public int returnGooJ(){
+	return gooJ;	
+	}
 
 }
