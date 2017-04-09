@@ -8,6 +8,7 @@ package packA;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
@@ -259,7 +260,7 @@ public class Board extends JPanel {
 			
 			if(tmpProperty.returnRent() != 0){																	//if rent exists (Rent & Unbuyable means it is a tax square.)
 				payRentFunction();
-				info = "\nYou have paid a fine of " + (char)POUND + tmpProperty.returnRent() + ".\n";
+				info = "\n" + tmpProperty.returnName() + "\nYou have paid a fine of " + (char)POUND + tmpProperty.returnRent() + ".\n";
 			}
 		}
 		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
