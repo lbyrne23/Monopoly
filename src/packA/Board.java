@@ -20,9 +20,9 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.text.DefaultCaret;
 
 import packA.Player;
 
@@ -36,13 +36,14 @@ public class Board extends JPanel {
 	protected static CardList communityCards = new CardList("community");
 	protected static CardList chanceCards = new CardList("chance");
 	protected static JLabel propertyCard = new JLabel();
-	protected static int numberOfPlayers;
+	protected static int numberOfPlayers = 0;
+	protected static int playersEntered = 0;
 	protected static OutputBox outputBox;
 	protected static JTextArea output;
 	private static int winner = 0;
 
 	//Following variables are for tracking details of players' turns. 
-	protected static int playerTurn;
+	protected static int playerTurn = -1;
 	protected static boolean bankrupt = false;
 	protected static boolean chooseFineOrChance = false;
 	
@@ -65,32 +66,40 @@ public class Board extends JPanel {
 
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
-		playerTurn = -1; 															//Indicates players have not yet been instantiated. 
 		playerList = new ArrayList<Player>(players);								//List to hold players/
-		numberOfPlayers = 0;														//Tracks number of players, begins at zero.
+		String[] options = new String[] {"6", "5", "4", "3", "2"};
+		int response = JOptionPane.showOptionDialog(null, "How many are playing?", "Monopoly by CessnaSkyhawk", 
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+		        null, options, options[0]);
+		
+		if (response == -1){
+			System.exit(0);
+		} else {
+			numberOfPlayers = Integer.parseInt(options[response]);
+		}
 	}
 
 
 	@Override																					
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		g.drawImage( image, 0, 0, 700, 704, null); 									//Draw image of board.
+		g.drawImage( image, 0, 0, 700, 704, null); 								//Draw image of board.
 	}
 
 
 	public void playerAction(String command){
 		//Reset auto-scroll in case someone has clicked on the output box.
 		outputBox.resetCaret();
-		
+
 		//This class will call other functions depending on command given.
 		if(playerTurn == -1){
 
-			if(numberOfPlayers>1 && command.equalsIgnoreCase("done")){			//Case of sufficient players to begin.
+			if(playersEntered>1 && command.equalsIgnoreCase("done")){			//Case of sufficient players to begin.
 				playerTurn++;
 				output.append("Roll to see who goes first.\n");
 
 				goFirst();														//Function to arrange players based on dice rolls.
-				Collections.shuffle(communityCards);							//Shuffle the decks
+				Collections.shuffle(communityCards);							//Shuffle the decks.
 				Collections.shuffle(chanceCards);
 
 				output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
@@ -107,38 +116,26 @@ public class Board extends JPanel {
 			}
 			
 			if(!playerList.isEmpty()){
-				
-				
-				
 				for(Player p : playerList){
 					if(command.equals(p.getName())){
 						output.append("\nSomeone already has this name, please select another\n");
 						return;
 					}
-					
-				
-					
 				}
 			}
 
-			if(numberOfPlayers < 6){																	//Adding players if there's room.
-				playerList.add(new Player(numberOfPlayers, command));
-				add(playerList.get(numberOfPlayers));
-				output.append("Player " + numberOfPlayers + " name : " + command + "\n");
+			if(playersEntered != numberOfPlayers){												//Adding players until they're all in.
+				playerList.add(new Player(playersEntered, command));
+				add(playerList.get(playersEntered));
+				output.append("Player " + (playersEntered+1) + " name : " + command + "\n");
 				revalidate();
 				repaint();
-				numberOfPlayers++;
+				playersEntered++;
 
-				switch(numberOfPlayers){																//Different message displayed once sufficient players added.
-				case 1:	output.append("Please enter a player name.\n");
-				break;
-
-				case 6: output.append("Roll to see who goes first.\n");									//If maximum players added, begin.
-				goFirst();
-				output.append(playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
-				break;
-
-				default : output.append("Please enter a player name, \nor type 'done' to begin.\n");
+				if(playersEntered == numberOfPlayers){											//If all players added, begin.
+					output.append("Roll to see who goes first.\n");
+					goFirst();
+					output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\n\nEnter 'roll'.\n");
 				}
 
 				return;
@@ -147,15 +144,9 @@ public class Board extends JPanel {
 
 		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
-		//Assessing command.
-		if(chooseFineOrChance && (command.equalsIgnoreCase("pay fine") || command.equalsIgnoreCase("chance")) ){
-			fineOrChance(command);
-		}
-		if(command.equalsIgnoreCase("buy")){
-			buyFunction();
-		}
+		
 		//TEST COMMAND USED TO PURCHASE ALL PROPERTY FOR DEBUGGING.
-		else if (command.equalsIgnoreCase("Squatters Rights")){
+		if (command.equalsIgnoreCase("Squatters Rights")){
 			int i;
 			Player currPlayer = playerList.get(playerTurn);
 			currPlayer.updateBalance(30000);
@@ -169,6 +160,14 @@ public class Board extends JPanel {
 		//TEST COMMAND USED TO ENTER BANKRUPTCY.
 		else if(command.equalsIgnoreCase("purchase bit coin")){
 			playerList.get(playerTurn).updateBalance(-1499);
+		}
+		//TEST COMMAND TO TAKE COMMUNITY CARD.
+		else if(command.equalsIgnoreCase("gambino")){
+			takeCard(communityCards);
+		}
+		
+		else if(command.equalsIgnoreCase("buy")){
+			buyFunction();
 		}
 
 		else if(command.equalsIgnoreCase("property")){
@@ -184,7 +183,6 @@ public class Board extends JPanel {
 			String propInputName = command.substring(7);
 			redeemFunction(propInputName);
 		}
-
 
 		else if(command.equalsIgnoreCase("done")){
 			doneFunction();
@@ -223,6 +221,10 @@ public class Board extends JPanel {
 		
 		else if(command.equalsIgnoreCase("jail")){
 			goToJail();
+		}
+		
+		else if(chooseFineOrChance && (command.equalsIgnoreCase("pay fine") || command.equalsIgnoreCase("chance")) ){
+			fineOrChance(command);
 		}
 
 		else {
@@ -306,10 +308,10 @@ public class Board extends JPanel {
 	public void takeCard(CardList deck){
 		processCard(deck.get(0));
 		
-		if(deck.get(0).returnType() == 5){						//If GooJ card
+		if(deck.get(0).returnType() == 5){						//If GooJ card, add to jailCards and remove from deck.
 			jailCards.add(deck.get(0));
 			deck.remove(deck.get(0));
-		} else {
+		} else {												//Move to end of deck.
 			deck.add(deck.get(0));
 			deck.remove(0);
 		}
@@ -338,7 +340,7 @@ public class Board extends JPanel {
 			goToJail();
 			break;
 			
-		// Receive Money or Pay a fine/expense.
+		//Receive Money or Pay a fine/expense.
 		case 3 :
 			currPlayer.updateBalance(card.returnMoney());
 			break;
@@ -488,7 +490,6 @@ public class Board extends JPanel {
 	public void helpFunction(){
 		output.append("\n'roll' : Roll dice.\n"
 				+ "'buy' : Buy property of square you landed on.\n"
-				+ "'pay rent' : Pay rent of square you landed on.\n"
 				+ "'property' : Query the properties you currently own.\n"
 				+ "'balance' : Query your current balance.\n"
 				+ "'build <property short name> <number of houses>': Build houses on a property you own\n"
@@ -660,13 +661,15 @@ public class Board extends JPanel {
 		for(Property p : properties){
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
 				if (p.isMortgage() == true){
-					output.append("\n" + p.returnName() + " (Mortgaged) : \n-The rent is " + (char)POUND + p.returnRent() + "\n");
-					output.append("\nThe Redeem Price is " + (char)POUND + p.returnMortgageValue()/10 + "\n.");
+					output.append("\n" + p.returnName() + " (Mortgaged) : \n" 
+							+ "-The rent is " + (char)POUND + p.returnRent() + "\n" 
+							+ "-The redeem cost is " + (char)POUND + p.returnRedeemValue() + "\n");
 				} else {
-					output.append("\n" + p.returnName() + " : \n-The rent is " + (char)POUND + p.returnRent() +"\n");
-					output.append("\nThe Mortgage Value is " +  (char)POUND + p.returnMortgageValue() + "\n.");
+					output.append("\n" + p.returnName() + " : \n" 
+							+ "-The rent is " + (char)POUND + p.returnRent() +"\n" 
+							+ "-The mortgage value is " + (char) + p.returnMortgageValue() + "\n");
 				}
-					output.append("\n The House Price is " + (char)POUND + p.returnHousePrice());
+					output.append("\nThe House Price is " + (char)POUND + p.returnHousePrice() + "\n");
 			}
 		}
 	}
@@ -679,12 +682,12 @@ public class Board extends JPanel {
 			if(p.returnOwner() != null && propInputName.equalsIgnoreCase(p.returnShortName())){	//All properties owned that's short name equals the name inputed.
 				if(p.returnOwner() == playerTurn){													//Condition to make sure it's owned by current player. (Separated for else)
 					if(p.isMortgage() == false){														//Checking the property hasn't been mortgaged yet. (Separated for else)
-						if (p.returnHousePrice() == -1 || p.returnHouses() == 0){							//Making sure it's either a station or has no houses. (Separated for else)
+						if (p.returnColour() > 7 || p.returnHouses() == 0){									//Making sure it's either a station or has no houses. (Separated for else)
+							
 							p.mortgage();
-	
-							playerList.get(playerTurn).updateBalance(p.mortgage());								//Updating balance to add the properties mortgage value.
-	
-							output.append("\nYou have mortgaged " + p.returnName() + " for " + (char)POUND + p.mortgage() + "\n");
+							playerList.get(playerTurn).updateBalance(p.returnMortgageValue());
+							output.append("\nYou have mortgaged " + p.returnName() + " for " + (char)POUND + p.returnMortgageValue() + "\n");
+						
 						} else {
 							output.append("You must sell all houses first.\n");
 						}
@@ -699,21 +702,28 @@ public class Board extends JPanel {
 		}
 
 		if(found == false){															//Outputting for when property wasn't found.
-			output.append("\nProperty not found.\nEnter the short name for a property you've mortgaged.\n");
+			output.append("\nProperty not found.\nEnter the short name for a property you own.\n");
 		}
 	}
 
-	//Function to redeem a property. (Similar layout as mortgage. If confused, look at corresponding lines for comments.)
+	//Function to redeem a property. (Similar layout as mortgageFunction. If confused, look at corresponding lines there for comments.)
 	public void redeemFunction(String propInputName){
 		boolean found = false;
+		Player currPlayer = playerList.get(playerTurn);
 
 		for(Property p: properties){
 			if(p.returnOwner() != null && propInputName.equalsIgnoreCase(p.returnShortName())){
 				if (p.returnOwner() == playerTurn){
 					if(p.isMortgage() == true){
-						playerList.get(playerTurn).updateBalance(p.redeem());
-						p.redeem();
-						output.append("\nYou have redeemed " + p.returnName() + "\n");
+						if(currPlayer.getBalance() >= p.returnRedeemValue()){					//Checking the player has enough money to redeem.
+							
+							playerList.get(playerTurn).updateBalance(p.returnRedeemValue());
+							p.redeem();
+							output.append("\nYou have redeemed " + p.returnName() + " for " + (char)POUND + p.returnRedeemValue() + "\n");
+					
+						} else {
+							output.append("You do not have sufficient funds.\n");
+						}
 					} else {
 						output.append("\nThis property is not currently mortgaged.\n");
 					}
@@ -725,7 +735,7 @@ public class Board extends JPanel {
 		}
 
 		if(found == false){
-			output.append("\nProperty not found.\nEnter short name for a property you've mortgaged.\n");
+			output.append("\nProperty not found.\nEnter the short name for a property you've mortgaged.\n");
 		}
 	}
 

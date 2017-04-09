@@ -17,10 +17,6 @@ import javax.swing.JLabel;
 public class Player extends JLabel{
 
 	ArrayList<Point> points = new ArrayList<Point>(); 					//Array of coordinates.
-	private int circleX;
-	private int circleY;
-	private double gX; 													//For casting.
-	private double gY;
 	private int location; 												//Location on board.
 	private int player; 												//To track which player it is.
 	private int place; 													//Used to calculate location and prevent collisions.
@@ -99,7 +95,7 @@ public class Player extends JLabel{
 		super.paintComponent(g); 										//Erase old tokens.
 		setPosition(location);
 		
-		//Different colors depending on player number.
+		//Different colours depending on player number.
 		if(player == 0){
 			g.setColor(Color.GREEN);
 		}
@@ -126,7 +122,6 @@ public class Player extends JLabel{
 	public void setPosition(int newLocation){
 		  location = newLocation;
 		  setLocation(points.get(location));
-		
 	}
 
 	public int getPosition(){
