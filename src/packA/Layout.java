@@ -6,6 +6,7 @@ package packA;
 //
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
@@ -23,7 +24,9 @@ public class Layout {
 		OutputBox outputPanel = new OutputBox();
 		Board monPanel = new Board(6, outputPanel);			//Panel for displaying board and players.
 		monPanel.setLayout(null);
+		monPanel.setPreferredSize(new Dimension(700, 704));
 		InputBox inputPanel = new InputBox();								//Panel which takes in text.
+		inputPanel.setPreferredSize(new Dimension(700, 30));
 		inputPanel.setOutput(monPanel);								 		//Set 'output' to be the designated output destination for text input.
 
 

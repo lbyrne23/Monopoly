@@ -97,6 +97,29 @@ public class Board extends JPanel {
 				return;
 
 			}
+			String[] commands = {"done", "roll", "help", "buy", "pay", "property", "balance", "build", "mortgage"};
+			for(String s : commands){
+				s = s.toLowerCase();
+				if(command.startsWith(s)){
+					output.append("\nThis name is too similar to available commands. Try another!\n");
+					return;
+				}
+			}
+			
+			if(!playerList.isEmpty()){
+				
+				
+				
+				for(Player p : playerList){
+					if(command.equals(p.getName())){
+						output.append("\nSomeone already has this name, please select another\n");
+						return;
+					}
+					
+				
+					
+				}
+			}
 
 			if(numberOfPlayers < 6){																	//Adding players if there's room.
 				playerList.add(new Player(numberOfPlayers, command));
@@ -125,8 +148,8 @@ public class Board extends JPanel {
 		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
 		//Assessing command.
-		if(chooseFineOrChance && (command.equalsIgnoreCase("pay") || command.equalsIgnoreCase("chance")) ){
-			
+		if(chooseFineOrChance && (command.equalsIgnoreCase("pay fine") || command.equalsIgnoreCase("chance")) ){
+			fineOrChance(command);
 		}
 		if(command.equalsIgnoreCase("buy")){
 			buyFunction();
@@ -372,7 +395,7 @@ public class Board extends JPanel {
 		//Choice between Fine or Chance.
 		case 8 : 
 			chooseFineOrChance = true;
-			output.append("\nEnter 'Chance' to take a chance or 'Pay' to pay the fine.\n");
+			output.append("\nEnter 'chance' to take a chance or 'pay Fine' to pay the fine.\n");
 		}
 	}
 
@@ -580,11 +603,11 @@ public class Board extends JPanel {
 	//Function to allow player to pay a fine or else draw another card if a type 8 card is draw.
 	public void fineOrChance(String command){
 		Player currPlayer = playerList.get(playerTurn);
-		if(command.equalsIgnoreCase("pay")){
+		if(command.equalsIgnoreCase("pay fine")){
 			output.append("\nYou have paid the fine.\n");
 			currPlayer.updateBalance(-10);
 		}
-		if(command.equalsIgnoreCase("chance")){
+		else if(command.equalsIgnoreCase("chance")){
 			output.append("\nYou have drawn a Chance Card.\n");
 			takeCard(chanceCards);
 		}
