@@ -38,7 +38,7 @@ public class PropertyList extends ArrayList<Property>{
 		add(new Property("Fenchurch St Station","Fenchurch", -1, 200, SITE_RENTS[18], 8, 200, false, -1, 25));
 		add(new Property("Leicester Sq","Leicester", -1, 260, SITE_RENTS[19], 5, 120, false, 150, 26));
 		add(new Property("Coventry St","Coventry", -1, 260, SITE_RENTS[20], 5, 150, false, 150, 27));
-		add(new Property("Waterworks","Waterworks",-1, 150, SITE_RENTS[21], 9, 200, false, -1, 28));
+		add(new Property("Water Works","Water Works",-1, 150, SITE_RENTS[21], 9, 200, false, -1, 28));
 		add(new Property("Piccadilly","Piccadilly", -1, 280, SITE_RENTS[22], 5, 150, false, 150, 29));
 		add(new Property("Go To Jail", 30));
 		add(new Property("Regent St","Regent", -1, 300, SITE_RENTS[23], 6, 150, false, 150, 31));
@@ -53,7 +53,7 @@ public class PropertyList extends ArrayList<Property>{
 		
 		String currName;
 		for(Property p : this){
-			if(p.returnColour() > 0 && p.returnColour() < 8){
+			if(p.returnColour() > 0 ){
 				currName = p.returnName();
 				currName = currName.concat(".jpg");
 				p.setImage(currName);
