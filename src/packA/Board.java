@@ -215,6 +215,11 @@ public class Board extends JPanel {
 			}
 		}
 		
+		if(command.equals("")){
+			output.append("Can't have that name!\n");
+			return;
+		}
+		
 		if(!playerList.isEmpty()){
 			for(Player p : playerList){
 				if(command.equals(p.getName())){
