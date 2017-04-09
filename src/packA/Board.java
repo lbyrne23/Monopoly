@@ -401,13 +401,18 @@ public class Board extends JPanel {
 
 	//Function to roll dice and move player.
 	public void rollFunction(){
+		Player tmpPlayer = playerList.get(playerTurn);
 		if(chooseFineOrChance){
 			output.append("\nYou cannot roll without choosing to pay a fine or draw a card.\nType 'pay' or 'fine'.\n");
 			return;
 		}
+		if (tmpPlayer.getBalance() < 0){
+			output.append("\nYou cannot roll again while in debt.\n");
+			return;
+		}
 		
 		if (playerList.get(playerTurn).inJail() == true){
-			Player tmpPlayer = playerList.get(playerTurn);
+			
 			int thisRoll = Dice.Roll();
 
 			if(Dice.allowedRoll == 2){ //if the player rolled doubles while in jail
@@ -440,7 +445,7 @@ public class Board extends JPanel {
 			}
 		}
 		else if(Dice.allowedRoll == 0 || Dice.allowedRoll == 2 || Dice.allowedRoll == 4){
-			Player tmpPlayer = playerList.get(playerTurn);
+		
 			int thisRoll = Dice.Roll();
 
 			if((tmpPlayer.getPosition()+ thisRoll)%40 < tmpPlayer.getPosition()){
@@ -653,9 +658,12 @@ public class Board extends JPanel {
 			if(p.returnOwner() != null && p.returnOwner() == playerTurn){
 				if (p.isMortgage() == true){
 					output.append("\n" + p.returnName() + " (Mortgaged) : \n-The rent is " + (char)POUND + p.returnRent() + "\n");
+					output.append("\nThe Redeem Price is " + (char)POUND + p.returnMortgageValue()/10 + "\n.");
 				} else {
 					output.append("\n" + p.returnName() + " : \n-The rent is " + (char)POUND + p.returnRent() +"\n");
+					output.append("\nThe Mortgage Value is " +  (char)POUND + p.returnMortgageValue() + "\n.");
 				}
+					output.append("\n The House Price is " + (char)POUND + p.returnHousePrice());
 			}
 		}
 	}
@@ -762,7 +770,7 @@ public class Board extends JPanel {
 			output.append("\nYou don't own this property\n");
 			return;
 		}
-		if(currProperty.returnHousePrice() < 0){													//House prices set to '-1' to indicate they can't be purchased.
+		if(currProperty.returnColour() > 7 || currProperty.returnColour() > 0){													//House prices set to '-1' to indicate they can't be purchased.
 			output.append("\nNeither stations nor utilities can be developed\n");
 			return;
 		}
