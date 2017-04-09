@@ -214,17 +214,17 @@ public class Board extends JPanel {
 		}
 		if (currPlayer.getPosition() == 2 || currPlayer.getPosition() == 17 || currPlayer.getPosition() == 33){	//Draw Community Chest.
 			output.append("Community Chest Card:\n");
-//PRINT COMMUNITY CHEST CARD
+			drawCard(communityCards);
 		}
 		if (currPlayer.getPosition() ==  7|| currPlayer.getPosition() == 22 || currPlayer.getPosition() == 36){	//Draw Chance.
 			output.append("Chance Card:\n");
-//PRINT CHANCE CARD.
+			drawCard(chanceCards);
 		}
 		
 		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
 			info = "\n" + tmpProperty.returnName() + "\n";
 			
-			if(tmpProperty.returnRent() != 0){//if rent exists (Rent & Unbuyable means it is a tax square.)
+			if(tmpProperty.returnRent() != 0){																	//if rent exists (Rent & Unbuyable means it is a tax square.)
 				payRentFunction();
 				info = "\nYou have paid a fine of " + (char)POUND + tmpProperty.returnRent() + ".\n";
 			}
@@ -256,9 +256,6 @@ public class Board extends JPanel {
 		output.append(info);
 	}
 	
-//	public String getCommunity(){
-//
-//	}
 	
 	public void checkJail(){
 		Player tmpPlayer = playerList.get(playerTurn);
@@ -275,6 +272,18 @@ public class Board extends JPanel {
 			if(tmpPlayer.getJailRoll() > 0 && tmpPlayer.getJailRoll() <= 2){
 				output.append("You have " + tmpPlayer.getJailRoll() +" attempts left to roll doubles before you must pay the fine. \n");
 			}
+		}
+	}
+	
+	public void drawCard(CardList deck){
+		processCard(deck.get(0));
+		
+		if(deck.get(0).returnType() == 5){						//If GooJ card
+			jailCards.add(deck.get(0));
+			deck.remove(deck.get(0));
+		} else {
+			deck.add(deck.get(0));
+			deck.remove(0);
 		}
 	}
 	
@@ -453,7 +462,7 @@ public class Board extends JPanel {
 	//Function to handle bankruptcy.
 	public void bankruptFunction(){
 		Player currPlayer = playerList.get(playerTurn);
-		if(currPlayer.getBalance() < 0 && ! playerOwnsAssets()){	//If player has a negative balance and owns no property.
+		if(currPlayer.getBalance() < 0 && ! playerOwnsAssets()){											//If player has a negative balance and owns no property.
 			bankrupt = true;
 			output.append("\nYou have declared bankruptcy, you will be removed from the game.\n");
 			doneFunction();
@@ -466,7 +475,7 @@ public class Board extends JPanel {
 	
 	public boolean playerOwnsAssets(){
 		for(Property p : properties){
-			if(p.returnOwner() != null && p.returnOwner() == playerTurn && ! p.isMortgage()){//Property is ownable, owned by this palyer and not mortgaged.
+			if(p.returnOwner() != null && p.returnOwner() == playerTurn && ! p.isMortgage()){				//Property is ownable, owned by this palyer and not mortgaged.
 				return true;
 			}
 		}
@@ -483,7 +492,7 @@ public class Board extends JPanel {
 		
 		Player currPlayer = playerList.get(playerTurn);
 		//If bankruptcy declared, remove player, check if game is finished otherwise carry on.
-		if(bankrupt){										//If out of money.								
+		if(bankrupt){																//If out of money.								
 			releasePropertyFunction();													//Return properties to Market.
 			playerList.remove(playerTurn);												//Remove player from game.
 			numberOfPlayers--;															//Player Turn stays on same index, unless last player removed.
