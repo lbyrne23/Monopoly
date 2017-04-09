@@ -26,8 +26,10 @@ public final class OutputBox extends JPanel {
 	}
 	
 	public void resetCaret(){
+		output.setCaretPosition(output.getDocument().getLength());
 		DefaultCaret caret = (DefaultCaret)output.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
 	}
 
 	private JTextArea output;

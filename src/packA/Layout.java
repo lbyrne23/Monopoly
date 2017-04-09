@@ -21,7 +21,7 @@ public class Layout {
 
 
 		OutputBox outputPanel = new OutputBox();
-		Board monPanel = new Board(6, outputPanel.getJTextArea());			//Panel for displaying board and players.
+		Board monPanel = new Board(6, outputPanel);			//Panel for displaying board and players.
 		monPanel.setLayout(null);
 		InputBox inputPanel = new InputBox();								//Panel which takes in text.
 		inputPanel.setOutput(monPanel);								 		//Set 'output' to be the designated output destination for text input.

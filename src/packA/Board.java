@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
 import packA.Player;
 
@@ -36,6 +37,7 @@ public class Board extends JPanel {
 	protected static CardList chanceCards = new CardList("chance");
 	protected static JLabel propertyCard = new JLabel();
 	protected static int numberOfPlayers;
+	protected static OutputBox outputBox;
 	protected static JTextArea output;
 	private static int winner = 0;
 
@@ -45,11 +47,12 @@ public class Board extends JPanel {
 	protected static boolean chooseFineOrChance = false;
 	
 
-	public Board(int players, JTextArea newOutput) {
+	public Board(int players, OutputBox newOutput) {
 		add(propertyCard);
 		propertyCard.setSize(new Dimension(200, 229));
 		propertyCard.setLocation(260, 80);
-		output = newOutput;
+		outputBox = newOutput;
+		output = newOutput.getJTextArea();
 		
 		//Try to load image from project files.
 		URL url = getClass().getResource("Board3.gif");
@@ -76,6 +79,9 @@ public class Board extends JPanel {
 
 
 	public void playerAction(String command){
+		//Reset auto-scroll in case someone has clicked on the output box.
+		outputBox.resetCaret();
+		
 		//This class will call other functions depending on command given.
 		if(playerTurn == -1){
 
@@ -567,7 +573,7 @@ public class Board extends JPanel {
 		}
 		if(command.equalsIgnoreCase("chance")){
 			output.append("\nYou have drawn a Chance Card.\n");
-			drawACard(chanceCards);
+			takeCard(chanceCards);
 		}
 		
 		chooseFineOrChance = false;
