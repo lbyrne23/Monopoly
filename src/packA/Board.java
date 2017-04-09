@@ -67,7 +67,7 @@ public class Board extends JPanel {
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
 		playerList = new ArrayList<Player>(players);								//List to hold players/
-		String[] options = new String[] {"6", "5", "4", "3", "2"};
+		String[] options = new String[] {"2", "3", "4", "5", "6"};
 		int response = JOptionPane.showOptionDialog(null, "How many are playing?", "Monopoly by CessnaSkyhawk", 
 				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 		        null, options, options[0]);
@@ -75,7 +75,7 @@ public class Board extends JPanel {
 		if (response == -1){
 			System.exit(0);
 		} else {
-			numberOfPlayers = Integer.parseInt(options[response]);
+			numberOfPlayers = response+2;
 		}
 	}
 
@@ -90,58 +90,13 @@ public class Board extends JPanel {
 	public void playerAction(String command){
 		//Reset auto-scroll in case someone has clicked on the output box.
 		outputBox.resetCaret();
-
-		//This class will call other functions depending on command given.
+		
+		//Read in player names before beginning.
 		if(playerTurn == -1){
-
-			if(playersEntered>1 && command.equalsIgnoreCase("done")){			//Case of sufficient players to begin.
-				playerTurn++;
-				output.append("Roll to see who goes first.\n");
-
-				goFirst();														//Function to arrange players based on dice rolls.
-				Collections.shuffle(communityCards);							//Shuffle the decks.
-				Collections.shuffle(chanceCards);
-
-				output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
-				return;
-
-			}
-			String[] commands = {"done", "roll", "help", "buy", "pay", "property", "balance", "build", "mortgage"};
-			for(String s : commands){
-				s = s.toLowerCase();
-				if(command.startsWith(s)){
-					output.append("\nThis name is too similar to available commands. Try another!\n");
-					return;
-				}
-			}
-			
-			if(!playerList.isEmpty()){
-				for(Player p : playerList){
-					if(command.equals(p.getName())){
-						output.append("\nSomeone already has this name, please select another\n");
-						return;
-					}
-				}
-			}
-
-			if(playersEntered != numberOfPlayers){												//Adding players until they're all in.
-				playerList.add(new Player(playersEntered, command));
-				add(playerList.get(playersEntered));
-				output.append("Player " + (playersEntered+1) + " name : " + command + "\n");
-				revalidate();
-				repaint();
-				playersEntered++;
-
-				if(playersEntered == numberOfPlayers){											//If all players added, begin.
-					output.append("Roll to see who goes first.\n");
-					goFirst();
-					output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\n\nEnter 'roll'.\n");
-				}
-
-				return;
-			}
+			setupGame(command);
+			return;
 		}
-
+		
 		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
 		
@@ -238,6 +193,55 @@ public class Board extends JPanel {
 		}
 	}
 
+	public void setupGame(String command){
+		if(playersEntered>1 && command.equalsIgnoreCase("done")){			//Case of sufficient players to begin.
+			playerTurn++;
+			output.append("Roll to see who goes first.\n");
+
+			goFirst();														//Function to arrange players based on dice rolls.
+			Collections.shuffle(communityCards);							//Shuffle the decks.
+			Collections.shuffle(chanceCards);
+
+			output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
+			return;
+
+		}
+		String[] commands = {"done", "roll", "help", "buy", "pay", "property", "balance", "build", "mortgage"};
+		for(String s : commands){
+			s = s.toLowerCase();
+			if(command.startsWith(s)){
+				output.append("\nThis name is too similar to available commands. Try another!\n");
+				return;
+			}
+		}
+		
+		if(!playerList.isEmpty()){
+			for(Player p : playerList){
+				if(command.equals(p.getName())){
+					output.append("\nSomeone already has this name, please select another\n");
+					return;
+				}
+			}
+		}
+
+		if(playersEntered != numberOfPlayers){												//Adding players until they're all in.
+			playerList.add(new Player(playersEntered, command));
+			add(playerList.get(playersEntered));
+			output.append("Player " + (playersEntered+1) + " name : " + command + "\n");
+			revalidate();
+			repaint();
+			playersEntered++;
+
+			if(playersEntered == numberOfPlayers){											//If all players added, begin.
+				output.append("Roll to see who goes first.\n");
+				goFirst();
+				output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\n\nEnter 'roll'.\n");
+			}
+
+			return;
+		}
+	}
+	
 	public void squareInfo(){
 		//Get property at location of current players turn.
 		Player currPlayer = playerList.get(playerTurn);
