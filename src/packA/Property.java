@@ -29,11 +29,11 @@ class Property {
 	private int houses = 0;
 	private int colour;
 	private int mortgageValue;
+	private int redeemValue;
 	private boolean mortgagedProperty;
 	private int[] rentArray;
 	private int housePrice;
 	private int squareNumber;
-	private int storeRentDuringMortgage;
 	private ImageIcon cardImage;
 	
 	public Property(String name, int squareNumber){
@@ -96,20 +96,25 @@ class Property {
 		return colour;
 	}
 	
-	public int mortgage(){
-		mortgagedProperty = true;
+	public int returnMortgageValue(){
 		return mortgageValue;
+	}
+	
+	public void mortgage(){
+		mortgagedProperty = true;
 	}
 	
 	public boolean isMortgage(){
 		return mortgagedProperty;
 	}
 	
-	public int redeem(){
+	public int returnRedeemValue(){
 		double temp = mortgageValue * 1.1;
 		int redeemValue = (int)temp * -1;
-		mortgagedProperty = false;
 		return redeemValue;
+	}
+	public void redeem(){
+		mortgagedProperty = false;
 	}
 	
 	public int returnHouses(){
@@ -144,10 +149,4 @@ class Property {
 		}
 		else return null;
 	}
-	
-	
-	
-//	public void moveSquare(int toSquare){
-//		this.squareNumber = toSquare;
-//	}
 }
