@@ -67,7 +67,7 @@ public class Board extends JPanel {
 		output.append("Welcome to Monopoly by Cessna Skyhawk!\nPlease enter a player name.\n");
 
 		playerList = new ArrayList<Player>(players);								//List to hold players/
-		String[] options = new String[] {"6", "5", "4", "3", "2"};
+		String[] options = new String[] {"2", "3", "4", "5", "6"};
 		int response = JOptionPane.showOptionDialog(null, "How many are playing?", "Monopoly by CessnaSkyhawk", 
 				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
 		        null, options, options[0]);
@@ -75,7 +75,8 @@ public class Board extends JPanel {
 		if (response == -1){
 			System.exit(0);
 		} else {
-			numberOfPlayers = Integer.parseInt(options[response]);
+			numberOfPlayers = response+2;
+			JOptionPane.showMessageDialog(null, "Number of players: " + numberOfPlayers);
 		}
 	}
 
