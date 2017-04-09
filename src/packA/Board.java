@@ -218,19 +218,11 @@ public class Board extends JPanel {
 		if(currPlayer.getPosition() == 30){
 			goToJail();
 		}
-		if (currPlayer.getPosition() == 2 || currPlayer.getPosition() == 17 || currPlayer.getPosition() == 33){	//Draw Community Chest.
-			output.append("Community Chest Card:\n");
-//PRINT COMMUNITY CHEST CARD
-		}
-		if (currPlayer.getPosition() ==  7|| currPlayer.getPosition() == 22 || currPlayer.getPosition() == 36){	//Draw Chance.
-			output.append("Chance Card:\n");
-//PRINT CHANCE CARD.
-		}
 		
 		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
 			info = "\n" + tmpProperty.returnName() + "\n";
 			
-			if(tmpProperty.returnRent() != 0){//if rent exists (Rent & Unbuyable means it is a tax square.)
+			if(tmpProperty.returnRent() != 0){																	//if rent exists (Rent & Unbuyable means it is a tax square.)
 				payRentFunction();
 				info = "\nYou have paid a fine of " + (char)POUND + tmpProperty.returnRent() + ".\n";
 			}
@@ -260,11 +252,15 @@ public class Board extends JPanel {
 		}
 		
 		output.append(info);
+		
+		if (currPlayer.getPosition() == 2 || currPlayer.getPosition() == 17 || currPlayer.getPosition() == 33){	//Draw Community Chest.
+			takeCard(communityCards);
+		}
+		if (currPlayer.getPosition() ==  7|| currPlayer.getPosition() == 22 || currPlayer.getPosition() == 36){	//Draw Chance.
+			takeCard(chanceCards);
+		}
 	}
 	
-//	public String getCommunity(){
-//
-//	}
 	
 	public void checkJail(){
 		Player tmpPlayer = playerList.get(playerTurn);
@@ -284,6 +280,18 @@ public class Board extends JPanel {
 		}
 	}
 	
+	public void takeCard(CardList deck){
+		processCard(deck.get(0));
+		
+		if(deck.get(0).returnType() == 5){						//If GooJ card
+			jailCards.add(deck.get(0));
+			deck.remove(deck.get(0));
+		} else {
+			deck.add(deck.get(0));
+			deck.remove(0);
+		}
+	}
+	
 	public void processCard(Card card){
 		int type = card.returnType();
 		Player currPlayer = playerList.get(playerTurn);
@@ -291,26 +299,29 @@ public class Board extends JPanel {
 		output.append(card.returnMessage());								//Display card's message.
 		
 		switch(type){
+		
 		//Move to specific square.
 		case 1 :																							
 			if(currPlayer.getPosition() > card.returnToSquare()){
 				currPlayer.updateBalance(200);
-				output.append("\nYou've passed GO!\n " + (char)POUND + "200 has been added to your balance.\n");
+				output.append("\nYou've passed GO!\n" + (char)POUND + "200 has been added to your balance.\n");
 			}
 			currPlayer.setPosition(card.returnToSquare());					//Move player to square given by card.
 			squareInfo();
 			break;
+			
 		//Go To Jail
 		case 2 :
 			goToJail();
 			break;
+			
 		// Receive Money or Pay a fine/expense.
 		case 3 :
 			currPlayer.updateBalance(card.returnMoney());
 			break;
+			
 		//Collect money from every player.
 		case 4 :
-			
 			for(Player p : playerList){
 				if (p.getNumber() != playerTurn){							//If it isn't this player's turn
 					p.updateBalance(- card.returnMoney());					//Update player's balance with negative value of returnMoney()
@@ -318,17 +329,17 @@ public class Board extends JPanel {
 				}
 			}
 			break;
+			
 		//Give player a Get out of Jail free card, (recorded as int).
 		case 5 :
 			currPlayer.updateGooJ(1);
-			
 			break;
-			
+
 		//Move a set amount of steps.
 		case 6 :
 			currPlayer.setPosition(currPlayer.getPosition() + card.returnSteps());
 			break;
-			
+
 		//Pay
 		case 7 :
 			int houseRepairs, hotelRepairs;
@@ -339,6 +350,7 @@ public class Board extends JPanel {
 				hotelRepairs = Integer.parseInt(m.group(1));
 			}
 			else break;
+			
 			int numberHouses = 0, numberHotels = 0;
 			for(Property p : properties){												//Increment through all properties.
 				if(p.returnOwner() != null && p.returnOwner() == playerTurn && p.returnHouses() > 0){
@@ -357,6 +369,7 @@ public class Board extends JPanel {
 			output.append("\nHotels : " + numberHotels + "\nYou have paid " + (char)POUND + hotelRepairs*numberHotels + ".\n");
 			break;
 			
+		//Choice between Fine or Chance.
 		case 8 : 
 			chooseFineOrChance = true;
 			output.append("\nEnter 'Chance' to take a chance or 'Pay' to pay the fine.\n");
@@ -459,7 +472,7 @@ public class Board extends JPanel {
 	//Function to handle bankruptcy.
 	public void bankruptFunction(){
 		Player currPlayer = playerList.get(playerTurn);
-		if(currPlayer.getBalance() < 0 && ! playerOwnsAssets()){	//If player has a negative balance and owns no property.
+		if(currPlayer.getBalance() < 0 && ! playerOwnsAssets()){											//If player has a negative balance and owns no property.
 			bankrupt = true;
 			output.append("\nYou have declared bankruptcy, you will be removed from the game.\n");
 			doneFunction();
@@ -472,7 +485,7 @@ public class Board extends JPanel {
 	
 	public boolean playerOwnsAssets(){
 		for(Property p : properties){
-			if(p.returnOwner() != null && p.returnOwner() == playerTurn && ! p.isMortgage()){//Property is ownable, owned by this palyer and not mortgaged.
+			if(p.returnOwner() != null && p.returnOwner() == playerTurn && ! p.isMortgage()){				//Property is ownable, owned by this palyer and not mortgaged.
 				return true;
 			}
 		}
@@ -489,7 +502,7 @@ public class Board extends JPanel {
 		
 		Player currPlayer = playerList.get(playerTurn);
 		//If bankruptcy declared, remove player, check if game is finished otherwise carry on.
-		if(bankrupt){										//If out of money.								
+		if(bankrupt){																//If out of money.								
 			releasePropertyFunction();													//Return properties to Market.
 			playerList.remove(playerTurn);												//Remove player from game.
 			numberOfPlayers--;															//Player Turn stays on same index, unless last player removed.
@@ -603,8 +616,6 @@ public class Board extends JPanel {
 				for(Property p : ownedProperties){
 					p.setHouses(numberOwned - 1);										//Set owned properties to rent level depending on number owned.
 				}
-
-
 			}
 		}
 		else{

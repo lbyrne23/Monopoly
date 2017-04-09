@@ -57,8 +57,6 @@ public class PropertyList extends ArrayList<Property>{
 				currName = p.returnName();
 				currName = currName.concat(".jpg");
 				p.setImage(currName);
-				
-
 			}
 			else p.setImage(null);
 		}
