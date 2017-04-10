@@ -105,33 +105,8 @@ public class Board extends JPanel {
 		//Aesthetic purpose for output box.
 		output.append("\n------------------------------------------------------------------------------------------\n");
 
-		//TEST COMMAND USED TO PURCHASE ALL PROPERTY FOR DEBUGGING.
-		if (command.equalsIgnoreCase("Squatters Rights")){
-			int i;
-			Player currPlayer = playerList.get(playerTurn);
-			currPlayer.updateBalance(30000);
 
-			for (i = 0; i < properties.size(); i++){
-				currPlayer.setPosition(i);
-				buyFunction();
-			}
-			output.append("\nYou own everything in sight, but do you feel any less empty?\n");
-		}
-		//TEST COMMAND USED TO ENTER BANKRUPTCY.
-		else if(command.equalsIgnoreCase("purchase bit coin")){
-			playerList.get(playerTurn).updateBalance(-1499);
-		}
-		//TEST COMMAND TO TAKE COMMUNITY CARD.
-		else if(command.equalsIgnoreCase("gambino")){
-			playerList.get(playerTurn).setPosition(3);
-			squareInfo();
-		}
-		//TEST CASE TO GO TO JAIL.
-		else if(command.equalsIgnoreCase("family reunion")){
-			goToJail();
-		}
-
-		else if(command.equalsIgnoreCase("card")){
+		if(command.equalsIgnoreCase("card")){
 			gooJ();
 		}
 
