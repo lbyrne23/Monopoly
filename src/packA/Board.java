@@ -119,7 +119,7 @@ public class Board extends JPanel {
 		}
 		//TEST COMMAND TO TAKE COMMUNITY CARD.
 		else if(command.equalsIgnoreCase("gambino")){
-			takeCard(communityCards);
+			takeCard(chanceCards);
 		}
 		else if(command.equalsIgnoreCase("family reunion")){
 			goToJail();
@@ -196,18 +196,9 @@ public class Board extends JPanel {
 	}
 
 	public void setupGame(String command){
-		if(playersEntered>1){			//Case of sufficient players to begin.
-			playerTurn++;
-			output.append("Roll to see who goes first.\n");
-
-			goFirst();														//Function to arrange players based on dice rolls.
 			Collections.shuffle(communityCards);							//Shuffle the decks.
 			Collections.shuffle(chanceCards);
 
-			output.append("\n" + playerList.get(playerTurn).getName() + " goes first.\nEnter 'roll' \n");
-			return;
-
-		}
 		String[] commands = {"done", "roll", "help", "buy", "pay", "property", "balance", "build", "mortgage"};
 		for(String s : commands){
 			s = s.toLowerCase();
@@ -255,12 +246,18 @@ public class Board extends JPanel {
 
 		propertyCard.setIcon(tmpProperty.getImage());
 		
+		
+		
 		if(currPlayer.getPosition() == 30){
 			goToJail();
 		}
 		
 		if(tmpProperty.returnOwner() == null){									 								//i.e. Unbuyable property, just return name for now.
 			info = "\n" + tmpProperty.returnName() + "\n";
+			
+			if(currPlayer.getPosition() == 10){	//If Visiting Jail.
+				info = "\nJail (Just Visiting.)\n";
+			}
 			
 			if(tmpProperty.returnRent() != 0){																	//if rent exists (Rent & Unbuyable means it is a tax square.)
 				payRentFunction();
@@ -270,14 +267,18 @@ public class Board extends JPanel {
 		else if(tmpProperty.returnOwner() < 0){																	//If owner<0 i.e. buyable property
 			info = tmpProperty.returnName() 
 					+ " ; \n-This property is on the market for " + (char)POUND + tmpProperty.returnPrice() 
-					+ "\n-It has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n"
 					+ "\nEnter 'buy' if you wish to purchase this property.\n"
 					+ "Enter 'help' for all other commands\n";
 		}
 
 		else if(tmpProperty.returnOwner() == playerTurn){														//Owner is current player.
-			info = tmpProperty.returnName() + " ; This is your property, "
-					+ "it has rent of " + (char)POUND + tmpProperty.returnRent() + ".\n";
+			info = tmpProperty.returnName() + " :\nThis is your property.";
+			if(tmpProperty.returnColour() == 8){
+				info = info + "\nIt has rent of £25, £50, £100 or  £200 with 1, 2, 3 or 4 Stations owned respectively.\n";
+			}
+			if(tmpProperty.returnColour() == 8){
+				info = info + "\nIt has rent of 4 or 10 times Dice Roll with 1 or 2 Utilities owned respectively.\n";
+			}
 		}
 		
 		else if(tmpProperty.isMortgage() == true){																//Property is mortgaged.
@@ -286,6 +287,7 @@ public class Board extends JPanel {
 		
 		else{											
 			info = tmpProperty.returnName() + "\n------------------------------------------------------------------------------------------\n"
+					+ "\n" + tmpProperty.returnName() + "\n"
 					+ "\n" + playerList.get(tmpProperty.returnOwner()).getName()								//Owner > 0, i.e. owned property.
 					+ " owns this property, you have paid them "+ (char)POUND + payRentFunction() + ".\n"
 							+ "\nYour balance is now " + (char)POUND + currPlayer.getBalance() +".\n";																				//
@@ -378,18 +380,23 @@ public class Board extends JPanel {
 		//Move a set amount of steps.
 		case 6 :
 			currPlayer.setPosition(currPlayer.getPosition() + card.returnSteps());
+			squareInfo();
 			break;
 
 		//Pay
 		case 7 :
 			int houseRepairs, hotelRepairs;
-			Pattern repairCosts = Pattern.compile("(\\d+).* (\\d+).*");		//Pattern to be matched, all non-spaces before number,number.
-			Matcher m = repairCosts.matcher(card.returnMessage());
-			if(m.find()){
-				houseRepairs = Integer.parseInt(m.group(0));
-				hotelRepairs = Integer.parseInt(m.group(1));
-			}
-			else break;
+				if(card.returnMessage().startsWith("Make")){
+				houseRepairs = 25;
+				hotelRepairs = 100;
+				}
+				
+				
+				else {
+					houseRepairs = 40;
+					hotelRepairs = 115;
+				}
+			
 			
 			int numberHouses = 0, numberHotels = 0;
 			for(Property p : properties){												//Increment through all properties.
@@ -404,15 +411,16 @@ public class Board extends JPanel {
 					}		
 				}
 			}
-			
+			if(numberHotels != 0 || numberHouses != 0){
 			output.append("\nHouses : " + numberHouses + "\nYou have paid " + (char)POUND + houseRepairs*numberHouses + ".\n");
 			output.append("\nHotels : " + numberHotels + "\nYou have paid " + (char)POUND + hotelRepairs*numberHotels + ".\n");
+			}
+			else output.append("\nYou do not own any Houses or Hotels.\n");
 			break;
 			
 		//Choice between Fine or Chance.
 		case 8 : 
 			chooseFineOrChance = true;
-			output.append("\nEnter 'chance' to take a chance or 'pay Fine' to pay the fine.\n");
 		}
 	}
 
@@ -614,7 +622,7 @@ public class Board extends JPanel {
 		currPlayer.setPosition(10); 	//Move to jail square.
 		currPlayer.setJail(true); 		//Record player as in jail.
 		currPlayer.setJailRoll(); 		//Give 3 attempts to roll doubles.
-		repaint(); 						//Move token to jail.
+
 	}
 	
 	//Function to get out of jail if you have a Card.
@@ -647,8 +655,7 @@ public class Board extends JPanel {
 		if(currPlayer.inJail() == true){
 			currPlayer.updateBalance(-50);
 			currPlayer.setJail(false);
-			output.append("You have paid a " + (char)POUND + "50 bail and are now free\n"
-					+ "Roll to proceed.\n");
+			output.append("You have paid a " + (char)POUND + "50 bail and are now free\n");
 		}
 		else {
 			output.append("You are not in jail \n");
@@ -682,19 +689,6 @@ public class Board extends JPanel {
 			currPlayer.updateBalance(-(currProperty.returnPrice()));					//Subtract cost from player Balance.
 			output.append("\nYou have purchased '" + currProperty.returnName() + "'\n");
 
-			if(currProperty.returnColour() == 8 || currProperty.returnColour() == 9){	//If property is a utility or station.
-				int numberOwned = 0;
-				ArrayList<Property> ownedProperties = new ArrayList<Property>();
-				for(Property p : properties){
-					if (p.returnColour() == currProperty.returnColour()){
-						numberOwned++;													//Record number of Utilities or Stations owned.
-						ownedProperties.add(p);											//Add these properties to a list for update after.
-					}
-				}
-				for(Property p : ownedProperties){
-					p.setHouses(numberOwned - 1);										//Set owned properties to rent level depending on number owned.
-				}
-			}
 		}
 		else{
 			output.append("\nYou cannot afford this property.\n");
@@ -768,7 +762,7 @@ public class Board extends JPanel {
 							output.append("\nYou have redeemed " + p.returnName() + " for " + (char)POUND + p.returnRedeemValue() + "\n");
 					
 						} else {
-							output.append("You do not have sufficient funds.\n");
+							output.append("\nYou do not have sufficient funds.\n");
 						}
 					} else {
 						output.append("\nThis property is not currently mortgaged.\n");
@@ -829,7 +823,7 @@ public class Board extends JPanel {
 			output.append("\nYou don't own this property\n");
 			return;
 		}
-		if(currProperty.returnColour() > 7 || currProperty.returnColour() > 0){													//House prices set to '-1' to indicate they can't be purchased.
+		if(currProperty.returnColour() > 7 || currProperty.returnColour() < 1){													//House prices set to '-1' to indicate they can't be purchased.
 			output.append("\nNeither stations nor utilities can be developed\n");
 			return;
 		}
@@ -904,7 +898,34 @@ public class Board extends JPanel {
 			
 			//If Property is utility, rent is multiplied by dice roll
 			if(currProperty.returnColour() == 9){
+				for(Property p : properties){
+					if(p.returnColour() == currProperty.returnColour() 
+							&& p.returnOwner() == currProperty.returnOwner() //Iterate through properties, and if another found.
+							&& !p.isMortgage()
+							&& !p.equals(currProperty)){
+						rent = 10;						//Set rent to second level.
+					}
+					else{
+						rent = 4;						//Set rent to lower level.
+					}
+				}
 				rent = rent*Dice.total();
+			}
+			
+			//If Property is Station, rent changes depending on how many owned.
+			if(currProperty.returnColour() == 8){
+				int stationsOwned = 0;
+				rent = 25;
+				for(Property p : properties){
+					if(p.returnColour() == currProperty.returnColour() 	//Iterate through stations, and count how many others.
+							&& p.returnOwner() == currProperty.returnOwner() 
+							&& !p.isMortgage()
+							&& !p.equals(currProperty)){
+						stationsOwned++;								//Set rent based on how many stations owned.
+						rent = 25*2*stationsOwned;
+					}	
+				}
+				
 			}
 			//If all properties of colour owned, but no houses on this property, double rent.
 			else if(colourMultiplier()){
@@ -935,11 +956,8 @@ public class Board extends JPanel {
 	}
 
 
-	//Function to determine who goes first.
-	//If two players roll the highest value, the dice is rolled again
-	//It does not matter if two players roll the non-highest value
-	//If player 4 Rolls the highest, they go first, then player 5, 6, 1, 2, 3...
-	//Turns do not go in order of highest-lowest dice roll
+	//Highest roll goes first, if two players roll highest then they re-roll.
+	//Cycle through players in 'clockwise' order from highest roller.
 	public static void goFirst(){
 		int Roll;
 		int[] firstRolls = new int[numberOfPlayers]; 							//Array to store the first roll.

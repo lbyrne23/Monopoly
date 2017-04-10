@@ -26,7 +26,7 @@ class Property {
 	private String name, shortName;
 	private Integer owner;
 	private int price;
-	private int houses = 0;
+	private int houses;
 	private int colour;
 	private int mortgageValue;
 	private int redeemValue;
@@ -40,7 +40,6 @@ class Property {
 		this.name = name;
 		this.squareNumber = squareNumber;
 	}
-
 	public Property(String name, String shortName, int owner, int price, int[] rent, int colour, int mortgage, boolean mortgagedProperty, int housePrice, int squareNumber){
 		this.name = name;
 		this.shortName = shortName;
@@ -130,7 +129,9 @@ class Property {
 	}
 	
 	public Integer setHouses(int newHouses){	//Sets how many houses are on property.
-		if(newHouses >= 0 && newHouses < rentArray.length){
+		if(newHouses >= 0 
+		 && newHouses < 
+		 rentArray.length){
 			houses = newHouses;
 			return rentArray[houses];
 		}

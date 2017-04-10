@@ -33,7 +33,8 @@ public class CardList extends ArrayList<Card>{
 		add (new Card("Community", 4, 0, "\nIt is your birthday. Collect " + (char)POUND + "10 from each player.\n", -1, 10));
 		add (new Card("Community", 5, 0, "\nGet out of jail free. This card may be kept until needed or sold.\n", -1, 0));
 
-		add (new Card("Community", 8, 0, "\nPay a " + (char)POUND + "10 fine or take a Chance. 'pay' or 'take'\n", -1, 10));
+		add (new Card("Community", 8, 0, "\nPay a " + (char)POUND + "10 fine or take a Chance."
+				+ "\n\nEnter 'chance' to take a chance or 'pay fine' to pay the fine.\n", -1, 10));
 	}
 	
 	if(typeCard.equalsIgnoreCase("chance")){
@@ -44,8 +45,8 @@ public class CardList extends ArrayList<Card>{
 		add (new Card("Chance", 1, 0, "\nAdvance to Trafalgar Square. If you pass Go collect " + (char)POUND + "200.\n", 24, 0));
 		add (new Card("Chance", 1, 0, "\nAdvance to Mayfair.\n", 39, 0));
 		add (new Card("Chance", 6, -3, "\nGo back three spaces.\n", -1, 0));
-		add (new Card("Chance", 7, 0, "\nMake general repairs on all of your houses. For each house pay " + (char)POUND + "25. For each hotel pay " + (char)POUND + "100.\n", -1, 0));	//House/hotel prices vary.
-		add (new Card("Chance", 7, 0, "\nYou are assessed for street repairs: " + (char)POUND + "40 per house, " + (char)POUND + "115 per hotel.\n", -1, 0));
+		add (new Card("Chance", 7, 0, "\nMake general repairs on all of your houses.\n For each house pay " + (char)POUND + "25\n For each hotel pay " + (char)POUND + "100\n", -1, 0));	//House/hotel prices vary.
+		add (new Card("Chance", 7, 0, "\nYou are assessed for street repairs: \n" + (char)POUND + "40 per house,\n" + (char)POUND + "115 per hotel.\n", -1, 0));
 		add (new Card("Chance", 3, 0, "\nPay school fees of " + (char)POUND + "150.\n", -1, 0));
 		add (new Card("Chance", 3, 0, "\nDrunk in charge fine " + (char)POUND + "20.\n", -1, -20));
 		add (new Card("Chance", 3, 0, "\nSpeeding fine " + (char)POUND + "15.\n", -1, -15));
