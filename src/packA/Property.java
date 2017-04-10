@@ -1,26 +1,11 @@
 package packA;
-
-
-
-import java.awt.image.BufferedImage;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.io.IOException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
-
 //Team : Cessna Skyhawk
 //Michael Jordan
 //Lucy Byrne
 //Fiachra Dunn
 //
+
+import javax.swing.ImageIcon;
 
 class Property {
 	private String name, shortName;
@@ -40,17 +25,19 @@ class Property {
 		this.name = name;
 		this.squareNumber = squareNumber;
 	}
-	public Property(String name, String shortName, int owner, int price, int[] rent, int colour, int mortgage, boolean mortgagedProperty, int housePrice, int squareNumber){
+	public Property(String name, String shortName, int owner, int price, int[] rent, int colour, int mortgageValue, boolean mortgagedProperty, int housePrice, int squareNumber){
 		this.name = name;
 		this.shortName = shortName;
 		this.owner = owner;
 		this.price = price;
 		this.rentArray = rent;
 		this.colour = colour;
-		this.mortgageValue = mortgage;
-		this.mortgagedProperty = mortgagedProperty;			//If property is mortgaged, this value is changed from 0 to 1.
+		this.mortgageValue = mortgageValue;
+		this.mortgagedProperty = mortgagedProperty;
 		this.housePrice = housePrice;
 		this.squareNumber = squareNumber;
+		
+		this.redeemValue = (int)(1.1 * (double)mortgageValue);
 	}
 	
 	public Property(String name, int[] rent, int squareNumber){
@@ -108,10 +95,9 @@ class Property {
 	}
 	
 	public int returnRedeemValue(){
-		double temp = mortgageValue * 1.1;
-		int redeemValue = (int)temp * -1;
 		return redeemValue;
 	}
+	
 	public void redeem(){
 		mortgagedProperty = false;
 	}
