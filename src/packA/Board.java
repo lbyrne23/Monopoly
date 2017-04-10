@@ -566,7 +566,7 @@ public class Board extends JPanel {
 
 		Player currPlayer = playerList.get(playerTurn);
 		//If bankruptcy declared, remove player, check if game is finished otherwise carry on.
-		if(bankrupt){																//If out of money.								
+		if(bankrupt){																	//If out of money.								
 			releasePropertyFunction();													//Return properties to Market.
 			playerList.remove(playerTurn);												//Remove player from game.
 			numberOfPlayers--;															//Player Turn stays on same index, unless last player removed.
@@ -584,7 +584,7 @@ public class Board extends JPanel {
 			}
 
 			else{
-				bankrupt = false; 														//reset bankruptcy
+				bankrupt = false; 														//Reset bankruptcy.
 				Dice.allowedRoll = 0;													//Allow player to roll again.
 				if(playerList.get(playerTurn).inJail() == false){
 					output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
@@ -717,7 +717,7 @@ public class Board extends JPanel {
 							+ "-The mortgage value is " + (char)POUND + p.returnMortgageValue() + ".\n");
 				}
 				
-				if(p.returnHousePrice() != -1){																	//If it's a station.
+				if(p.returnHousePrice() != -1){							//If it's not a station.
 					output.append("-The house price is " + (char)POUND + p.returnHousePrice() + ".\n");
 				}
 				
@@ -883,17 +883,17 @@ public class Board extends JPanel {
 		}
 	}
 
-	//If player owns all of colour and it is not a station or utility, he can build.
+	//If player owns all of colour and it is not a station or utility, they can build.
 	public boolean canBuild(int colour){
-		if(colour > 7){ //If Utility or Station
+		if(colour > 7){ 			//If Utility or Station.
 			return false;
 		}
 		for(Property p : properties){
 			if(p.returnOwner()!= null && p.returnOwner() != playerTurn && p.returnColour() == colour){ 		
-				return false;		//If any property of given colour isn't owned by current player, he can't build.																	
+				return false;		//If any property of given colour isn't owned by current player, they can't build.																	
 			}	
 		}
-		return true;				//Otherwise he can.
+		return true;				//Otherwise they can.
 	}
 
 	// Function to return properties to market if player has lost.
@@ -908,11 +908,11 @@ public class Board extends JPanel {
 	//Function to payRent on current square.
 	public int payRentFunction(){
 
-		Player currPlayer = playerList.get(playerTurn);							//Get player
-		Property currProperty = properties.get(currPlayer.getPosition());		//Get property
+		Player currPlayer = playerList.get(playerTurn);							//Get player.
+		Property currProperty = properties.get(currPlayer.getPosition());		//Get property.
 		int rent = currProperty.returnRent();
 
-		//If Property is utility, rent is multiplied by dice roll
+		//If Property is utility, rent is multiplied by dice roll.
 		if(currProperty.returnColour() == 9){
 			for(Property p : properties){
 				if(p.returnColour() == currProperty.returnColour() 
@@ -948,9 +948,9 @@ public class Board extends JPanel {
 			rent = rent*2;
 		}
 		currPlayer.updateBalance(-(rent));
-		if(currProperty.returnOwner() != null){										//If owner exists
-			Player debtor = playerList.get(currProperty.returnOwner());				//Get owner of property
-			debtor.updateBalance(rent);												//Pay rent to owner
+		if(currProperty.returnOwner() != null){										//If owner exists.
+			Player debtor = playerList.get(currProperty.returnOwner());				//Get owner of property.
+			debtor.updateBalance(rent);												//Pay rent to owner.
 		}
 
 
@@ -964,10 +964,10 @@ public class Board extends JPanel {
 		Player currPlayer = playerList.get(playerTurn);	
 		Property currProperty = properties.get(currPlayer.getPosition());
 		int colour = currProperty.returnColour();
-		if(canBuild(colour) && currProperty.returnHouses() == 0 ){				//Return true if allowed build houses, but none on square.
+		if(canBuild(colour) && currProperty.returnHouses() == 0 ){				//True if allowed build houses, but none on square.
 			return true;
 		}
-		else return false;														//Else return false
+		else return false;
 
 	}
 
@@ -997,7 +997,7 @@ public class Board extends JPanel {
 		if (firstRolls[numberOfPlayers-1] == firstRolls[numberOfPlayers-2])
 		{
 			output.append("\nRe-roll..\n");
-			goFirst();															//Using recursion to ensure there is a unique highest roll.
+			goFirst();									//Using recursion to ensure there is a unique highest roll.
 		} else
 		{ 
 			int g = 0;
@@ -1015,7 +1015,7 @@ public class Board extends JPanel {
 
 	//Adds assets and current balance.
 	public void highestPlayer(){
-		int[] houses = new int[numberOfPlayers];						 						//Array to store the balances.
+		int[] houses = new int[numberOfPlayers];		//Array to store the balances.
 		boolean draw = false;
 
 
@@ -1065,7 +1065,5 @@ public class Board extends JPanel {
 		if (draw == true){
 			output.append("No Winner! There is a draw. ");
 		}
-
 	}
-
 }
