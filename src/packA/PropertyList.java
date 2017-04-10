@@ -53,12 +53,10 @@ public class PropertyList extends ArrayList<Property>{
 		
 		String currName;
 		for(Property p : this){
-			if(p.returnColour() > 0 ){
+			
 				currName = p.returnName();
 				currName = currName.concat(".jpg");
 				p.setImage(currName);
-			}
-			else p.setImage(null);
 		}
 	}
 	

@@ -119,7 +119,8 @@ public class Board extends JPanel {
 		}
 		//TEST COMMAND TO TAKE COMMUNITY CARD.
 		else if(command.equalsIgnoreCase("gambino")){
-			takeCard(chanceCards);
+			playerList.get(playerTurn).setPosition(3);
+			squareInfo();
 		}
 		else if(command.equalsIgnoreCase("family reunion")){
 			goToJail();
@@ -823,7 +824,7 @@ public class Board extends JPanel {
 			output.append("\nYou don't own this property\n");
 			return;
 		}
-		if(currProperty.returnColour() > 7 || currProperty.returnColour() < 1){													//House prices set to '-1' to indicate they can't be purchased.
+		if(currProperty.returnColour() > 7 || currProperty.returnColour() < 0){													//House prices set to '-1' to indicate they can't be purchased.
 			output.append("\nNeither stations nor utilities can be developed\n");
 			return;
 		}

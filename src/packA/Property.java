@@ -139,7 +139,7 @@ class Property {
 	}
 	
 	public void setImage(String url){
-			if(url != null)
+			if((this.getClass().getResource(url)) != null)
 			cardImage = new ImageIcon ((this.getClass().getResource(url)));
 			else
 			cardImage = null;
