@@ -631,7 +631,6 @@ public class Board extends JPanel {
 		currPlayer.setPosition(10); 	//Move to jail square.
 		currPlayer.setJail(true); 		//Record player as in jail.
 		currPlayer.setJailRoll(); 		//Give 3 attempts to roll doubles.
-
 	}
 
 	//Function to get out of jail if you have a Card.
