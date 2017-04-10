@@ -625,8 +625,7 @@ public class Board extends JPanel {
 				+ "1) Use a 'Get out of Jail Free' card.\n"
 				+ "2) Pay a fine of " + (char)POUND + "50.\n"
 				+ "3) Roll doubles.\n"
-				+ "If you do not roll doubles by your 3rd turn in jail you must pay the fine of " + (char)POUND + "50.\n\n"
-				+ "Enter 'card' or 'pay' to proceed\n");
+				+ "If you do not roll doubles by your 3rd turn in jail you must pay the fine of " + (char)POUND + "50.\n\n");
 		currPlayer.setPosition(10); 	//Move to jail square.
 		currPlayer.setJail(true); 		//Record player as in jail.
 		currPlayer.setJailRoll(); 		//Give 3 attempts to roll doubles.
