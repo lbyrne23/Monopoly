@@ -69,9 +69,14 @@ public class Board extends JPanel {
 
 		playerList = new ArrayList<Player>(players);								//List to hold players/
 		String[] options = new String[] {"2", "3", "4", "5", "6"};
-		int response = JOptionPane.showOptionDialog(null, "How many are playing?", "Monopoly by CessnaSkyhawk", 
-				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-		        null, options, options[0]);
+		int response = JOptionPane.showOptionDialog(null, 
+				"How many are playing?", 
+				"Monopoly by CessnaSkyhawk", 
+				JOptionPane.DEFAULT_OPTION, 
+				JOptionPane.PLAIN_MESSAGE,
+		        null, 
+		        options, 
+		        options[0]);
 		
 		if (response == -1){
 			System.exit(0);
@@ -275,7 +280,7 @@ public class Board extends JPanel {
 		else if(tmpProperty.returnOwner() == playerTurn){														//Owner is current player.
 			info = tmpProperty.returnName() + " :\nThis is your property.";
 			if(tmpProperty.returnColour() == 8){
-				info = info + "\nIt has rent of £25, £50, £100 or  £200 with 1, 2, 3 or 4 Stations owned respectively.\n";
+				info = info + "\nIt has rent of ï¿½25, ï¿½50, ï¿½100 or  ï¿½200 with 1, 2, 3 or 4 Stations owned respectively.\n";
 			}
 			if(tmpProperty.returnColour() == 8){
 				info = info + "\nIt has rent of 4 or 10 times Dice Roll with 1 or 2 Utilities owned respectively.\n";
