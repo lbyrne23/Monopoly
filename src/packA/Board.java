@@ -261,7 +261,7 @@ public class Board extends JPanel {
 		if(tmpProperty.returnOwner() == null){									 				//i.e. Unbuyable property, just return name for now.
 			info = "\n" + tmpProperty.returnName() + "\n";
 
-			if(currPlayer.getPosition() == 10){	//If Visiting Jail.
+			if(currPlayer.getPosition() == 10){													//If Visiting Jail.
 				info = "\nJail (Just Visiting.)\n";
 			}
 
@@ -293,7 +293,7 @@ public class Board extends JPanel {
 			}
 		}
 
-		else if(tmpProperty.isMortgage() == true){																//IF property is mortgaged.
+		else if(tmpProperty.isMortgage() == true){												//IF property is mortgaged.
 			info = tmpProperty.returnName() + " is currently mortgaged. No rent paid.\n";
 		}
 
@@ -587,11 +587,10 @@ public class Board extends JPanel {
 				bankrupt = false; 														//reset bankruptcy
 				Dice.allowedRoll = 0;													//Allow player to roll again.
 				if(playerList.get(playerTurn).inJail() == false){
-					propertyCard.setIcon(null);
 					output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 				}
+				propertyCard.setIcon(null);
 				checkJail();
-
 			}
 			return;
 
@@ -623,11 +622,11 @@ public class Board extends JPanel {
 		Player currPlayer = playerList.get(playerTurn);
 		output.append("\nYou have been sent to jail.\n\n"
 				+ "To be released you must do one of these:\n"
-				+ "1) Use a 'get out of jail free' card \n"
-				+ "2) Pay a fine of " + (char)POUND + "50 \n"
-				+ "3) Roll doubles \n"
+				+ "1) Use a 'Get out of Jail Free' card.\n"
+				+ "2) Pay a fine of " + (char)POUND + "50.\n"
+				+ "3) Roll doubles.\n"
 				+ "If you do not roll doubles by your 3rd turn in jail you must pay the fine of " + (char)POUND + "50.\n\n"
-				+ "Enter 'roll', 'card', or 'pay' to proceed\n");
+				+ "Enter 'card' or 'pay' to proceed\n");
 		currPlayer.setPosition(10); 	//Move to jail square.
 		currPlayer.setJail(true); 		//Record player as in jail.
 		currPlayer.setJailRoll(); 		//Give 3 attempts to roll doubles.
@@ -841,7 +840,7 @@ public class Board extends JPanel {
 			output.append("\nYou don't own this property\n");
 			return;
 		}
-		if(currProperty.returnColour() > 7 || currProperty.returnColour() < 0){													//House prices set to '-1' to indicate they can't be purchased.
+		if(currProperty.returnColour() > 7 || currProperty.returnColour() < 0){						//House prices set to '-1' to indicate they can't be purchased.
 			output.append("\nNeither stations nor utilities can be developed\n");
 			return;
 		}
