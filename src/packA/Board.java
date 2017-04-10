@@ -187,11 +187,6 @@ public class Board extends JPanel {
 		else if(command.equalsIgnoreCase("pay")){
 			payBail();
 		}
-
-		else if(command.equalsIgnoreCase("jail")){
-			goToJail();
-		}
-
 		else if(chooseFineOrChance && (command.equalsIgnoreCase("pay fine") || command.equalsIgnoreCase("chance")) ){
 			fineOrChance(command);
 		}
@@ -589,8 +584,8 @@ public class Board extends JPanel {
 				if(playerList.get(playerTurn).inJail() == false){
 					output.append("\n" + playerList.get(playerTurn).getName() +"'s turn. Roll.\n");
 				}
-				propertyCard.setIcon(null);
 				checkJail();
+				propertyCard.setIcon(null);
 			}
 			return;
 
