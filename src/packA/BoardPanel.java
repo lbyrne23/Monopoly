@@ -1,4 +1,12 @@
+//Team : Cessna Skyhawk
+//Michael Jordan
+//Lucy Byrne
+//Fiachra Dunn
+//
+//
+
 package packA;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 

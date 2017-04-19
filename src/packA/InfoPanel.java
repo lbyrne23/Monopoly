@@ -1,4 +1,12 @@
+//Team : Cessna Skyhawk
+//Michael Jordan
+//Lucy Byrne
+//Fiachra Dunn
+//
+//
+
 package packA;
+
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
