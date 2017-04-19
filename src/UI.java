@@ -5,7 +5,7 @@
 //
 //
 
-package packA;
+
 
 import java.awt.BorderLayout;
 

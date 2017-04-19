@@ -5,7 +5,7 @@
 //
 //
 
-package packA;
+
 
 public class Dice implements DiceAPI {
 	

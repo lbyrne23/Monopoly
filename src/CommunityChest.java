@@ -5,12 +5,12 @@
 //
 //
 
-package packA;
 
-public class Chance extends Square {
+
+public class CommunityChest extends Square {
 	
-	Chance () {
-		super("Chance");
+	CommunityChest () {
+		super("Community Chest");
 		return;
 	}
 	

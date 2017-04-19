@@ -5,7 +5,7 @@
 //
 //
 
-package packA;
+
 
 public class CommunityChestDeck extends CardDeck {
 	

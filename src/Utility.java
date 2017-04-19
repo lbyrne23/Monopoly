@@ -5,7 +5,7 @@
 //
 //
 
-package packA;
+
 
 public class Utility extends Property {
 	

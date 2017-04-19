@@ -5,13 +5,14 @@
 //
 //
 
-package packA;
 
-public class GoToJail extends Square {
+
+public class Chance extends Square {
 	
-	GoToJail () {
-		super("Go To Jail");
+	Chance () {
+		super("Chance");
 		return;
 	}
-
+	
 }
+
