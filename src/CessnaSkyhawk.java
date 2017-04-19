@@ -7,7 +7,7 @@
 
 
 
-public class YourTeamName implements Bot {
+public class CessnaSkyhawk implements Bot {
 	
 	// The public API of YourTeamName must not change
 	// You cannot change any other classes
@@ -15,12 +15,12 @@ public class YourTeamName implements Bot {
 	// It may only inspect the state of the board and the player objects
 
 	
-	YourTeamName (BoardAPI board, PlayerAPI player, DiceAPI dice) {
+	CessnaSkyhawk (BoardAPI board, PlayerAPI player, DiceAPI dice) {
 		return;
 	}
 	
 	public String getName () {
-		return "YourTeamName";
+		return "CessnaSkyhawk";
 	}
 	
 	public String getCommand () {
