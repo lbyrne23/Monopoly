@@ -14,9 +14,14 @@ public class YourTeamName implements Bot {
 	// YourTeamName may not alter the state of the board or the player objects
 	// It may only inspect the state of the board and the player objects
 	private static int i = 0;
+	private static BoardAPI board;
+	private static PlayerAPI player;
+	private static DiceAPI dice;
 	
 	YourTeamName (BoardAPI board, PlayerAPI player, DiceAPI dice) {
-		System.out.println("asdasd");
+		this.board = board;
+		this.player = player;
+		this.dice = dice;
 		return;
 	}
 	
