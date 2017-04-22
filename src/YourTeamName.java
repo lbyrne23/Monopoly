@@ -85,4 +85,8 @@ public class YourTeamName implements Bot {
 		else return 0;
 	}
 	
+	public int mortgage(){
+		
+	}
+	
 }
