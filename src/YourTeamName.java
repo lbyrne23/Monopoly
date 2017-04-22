@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 //Team : Cessna Skyhawk
 //Michael Jordan
 //Lucy Byrne
@@ -101,9 +103,64 @@ public class YourTeamName implements Bot {
 		else return 0;
 	}
 
-	public void considerBuilding(){
-		if(canBuild(orangeProperty)){
+	//Function tries to build three houses on all properties, from most desired property to least.
+	public void buildThreeHouses(){
+		boolean success = false;	//Records whether we have managed to build anything.
+		int colourIndex = 0;
+		ColourGroup[] colourGroups = {orangeProperty, redProperty, yellowProperty, pinkProperty, greenProperty,
+										darkBlueProperty, lightBlueProperty};
+		
+		
+		while(colourIndex < 7 ){	//	While Player can afford, and hasn't reached end of colour groups
+				
+				if(ownsGroup(colourGroups[colourIndex])){	//If player owns group, loop through.
+					ArrayList<Site> siteList = colourGroups[colourIndex].getMembers();		//List of properties of this colour group
+					for(int j=0; j < siteList.size(); j++){
+						Site p = siteList.get(j);
+						while(p.getNumHouses() < 3 && player.getBalance() > 500){
+							 p.build(1);
+							 success = true;
+						}
+					}
+					
+				}
 			
+			colourIndex++;
+			if(player.getBalance() < 500){		//Don't continue through colour groups if cannot afford to build.
+				break;
+			}
+				
+		}
+		
+		if(success == false){
+			//Set case to run second build function.
+		}
+	}
+	
+	public void completeBuilding(){
+		int colourIndex = 0;
+		ColourGroup[] colourGroups = {orangeProperty, redProperty, yellowProperty, pinkProperty, greenProperty,
+										darkBlueProperty, lightBlueProperty};
+		
+		
+		while(colourIndex < 7 ){	//	While Player can afford, and hasn't reached end of colour groups
+				
+				if(ownsGroup(colourGroups[colourIndex])){	//If player owns group, loop through.
+					ArrayList<Site> siteList = colourGroups[colourIndex].getMembers();		//List of properties of this colour group
+					for(int j=0; j < siteList.size(); j++){
+						Site p = siteList.get(j);
+						if(p.canBuild(1) && player.getBalance() > 500){
+							p.build(1);
+						}
+					}
+					
+				}
+			
+			colourIndex++;
+			if(player.getBalance() < 500){		//Don't continue through colour groups if cannot afford to build.
+				break;
+			}
+				
 		}
 	}
 		
@@ -112,12 +169,18 @@ public class YourTeamName implements Bot {
 		
 	}
 	
-	public boolean canBuild(ColourGroup colour){
-		if(colour.getMembers().get(0).canBuild(1)){
+	public boolean ownsGroup(ColourGroup colour){
+		if( player.isGroupOwner(colour.getMembers().get(0)) ){
+			
 			return true;
 		}
 		
 			return false;
 	}
 	
+	public boolean threeHousesOrMore(ColourGroup colour){
+		ArrayList<Site> propertyList = colour.getMembers();
+		
+		return false;
+	}
 }
