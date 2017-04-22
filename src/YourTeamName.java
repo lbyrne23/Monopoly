@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+
+import jdk.nashorn.internal.objects.annotations.Property;
+
 //Team : Cessna Skyhawk
 //Michael Jordan
 //Lucy Byrne
@@ -13,7 +17,7 @@ public class YourTeamName implements Bot {
 	// You cannot change any other classes
 	// YourTeamName may not alter the state of the board or the player objects
 	// It may only inspect the state of the board and the player objects
-	private static int i;
+	private static int decision;
 	private static BoardAPI board;
 	private static PlayerAPI player;
 	private static DiceAPI dice;
@@ -31,13 +35,13 @@ public class YourTeamName implements Bot {
 		this.player = player;
 		this.dice = dice;
 		brownProperty = ((Site) board.getProperty(1)).getColourGroup();
-		 lightBlueProperty = ((Site) board.getProperty(6)).getColourGroup();
-		 pinkProperty = ((Site) board.getProperty(11)).getColourGroup();
-		 orangeProperty = ((Site) board.getProperty(16)).getColourGroup();
-		 redProperty = ((Site) board.getProperty(21)).getColourGroup();
-		 yellowProperty = ((Site) board.getProperty(26)).getColourGroup();
-		 greenProperty = ((Site) board.getProperty(31)).getColourGroup();
-		 darkBlueProperty = ((Site) board.getProperty(37)).getColourGroup();
+		lightBlueProperty = ((Site) board.getProperty(6)).getColourGroup();
+		pinkProperty = ((Site) board.getProperty(11)).getColourGroup();
+		orangeProperty = ((Site) board.getProperty(16)).getColourGroup();
+		redProperty = ((Site) board.getProperty(21)).getColourGroup();
+		yellowProperty = ((Site) board.getProperty(26)).getColourGroup();
+		greenProperty = ((Site) board.getProperty(31)).getColourGroup();
+		darkBlueProperty = ((Site) board.getProperty(37)).getColourGroup();
 		return;
 	}
 
@@ -46,7 +50,7 @@ public class YourTeamName implements Bot {
 	}
 
 	public String getCommand () {
-		switch (i){
+		switch (decision){
 		case 0 : 
 			return "roll";
 		case 1 :
@@ -69,7 +73,7 @@ public class YourTeamName implements Bot {
 			return "card"; //in jail
 
 		default : 
-			i = 1;
+			decision = 1;
 			return "roll";
 		}
 	}
@@ -103,21 +107,46 @@ public class YourTeamName implements Bot {
 
 	public void considerBuilding(){
 		if(canBuild(orangeProperty)){
-			
+
 		}
 	}
-		
 
-	public int mortgage(){
-		
+
+	public int mortgage(int goal){
+		ArrayList<Site> sites = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty, yellowProperty,  redProperty,  orangeProperty};
+		ArrayList<Property> properties = player.getProperties();
+
+		int earned = 0;
+		int i;
+		int j = 0;
+
+		for(i = 0; i < properties.size(); i++){
+			if(properties.get(i).getColourGroup() == sites.get(j)){
+				if(countColoursOwned(sites.get(j)) < 2){
+					//mortgage
+				}	
+			}
+			j++;
+		}
 	}
-	
+
+	public int countColoursOwned (Site site) {
+		boolean owns = 3;
+		ColourGroup colourGroup = site.getColourGroup();
+		for (Site s : colourGroup.getMembers()) {
+			if (!s.isOwned() || (s.isOwned() && s.getOwner() != this))
+				owns--;
+		}
+		return owns;
+	}
+
+
 	public boolean canBuild(ColourGroup colour){
 		if(colour.getMembers().get(0).canBuild(1)){
 			return true;
 		}
-		
-			return false;
+
+		return false;
 	}
-	
+
 }
