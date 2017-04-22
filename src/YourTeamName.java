@@ -7,7 +7,7 @@
 
 
 
-public class CessnaSkyhawk implements Bot {
+public class YourTeamName implements Bot {
 	
 	// The public API of YourTeamName must not change
 	// You cannot change any other classes
@@ -15,7 +15,7 @@ public class CessnaSkyhawk implements Bot {
 	// It may only inspect the state of the board and the player objects
 	private static int i = 0;
 	
-	CessnaSkyhawk (BoardAPI board, PlayerAPI player, DiceAPI dice) {
+	YourTeamName (BoardAPI board, PlayerAPI player, DiceAPI dice) {
 		System.out.println("asdasd");
 		return;
 	}
