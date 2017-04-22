@@ -17,14 +17,14 @@ public class YourTeamName implements Bot {
 	private static BoardAPI board;
 	private static PlayerAPI player;
 	private static DiceAPI dice;
-	ColourGroup brownProperty = ((Site) board.getProperty(1)).getColourGroup();
-	ColourGroup lightBlueProperty = ((Site) board.getProperty(6)).getColourGroup();
-	ColourGroup pinkProperty = ((Site) board.getProperty(11)).getColourGroup();
-	ColourGroup orangeProperty = ((Site) board.getProperty(16)).getColourGroup();
-	ColourGroup redProperty = ((Site) board.getProperty(21)).getColourGroup();
-	ColourGroup yellowProperty = ((Site) board.getProperty(26)).getColourGroup();
-	ColourGroup greenProperty = ((Site) board.getProperty(31)).getColourGroup();
-	ColourGroup darkBlueProperty = ((Site) board.getProperty(37)).getColourGroup();
+	ColourGroup brownProperty;
+	ColourGroup lightBlueProperty;
+	ColourGroup pinkProperty;
+	ColourGroup orangeProperty;
+	ColourGroup redProperty;
+	ColourGroup yellowProperty;
+	ColourGroup greenProperty;
+	ColourGroup darkBlueProperty;
 	
 	YourTeamName (BoardAPI board, PlayerAPI player, DiceAPI dice) {
 		this.board = board;
