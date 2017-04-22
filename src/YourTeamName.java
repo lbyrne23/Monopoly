@@ -17,11 +17,27 @@ public class YourTeamName implements Bot {
 	private static BoardAPI board;
 	private static PlayerAPI player;
 	private static DiceAPI dice;
+	ColourGroup brownProperty;
+	ColourGroup lightBlueProperty;
+	ColourGroup pinkProperty;
+	ColourGroup orangeProperty;
+	ColourGroup redProperty;
+	ColourGroup yellowProperty;
+	ColourGroup greenProperty;
+	ColourGroup darkBlueProperty;
 
 	YourTeamName (BoardAPI board, PlayerAPI player, DiceAPI dice) {
 		this.board = board;
 		this.player = player;
 		this.dice = dice;
+		brownProperty = ((Site) board.getProperty(1)).getColourGroup();
+		 lightBlueProperty = ((Site) board.getProperty(6)).getColourGroup();
+		 pinkProperty = ((Site) board.getProperty(11)).getColourGroup();
+		 orangeProperty = ((Site) board.getProperty(16)).getColourGroup();
+		 redProperty = ((Site) board.getProperty(21)).getColourGroup();
+		 yellowProperty = ((Site) board.getProperty(26)).getColourGroup();
+		 greenProperty = ((Site) board.getProperty(31)).getColourGroup();
+		 darkBlueProperty = ((Site) board.getProperty(37)).getColourGroup();
 		return;
 	}
 
@@ -86,7 +102,9 @@ public class YourTeamName implements Bot {
 	}
 
 	public void considerBuilding(){
-		
+		if(canBuild(orangeProperty)){
+			
+		}
 	}
 		
 
@@ -94,8 +112,12 @@ public class YourTeamName implements Bot {
 		
 	}
 	
-	public void canBuild(ColourGroup colour){
+	public boolean canBuild(ColourGroup colour){
+		if(colour.getMembers().get(0).canBuild(1)){
+			return true;
+		}
 		
+			return false;
 	}
 	
 }
