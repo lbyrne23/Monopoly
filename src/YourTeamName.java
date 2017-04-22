@@ -82,9 +82,13 @@ public class YourTeamName implements Bot {
 	}
 	
 	public void considerBuilding(){
-		int brown, lightBlue, pink, orange, red, yellow, green, darkBlue;
+		
 		
 
+	}
+	
+	public void canBuild(ColourGroup colour){
+		
 	}
 	
 }
