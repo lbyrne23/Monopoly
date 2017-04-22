@@ -1,12 +1,3 @@
-//Team : Cessna Skyhawk
-//Michael Jordan
-//Lucy Byrne
-//Fiachra Dunn
-//
-//
-
-
-
 import java.util.ArrayList;
 
 public class Player implements PlayerAPI {
@@ -167,6 +158,10 @@ public class Player implements PlayerAPI {
 		property.setOwner(this);
 		properties.add(property);
 		return;
+	}
+	
+	public int getNumProperties () {
+		return properties.size();
 	}
 	
 	public Property getLatestProperty () {

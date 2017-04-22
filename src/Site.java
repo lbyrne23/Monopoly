@@ -1,11 +1,3 @@
-//Team : Cessna Skyhawk
-//Michael Jordan
-//Lucy Byrne
-//Fiachra Dunn
-//
-//
-
-
 
 public class Site extends Property {
 	
@@ -24,7 +16,7 @@ public class Site extends Property {
 		numBuildings = 0;
 		colourGroup.addMember(this);
 		return;
-	}
+	}	
 	
 // METHODS DEALING WITH BUILDING UNITS (HOUSES AND HOTELS)
 	

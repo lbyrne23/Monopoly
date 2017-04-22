@@ -1,11 +1,3 @@
-//Team : Cessna Skyhawk
-//Michael Jordan
-//Lucy Byrne
-//Fiachra Dunn
-//
-//
-
-
 
 public class Property extends Square {
 
@@ -29,6 +21,12 @@ public class Property extends Square {
 		return;
 	}
 		
+// METHODS DEALING WITH NAMES
+	
+	public String getShortName () {
+		return shortName;
+	}
+	
 // METHODS DEALING WITH PRICE
 
 	public int getPrice () {

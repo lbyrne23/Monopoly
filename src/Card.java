@@ -1,11 +1,3 @@
-//Team : Cessna Skyhawk
-//Michael Jordan
-//Lucy Byrne
-//Fiachra Dunn
-//
-//
-
-
 
 public class Card {
 

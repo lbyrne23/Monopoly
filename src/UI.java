@@ -1,12 +1,3 @@
-//Team : Cessna Skyhawk
-//Michael Jordan
-//Lucy Byrne
-//Fiachra Dunn
-//
-//
-
-
-
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -286,7 +277,6 @@ public class UI {
 			infoPanel.displayString(player + " type pay or chance:");
 			string = bots[player.getTokenId()].getDecision();
 			infoPanel.displayString("> " + string);
-			string = commandPanel.getString();
 			string = string.toLowerCase();
 			string = string.trim();
 			switch (string) {

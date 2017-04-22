@@ -1,12 +1,3 @@
-//Team : Cessna Skyhawk
-//Michael Jordan
-//Lucy Byrne
-//Fiachra Dunn
-//
-//
-
-
-
 import java.util.ArrayList;
 
 public class Players {
