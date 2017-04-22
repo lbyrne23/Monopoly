@@ -48,11 +48,9 @@ public class YourTeamName implements Bot {
 		case 7 : 
 			return "bankrupt";
 		case 8 :
-			return "property";
+			return "pay"; //in jail
 		case 9 : 
-			return "balance";
-		case 10 :
-			return "quit";
+			return "card"; //in jail
 			
 		default : 
 			i = 1;
