@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 //Team : Cessna Skyhawk
 //Michael Jordan
 //Lucy Byrne
@@ -74,7 +73,7 @@ public class YourTeamName implements Bot {
 			return "card"; 			//In jail.
 
 		default : 
-			decision = 1;
+			decision = 0;
 			return "roll";
 		}
 	}
@@ -88,22 +87,22 @@ public class YourTeamName implements Bot {
 	
 	public String inJail(){
 
-		if(player.isInJail()){	//carry out jail functions if in jail.
+		if(player.isInJail()){							//Carry out jail functions if in jail.
 			
 			if(player.getNumProperties() < 10){
 				if(player.getBalance() < 50 ){
 					
 					decision = 1;
-					return "roll"; //Roll because our balance is too low and we will lose the game if we pay out
+					return "roll"; 						//Roll because our balance is too low and we will lose the game if we pay out.
 				}
 				else if(player.hasGetOutOfJailCard()){
 					decision = 0;
-					return "card"; //use the card to get out for free quickly
+					return "card"; 						//Use the card to get out for free quickly.
 					
 				}
 				else{
 					decision = 0;
-					return "pay"; //pay out to get out ASAP
+					return "pay"; 						//Pay out to get out ASAP.
 				}
 				
 			}
@@ -125,14 +124,13 @@ public class YourTeamName implements Bot {
 										darkBlueProperty, lightBlueProperty};
 		
 		//Loop attempts to build on houses from most to least desirable, building one house at a time.
-		//
 		
 		//We attempt to build all houses to level 3, then all houses to level 4, then 5.
 		for(int housesToBuild = 3; housesToBuild < 5; housesToBuild++){
-			while(colourIndex < 7 ){	//	While Player can afford, and hasn't reached end of colour groups
+			while(colourIndex < 7 ){	//	While Player can afford, and hasn't reached end of colour groups.
 					
 					if(ownsGroup(colourGroups[colourIndex])){									//If player owns group, loop through.
-						ArrayList<Site> siteList = colourGroups[colourIndex].getMembers();		//List of properties of this colour group
+						ArrayList<Site> siteList = colourGroups[colourIndex].getMembers();		//List of properties of this colour group.
 						for(int j=0; j < siteList.size(); j++){
 							Site p = siteList.get(j);
 							if(p.getNumHouses() < housesToBuild && player.getBalance() > 500){
@@ -150,22 +148,26 @@ public class YourTeamName implements Bot {
 			if(dice.isDouble() && !player.isInJail()){
 			decision = 0;
 			}
-			decision = 3; 											//move onto next function
+			decision = 3; 								//Move onto next function.
 			return command;
 			
 	}
 	
 	public String buyProperty(){
-		Property property = board.getProperty(player.getPosition());
-		decision = 2;												//sets choice for next time getCommand() is called.
+		decision = 2;															//Sets choice for next time getCommand() is called.
+
+		Property property;
 		
-		if (board.isSite(property.getShortName()) && !property.isOwned()){
-			return "buy";
-		
-		} else {
-			return "";								
-		
+		if (board.isProperty(player.getPosition()) ){
+			property = board.getProperty(player.getPosition());
+			
+			if (!property.isOwned() && board.isSite(property.getShortName()) ){
+	
+				return "buy";
+			}
 		}
+		
+		return "";																//Return null string when property is owned/not buyable.
 	}
 	
 
