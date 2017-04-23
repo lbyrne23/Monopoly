@@ -51,6 +51,7 @@ public class YourTeamName implements Bot {
 		switch (i){
 		case 0 : 
 			return "roll";
+			
 		case 1 :
 			return "done";
 		case 2 : 
@@ -104,9 +105,10 @@ public class YourTeamName implements Bot {
 	}
 
 	//Function tries to build three houses on all properties, from most desired property to least.
-	public void buildThreeHouses(){
+	public String buildThreeHouses(){
 		boolean success = false;	//Records whether we have managed to build anything.
 		int colourIndex = 0;
+		Strign command;
 		ColourGroup[] colourGroups = {orangeProperty, redProperty, yellowProperty, pinkProperty, greenProperty,
 										darkBlueProperty, lightBlueProperty};
 		
@@ -117,9 +119,10 @@ public class YourTeamName implements Bot {
 					ArrayList<Site> siteList = colourGroups[colourIndex].getMembers();		//List of properties of this colour group
 					for(int j=0; j < siteList.size(); j++){
 						Site p = siteList.get(j);
-						while(p.getNumHouses() < 3 && player.getBalance() > 500){
-							 p.build(1);
-							 success = true;
+						if(p.getNumHouses() < 3 && player.getBalance() > 500){
+							decision = 0;
+							command = "build " + p.getShortName() + " 1";
+							return command;									//Build one house at a time.
 						}
 					}
 					
@@ -137,32 +140,7 @@ public class YourTeamName implements Bot {
 		}
 	}
 	
-	public void completeBuilding(){
-		int colourIndex = 0;
-		ColourGroup[] colourGroups = {orangeProperty, redProperty, yellowProperty, pinkProperty, greenProperty,
-										darkBlueProperty, lightBlueProperty};
-		
-		
-		while(colourIndex < 7 ){	//	While Player can afford, and hasn't reached end of colour groups
-				
-				if(ownsGroup(colourGroups[colourIndex])){	//If player owns group, loop through.
-					ArrayList<Site> siteList = colourGroups[colourIndex].getMembers();		//List of properties of this colour group
-					for(int j=0; j < siteList.size(); j++){
-						Site p = siteList.get(j);
-						if(p.canBuild(1) && player.getBalance() > 500){
-							p.build(1);
-						}
-					}
-					
-				}
-			
-			colourIndex++;
-			if(player.getBalance() < 500){		//Don't continue through colour groups if cannot afford to build.
-				break;
-			}
-				
-		}
-	}
+
 		
 
 	public int mortgage(){
