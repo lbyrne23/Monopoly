@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b1c26166fa165971ea2c6b4ddbbc2d2af12f5c42
 
 //Team : Cessna Skyhawk
 //Michael Jordan
@@ -52,7 +55,6 @@ public class YourTeamName implements Bot {
 		switch (decision){
 		case 0 : 
 			return "roll";
-			
 		case 1 :
 			return "done";
 		case 2 : 
@@ -68,9 +70,9 @@ public class YourTeamName implements Bot {
 		case 7 : 
 			return "bankrupt";
 		case 8 :
-			return "pay"; //in jail
+			return "pay"; 			//In jail.
 		case 9 : 
-			return "card"; //in jail
+			return "card"; 			//In jail.
 
 		default : 
 			decision = 1;
@@ -86,6 +88,7 @@ public class YourTeamName implements Bot {
 	public String inJail(){
 		if(player.getNumProperties() < 10){
 			if(player.getBalance() < 50){
+
 				return "roll"; //Roll because our balance is too low and we will lose the game if we pay out
 			}
 			else if(player.hasGetOutOfJailCard()){
@@ -95,6 +98,7 @@ public class YourTeamName implements Bot {
 		}
 			
 			return "roll";
+
 	}
 
 	//Function tries to build three houses on all properties, from most desired property to least.
@@ -126,44 +130,57 @@ public class YourTeamName implements Bot {
 				
 				colourIndex++;		
 				}
-		}
-		
+		}	
 		
 			decision = 3; 											//move onto next function
 			return command;
-
-	
+			
 	}
 	
-
-
-	public int mortgage(int goal){
-		ArrayList<Site> sites = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty, yellowProperty,  redProperty,  orangeProperty};
-		ArrayList<Property> properties = player.getProperties();
-
-		int earned = 0;
-		int i;
-		int j = 0;
-
-		for(i = 0; i < properties.size(); i++){
-			if(properties.get(i).getColourGroup() == sites.get(j)){
-				if(countColoursOwned(sites.get(j)) < 2){
-					//mortgage
-				}	
-			}
-			j++;
+	public String buyProperty(){
+		Property property = board.getProperty(player.getPosition());
+		
+		if (board.isSite(property.getShortName()) && !property.isOwned()){
+			
+			decision = 1;													//**REMINDER** Fix to the appropriate case.
+			return "buy";
+		
+		} else {
+			
+			decision = 2;													//**REMINDER** Fix to the appropriate case.
+			return "";								
+		
 		}
 	}
+	
 
-	public int countColoursOwned (Site site) {
-		boolean owns = 3;
-		ColourGroup colourGroup = site.getColourGroup();
-		for (Site s : colourGroup.getMembers()) {
-			if (!s.isOwned() || (s.isOwned() && s.getOwner() != this))
-				owns--;
-		}
-		return owns;
-	}
+//	public int mortgage(int goal){
+//		ArrayList<Site> sites = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty, yellowProperty,  redProperty,  orangeProperty};
+//		ArrayList<Property> properties = player.getProperties();
+//
+//		int earned = 0;
+//		int i;
+//		int j = 0;
+//
+//		for(i = 0; i < properties.size(); i++){
+//			if(properties.get(i).getColourGroup() == sites.get(j)){
+//				if(countColoursOwned(sites.get(j)) < 2){
+//					//mortgage
+//				}	
+//			}
+//			j++;
+//		}
+//	}
+//
+//	public int countColoursOwned (Site site) {
+//		int owns = 3;
+//		ColourGroup colourGroup = site.getColourGroup();
+//		for (Site s : colourGroup.getMembers()) {
+//			if (!s.isOwned() || (s.isOwned() && s.getOwner() != player.getTokenId()))
+//				owns--;
+//		}
+//		return owns;
+//	}
 
 	
 	public boolean ownsGroup(ColourGroup colour){
