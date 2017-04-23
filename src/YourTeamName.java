@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import jdk.nashorn.internal.objects.annotations.Property;
+
 
 //Team : Cessna Skyhawk
 //Michael Jordan
@@ -83,31 +83,22 @@ public class YourTeamName implements Bot {
 		return "pay";
 	}
 
-	public int inJail(){
-		if(player.getNumProperties() < 2){
+	public String inJail(){
+		if(player.getNumProperties() < 10){
 			if(player.getBalance() < 50){
-				return 0; //Roll because our balance is too low and we will lose the game if we pay out
+				return "roll"; //Roll because our balance is too low and we will lose the game if we pay out
 			}
 			else if(player.hasGetOutOfJailCard()){
-				return 9; //use the card to get out for free quickly
+				return "card"; //use the card to get out for free quickly
 			}
-			else return 8; //pay out to get out ASAP
+			else return "pay"; //pay out to get out ASAP
 		}
-		else if(player.getNumProperties() > 15){
-			return 0; //roll beacuse we want to stay in jail and just collect rent
-		}
-		else if (player.getBalance() > 1000){
-			return 8; //save our get out of jail card so other player cant have it/for us later when we're poor
-		}
-		else if(player.hasGetOutOfJailCard()){
-			return 9; //use the card if we have low funds and want out
-		}
-		else return 0;
+			
+			return "roll";
 	}
 
 	//Function tries to build three houses on all properties, from most desired property to least.
 	public String considerBuild(){
-		boolean success = false;	//Records whether we have managed to build anything.
 		int colourIndex = 0;
 		String command = "";
 		ColourGroup[] colourGroups = {orangeProperty, redProperty, yellowProperty, pinkProperty, greenProperty,
@@ -137,10 +128,10 @@ public class YourTeamName implements Bot {
 				}
 		}
 		
-		if (command.equals("")){
+		
 			decision = 3; 											//move onto next function
 			return command;
-		}
+
 	
 	}
 	
