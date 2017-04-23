@@ -108,7 +108,7 @@ public class YourTeamName implements Bot {
 				
 			}
 		}
-		
+			System.out.println("Rolled");
 			decision = 1;
 			return "roll";
 		
@@ -148,9 +148,12 @@ public class YourTeamName implements Bot {
 				}
 		}	
 			if(dice.isDouble() && !player.isInJail()){
-			decision = 0;
+				decision = 0;
 			}
-			decision = 3; 											//move onto next function
+			else{
+				decision = 3;
+			}				
+			
 			return command;
 			
 	}
