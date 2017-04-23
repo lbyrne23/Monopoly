@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import jdk.nashorn.internal.objects.annotations.Property;
 
 //Team : Cessna Skyhawk
 //Michael Jordan
@@ -52,7 +51,6 @@ public class YourTeamName implements Bot {
 		switch (decision){
 		case 0 : 
 			return "roll";
-			
 		case 1 :
 			return "done";
 		case 2 : 
@@ -68,9 +66,9 @@ public class YourTeamName implements Bot {
 		case 7 : 
 			return "bankrupt";
 		case 8 :
-			return "pay"; //in jail
+			return "pay"; 			//In jail.
 		case 9 : 
-			return "card"; //in jail
+			return "card"; 			//In jail.
 
 		default : 
 			decision = 1;
@@ -86,21 +84,21 @@ public class YourTeamName implements Bot {
 	public int inJail(){
 		if(player.getNumProperties() < 2){
 			if(player.getBalance() < 50){
-				return 0; //Roll because our balance is too low and we will lose the game if we pay out
+				return 0; 								//Roll because our balance is too low and we will lose the game if we pay out.
 			}
 			else if(player.hasGetOutOfJailCard()){
-				return 9; //use the card to get out for free quickly
+				return 9; 								//Use the card to get out for free quickly.
 			}
-			else return 8; //pay out to get out ASAP
+			else return 8; 								//Pay out to get out ASAP.
 		}
 		else if(player.getNumProperties() > 15){
-			return 0; //roll beacuse we want to stay in jail and just collect rent
+			return 0; 									//Roll because we want to stay in jail and just collect rent.
 		}
 		else if (player.getBalance() > 1000){
-			return 8; //save our get out of jail card so other player cant have it/for us later when we're poor
+			return 8; 									//Save our get out of jail card so other player can't have it/for us later when we're poor.
 		}
 		else if(player.hasGetOutOfJailCard()){
-			return 9; //use the card if we have low funds and want out
+			return 9; 									//Use the card if we have low funds and want out.
 		}
 		else return 0;
 	}
@@ -136,43 +134,56 @@ public class YourTeamName implements Bot {
 				colourIndex++;		
 				}
 		}
+	
+		decision = 3; 											//move onto next function
+		return command;	
+			
+	}
+	
+	public String buyProperty(){
+		Property property = board.getProperty(player.getPosition());
 		
-		if (command.equals("")){
-			decision = 3; 											//move onto next function
-			return command;
+		if (board.isSite(property.getShortName()) && !property.isOwned()){
+			
+			decision = 1;													//**REMINDER** Fix to the appropriate case.
+			return "buy";
+		
+		} else {
+			
+			decision = 2;													//**REMINDER** Fix to the appropriate case.
+			return "";								
+		
 		}
+	}
 	
-	}
-	
 
-
-	public int mortgage(int goal){
-		ArrayList<Site> sites = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty, yellowProperty,  redProperty,  orangeProperty};
-		ArrayList<Property> properties = player.getProperties();
-
-		int earned = 0;
-		int i;
-		int j = 0;
-
-		for(i = 0; i < properties.size(); i++){
-			if(properties.get(i).getColourGroup() == sites.get(j)){
-				if(countColoursOwned(sites.get(j)) < 2){
-					//mortgage
-				}	
-			}
-			j++;
-		}
-	}
-
-	public int countColoursOwned (Site site) {
-		boolean owns = 3;
-		ColourGroup colourGroup = site.getColourGroup();
-		for (Site s : colourGroup.getMembers()) {
-			if (!s.isOwned() || (s.isOwned() && s.getOwner() != this))
-				owns--;
-		}
-		return owns;
-	}
+//	public int mortgage(int goal){
+//		ArrayList<Site> sites = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty, yellowProperty,  redProperty,  orangeProperty};
+//		ArrayList<Property> properties = player.getProperties();
+//
+//		int earned = 0;
+//		int i;
+//		int j = 0;
+//
+//		for(i = 0; i < properties.size(); i++){
+//			if(properties.get(i).getColourGroup() == sites.get(j)){
+//				if(countColoursOwned(sites.get(j)) < 2){
+//					//mortgage
+//				}	
+//			}
+//			j++;
+//		}
+//	}
+//
+//	public int countColoursOwned (Site site) {
+//		int owns = 3;
+//		ColourGroup colourGroup = site.getColourGroup();
+//		for (Site s : colourGroup.getMembers()) {
+//			if (!s.isOwned() || (s.isOwned() && s.getOwner() != player.getTokenId()))
+//				owns--;
+//		}
+//		return owns;
+//	}
 
 	
 	public boolean ownsGroup(ColourGroup colour){
