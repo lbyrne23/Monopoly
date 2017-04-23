@@ -1,8 +1,5 @@
 import java.util.ArrayList;
-<<<<<<< HEAD
 
-=======
->>>>>>> b1c26166fa165971ea2c6b4ddbbc2d2af12f5c42
 
 //Team : Cessna Skyhawk
 //Michael Jordan
@@ -23,6 +20,7 @@ public class YourTeamName implements Bot {
 	private static BoardAPI board;
 	private static PlayerAPI player;
 	private static DiceAPI dice;
+	boolean allowedRoll = true;
 	ColourGroup brownProperty;
 	ColourGroup lightBlueProperty;
 	ColourGroup pinkProperty;
@@ -48,19 +46,20 @@ public class YourTeamName implements Bot {
 	}
 
 	public String getName () {
-		return "CessnaSkyhawk";
+		return "YourTeamName";
 	}
 
 	public String getCommand () {
 		switch (decision){
 		case 0 : 
-			return "roll";
+			return inJail();
 		case 1 :
-			return "done";
+			return buyProperty();
 		case 2 : 
-			return "pay rent";
+			return considerBuild();
 		case 3 :
-			return "build";
+			
+			return "done";
 		case 4 :
 			return "demolish";
 		case 5 :
@@ -85,20 +84,37 @@ public class YourTeamName implements Bot {
 		return "pay";
 	}
 
+	
+	
 	public String inJail(){
-		if(player.getNumProperties() < 10){
-			if(player.getBalance() < 50){
 
-				return "roll"; //Roll because our balance is too low and we will lose the game if we pay out
-			}
-			else if(player.hasGetOutOfJailCard()){
-				return "card"; //use the card to get out for free quickly
-			}
-			else return "pay"; //pay out to get out ASAP
-		}
+		if(player.isInJail()){	//carry out jail functions if in jail.
 			
+			if(player.getNumProperties() < 10){
+				if(player.getBalance() < 50 ){
+					
+					decision = 1;
+					return "roll"; //Roll because our balance is too low and we will lose the game if we pay out
+				}
+				else if(player.hasGetOutOfJailCard()){
+					decision = 0;
+					return "card"; //use the card to get out for free quickly
+					
+				}
+				else{
+					decision = 0;
+					return "pay"; //pay out to get out ASAP
+				}
+				
+			}
+		}
+		
+			decision = 1;
 			return "roll";
-
+		
+		
+			
+			
 	}
 
 	//Function tries to build three houses on all properties, from most desired property to least.
@@ -131,7 +147,9 @@ public class YourTeamName implements Bot {
 				colourIndex++;		
 				}
 		}	
-		
+			if(dice.isDouble() && !player.isInJail()){
+			decision = 0;
+			}
 			decision = 3; 											//move onto next function
 			return command;
 			
@@ -139,15 +157,12 @@ public class YourTeamName implements Bot {
 	
 	public String buyProperty(){
 		Property property = board.getProperty(player.getPosition());
+		decision = 2;												//sets choice for next time getCommand() is called.
 		
 		if (board.isSite(property.getShortName()) && !property.isOwned()){
-			
-			decision = 1;													//**REMINDER** Fix to the appropriate case.
 			return "buy";
 		
 		} else {
-			
-			decision = 2;													//**REMINDER** Fix to the appropriate case.
 			return "";								
 		
 		}
