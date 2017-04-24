@@ -19,8 +19,9 @@ public class YourTeamName implements Bot {
 	private static BoardAPI board;
 	private static PlayerAPI player;
 	private static DiceAPI dice;
-	boolean allowedRoll = true;
-	boolean wasInJail = false;
+	boolean allowedRoll;
+	boolean wasInJail;
+	boolean z = false;
 	ColourGroup brownProperty;
 	ColourGroup lightBlueProperty;
 	ColourGroup pinkProperty;
@@ -31,6 +32,8 @@ public class YourTeamName implements Bot {
 	ColourGroup darkBlueProperty;
 
 	YourTeamName (BoardAPI board, PlayerAPI player, DiceAPI dice) {
+		allowedRoll = true;
+		wasInJail = false;
 		this.board = board;
 		this.player = player;
 		this.dice = dice;
@@ -55,41 +58,26 @@ public class YourTeamName implements Bot {
 		System.out.println(decision);
 		switch (decision){
 		case 0 : 
-			return checkInJail();	//decision is 1 if in jail, 2 if not.
+			return checkAllowedRoll();	//decision is 1 if in jail, 2 if not.
 		case 1 :
 			
-			return inJail();
+			return checkInJail();
 			
 			
 		case 2 : 
-			return roll();
+			return inJail();
 		case 3 :
-			
-			if(!allowedRoll){
-				wasInJail = false;
-				allowedRoll = true;
-				decision = 0;
-				return "done";
-			}
-			else
-				decision = 0;
-				return "";
+			return roll();
 		case 4 :
-			return "demolish";
-		case 5 :
-			return "mortgage";
-		case 6 :
-			return "redeem";
-		case 7 : 
-			return "bankrupt";
-		case 8 :
-			return "pay"; 			//In jail.
-		case 9 : 
-			return "card"; 			//In jail.
+			wasInJail = false;
+			allowedRoll = true;
+			decision = 0;
+			return "done";
+
 
 		default : 
 			decision = 0;
-			return "roll";
+			return "done";
 		}
 	}
 
@@ -98,164 +86,67 @@ public class YourTeamName implements Bot {
 		return "pay";
 	}
 
-	public String checkInJail(){
-		if(player.isInJail()){
-			decision = 1;
+	public String checkAllowedRoll(){
+		if(dice.isDouble() && !player.isInJail() && !wasInJail){
+			allowedRoll = true;
+		}
+		if(allowedRoll){
+			decision = 1; //go to check jail
 		}
 		else{
-			decision = 2;
+			decision = 4; //go to done.
+		}
+		
+		return ""; //Return null string, to move to next step.
+	}
+	
+	public String checkInJail(){
+		if(player.isInJail()){
+			decision = 2;	//go to jail function
+		}
+		else{
+			decision = 3;	//go to roll function
 		}
 		return "";
 	}
 	
 	public String roll(){
-		//Check last roll
-		if(dice.isDouble() && !wasInJail && !player.isInJail()){	//If player rolled doubles, wasn't just in jail and isn't in jail now.
-			allowedRoll = true;
-		}
-		//Depending on last roll, either roll or go to next step. 
 		if(allowedRoll){
+			allowedRoll = false;	//If you get to roll, next time you can't roll unless the previous if statement is passed.
 			decision = 0;
-			allowedRoll = false;
 			return "roll";
 		}
 		
-		decision = 3;
-		return "";
+		decision = 4;
+		return ""; //Don't roll, send to 4, currently 'done'.
+		
 	}
 	
 	public String inJail(){
-		wasInJail = true;
 		if(!allowedRoll){
-			wasInJail = false;
-			return "done";
+			decision = 4;
+			return "";
 		}
-			
+		wasInJail = true;
+		System.out.println(player.isInJail());
 		if(player.getNumProperties() < 10){
-				
-				if(player.hasGetOutOfJailCard()){
+			if(player.getBalance() > 50){
 					decision = 0;
-					System.out.println("Used Card");
-					return "card"; 						//Use the card to get out for free quickly.
-					
-				}
-				else if(player.getBalance() > 100){
-					decision = 0;
-					System.out.println(player.isInJail());
-					return "pay"; 						//Pay out to get out ASAP.
+					return "pay";
 				}
 				
 		}
-			
-			decision = 0;
-			allowedRoll = false;
-			return "roll";
-			
-	}
 
-	//Function tries to build three houses on all properties, from most desired property to least.
-	public String considerBuild(){
-		int colourIndex = 0;
-		String command = "";
-		ColourGroup[] colourGroups = {orangeProperty, redProperty, yellowProperty, pinkProperty, greenProperty,
-										darkBlueProperty, lightBlueProperty};
 		
-		//Loop attempts to build on houses from most to least desirable, building one house at a time.
+		allowedRoll = false;
+		return "roll";
 		
-		//We attempt to build all houses to level 3, then all houses to level 4, then 5.
-		for(int housesToBuild = 3; housesToBuild < 5; housesToBuild++){
-			while(colourIndex < 7 ){	//	While Player can afford, and hasn't reached end of colour groups.
-					if(ownsGroup(colourGroups[colourIndex])){									//If player owns group, loop through.
-						ArrayList<Site> siteList = colourGroups[colourIndex].getMembers();		//List of properties of this colour group.
-						for(int j=0; j < siteList.size(); j++){
-							Site p = siteList.get(j);
-							if(p.getNumHouses() < housesToBuild && player.getBalance() > 500){
-								decision = 2;													//Loop back to same function if we succeed in building.
-								
-								command = "build " + p.getShortName() + " 1";
-								
-								return command;													//Build one house at a time.
-							}
-						}
-						
-					}
-				
-				colourIndex++;		
-				}
-		}	
-			if(dice.isDouble() && !player.isInJail()){
-				decision = 0;
-				System.out.println("Rolled Doubles");
-			}
-			else{
-				decision = 3;
-			}
-						
-			
-			command = "";
-			return command;
-			
-	}
-	
-	public String buyProperty(){
-		decision = 3 ;															//Sets choice for next time getCommand() is called.
-
-		Property property;
-		
-		if (board.isProperty(player.getPosition()) ){
-			property = board.getProperty(player.getPosition());
-			
-			if (!property.isOwned() && board.isSite(property.getShortName()) ){
-				System.out.println("Bought");
-				return "buy";
-			}
-		}
-		
-		return "";																//Return null string when property is owned/not buyable.
 	}
 	
 
-//	public int mortgage(int goal){
-//		ArrayList<Site> sites = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty, yellowProperty,  redProperty,  orangeProperty};
-//		ArrayList<Property> properties = player.getProperties();
-//
-//		int earned = 0;
-//		int i;
-//		int j = 0;
-//
-//		for(i = 0; i < properties.size(); i++){
-//			if(properties.get(i).getColourGroup() == sites.get(j)){
-//				if(countColoursOwned(sites.get(j)) < 2){
-//					//mortgage
-//				}	
-//			}
-//			j++;
-//		}
-//	}
-//
-//	public int countColoursOwned (Site site) {
-//		int owns = 3;
-//		ColourGroup colourGroup = site.getColourGroup();
-//		for (Site s : colourGroup.getMembers()) {
-//			if (!s.isOwned() || (s.isOwned() && s.getOwner() != player.getTokenId()))
-//				owns--;
-//		}
-//		return owns;
-//	}
+
+
 
 	
-	public boolean ownsGroup(ColourGroup colour){
-		if( player.isGroupOwner(colour.getMembers().get(0)) ){
-			
-			return true;
-		}
-
-		return false;
-	}
 	
-	public boolean threeHousesOrMore(ColourGroup colour){
-		ArrayList<Site> propertyList = colour.getMembers();
-		
-		return false;
-	}
 }
