@@ -15,13 +15,12 @@ public class YourTeamName implements Bot {
 	// You cannot change any other classes
 	// YourTeamName may not alter the state of the board or the player objects
 	// It may only inspect the state of the board and the player objects
-	private static int decision;
-	private static BoardAPI board;
-	private static PlayerAPI player;
-	private static DiceAPI dice;
+	private int decision;
+	private BoardAPI board;
+	private PlayerAPI player;
+	private DiceAPI dice;
 	boolean allowedRoll;
 	boolean wasInJail;
-	boolean z = false;
 	ColourGroup brownProperty;
 	ColourGroup lightBlueProperty;
 	ColourGroup pinkProperty;
