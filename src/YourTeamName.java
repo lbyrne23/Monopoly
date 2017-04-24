@@ -68,6 +68,7 @@ public class YourTeamName implements Bot {
 			if(!allowedRoll){
 				wasInJail = false;
 				allowedRoll = true;
+				decision = 0;
 				return "done";
 			}
 			else
