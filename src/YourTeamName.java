@@ -20,6 +20,7 @@ public class YourTeamName implements Bot {
 	private static PlayerAPI player;
 	private static DiceAPI dice;
 	boolean allowedRoll = true;
+	boolean wasInJail = false;
 	ColourGroup brownProperty;
 	ColourGroup lightBlueProperty;
 	ColourGroup pinkProperty;
@@ -49,22 +50,29 @@ public class YourTeamName implements Bot {
 	}
 
 	public String getCommand () {
+		
+		
 		System.out.println(decision);
 		switch (decision){
 		case 0 : 
-			decision = 1;
-			return inJail();
-
+			return checkInJail();	//decision is 1 if in jail, 2 if not.
 		case 1 :
-			decision = 3;
-			return buyProperty();
+			
+			return inJail();
 			
 			
 		case 2 : 
-			return buyProperty();
+			return roll();
 		case 3 :
-			decision = 0;
-			return "done";
+			
+			if(!allowedRoll){
+				wasInJail = false;
+				allowedRoll = true;
+				return "done";
+			}
+			else
+				decision = 0;
+				return "";
 		case 4 :
 			return "demolish";
 		case 5 :
@@ -89,40 +97,58 @@ public class YourTeamName implements Bot {
 		return "pay";
 	}
 
+	public String checkInJail(){
+		if(player.isInJail()){
+			decision = 1;
+		}
+		else{
+			decision = 2;
+		}
+		return "";
+	}
 	
+	public String roll(){
+		//Check last roll
+		if(dice.isDouble() && !wasInJail && !player.isInJail()){	//If player rolled doubles, wasn't just in jail and isn't in jail now.
+			allowedRoll = true;
+		}
+		//Depending on last roll, either roll or go to next step. 
+		if(allowedRoll){
+			decision = 0;
+			allowedRoll = false;
+			return "roll";
+		}
+		
+		decision = 3;
+		return "";
+	}
 	
 	public String inJail(){
-
-		if(player.isInJail()){							//Carry out jail functions if in jail.
-				System.out.println("iN jail");
-			if(player.getNumProperties() < 10){
-				if(player.getBalance() < 50 ){
-					
-					decision = 1;
-					return "roll"; 						//Roll because our balance is too low and we will lose the game if we pay out.
-				}
-				else if(player.hasGetOutOfJailCard()){
+		wasInJail = true;
+		if(!allowedRoll){
+			wasInJail = false;
+			return "done";
+		}
+			
+		if(player.getNumProperties() < 10){
+				
+				if(player.hasGetOutOfJailCard()){
 					decision = 0;
+					System.out.println("Used Card");
 					return "card"; 						//Use the card to get out for free quickly.
 					
 				}
-				else{
+				else if(player.getBalance() > 100){
 					decision = 0;
-					if(player.isInJail()){
-					System.out.println(" True " + player.isInJail());
-					}
+					System.out.println(player.isInJail());
 					return "pay"; 						//Pay out to get out ASAP.
 				}
 				
-			}
-			else return "roll";
 		}
-			System.out.println("Rolled");
-			decision = 1;
-			return "roll";
-		
-		
 			
+			decision = 0;
+			allowedRoll = false;
+			return "roll";
 			
 	}
 
