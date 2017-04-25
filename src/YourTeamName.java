@@ -144,17 +144,17 @@ public class YourTeamName implements Bot {
 	}
 
 	public String buyProperty(){
-		decision = 2;													//Sets choice for next time getCommand() is called.
+		decision = 2;	//Sets choice for next time getCommand() is called.
 
 		Property property;
 
-		if (player.getBalance() < 500){											//Critical stage: Only buy desirable properties, mortgage least wanted properties until above 300 pounds.
+		if (player.getBalance() < 500){	//Critical stage: Only buy desirable properties, mortgage least wanted properties until above 300 pounds.
 			stage = 0;
 		}
-		else if (player.getBalance() < 1000){									//Average stage: Buy most properties, avoid blacklisted ones.
+		else if (player.getBalance() < 1000){//Average stage: Buy most properties, avoid blacklisted ones.
 			stage = 1;
 		} 
-		else {																	//Rich stage: Buy everything.
+		else {	//Rich stage: Buy everything.
 			stage = 2;
 		}
 
@@ -213,6 +213,91 @@ public class YourTeamName implements Bot {
 		}
 		//SEND ELSEWHERE
 		return ""; 
+}
+	public String mortgage() {
+		while( player.getBalance() < 0){
+			ColourGroup[] desire = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty,
+					yellowProperty, redProperty, orangeProperty};
+
+			int i = 0;
+			int j = 0;
+			Site site = desire[i].getMembers().get(j);
+			
+			
+
+			/*--------- Check if other player owns a property on a colour group ---------*/
+			int playerOwns;
+			int otherPlayerOwns;
+
+			for(i = 0; i < 8; i++){ //go through each colourGroup
+				int groupSize = desire[i].size(); //get the size (ie. brown = 2, pink = 3)
+				playerOwns = 0;
+				otherPlayerOwns = 0;
+
+				//Find a colour group where both players own something
+				for(j = 0; j < groupSize; j++){ //go through each member of the group
+					Player owner = site.getOwner(); //get the player who owns the property
+					if(owner.equals(player) && site.isMortgaged() == false){
+						playerOwns++; //record if player owns something in this colour
+					}
+					if(!(owner.equals(player)) && !(owner.equals(null))){
+						otherPlayerOwns++; //record if another player owns something in this colour
+					}
+				}
+
+				//Find the first property we own in this colour group that isnt already mortgaged
+				if(playerOwns>0 && otherPlayerOwns > 0){ //We own a property of this colour and so does another player
+					for(j = 0; j < groupSize; j++){ 
+						Player owner = site.getOwner(); //get the player who owns the property
+						String shortName = site.getShortName(); //get the short name
+						
+						if(owner.equals(player) && site.isMortgaged() == false){
+							return "mortgage "+ shortName; //mortgage this property
+						}
+					}
+				}
+			}
+
+			/*----------- Check if we are far away from a Monopoly ---------*/
+			for(i = 0; i < 8; i++){ //go through each colourGroup
+				playerOwns = 0;
+				int groupSize = desire[i].size(); //get the size (ie. brown = 2, pink = 3)
+
+				//Find a colour group where we own something
+				for(j = 0; j < groupSize; j++){ //go through each member of the group
+					Player owner = site.getOwner(); //get the player who owns the property
+					if(owner.equals(player) && site.isMortgaged() == false){
+						playerOwns++; //record if player owns something in this colour
+					}
+				}
+
+				//mortgage if we are too far from monopoly
+				if(playerOwns == 1){
+					for(j = 0; j < groupSize; j++){ 
+						Player owner = site.getOwner(); //get the player who owns the property
+						String shortName = site.getShortName(); //get the short name
+						if(owner.equals(player)){
+							return "mortgage "+shortName; //mortgage this property
+						}
+					}
+				}
+				//Mortgaging properties where we only own 1 of the colour group has failed
+				//try mortgaging a property where we only own 2 of the group
+				if(playerOwns == 2){
+					for(j = 0; j < groupSize; j++){ 
+						Player owner = site.getOwner(); //get the player who owns the property
+						String shortName = site.getShortName(); //get the short name
+						if(owner.equals(player)){
+							return "mortgage "+shortName; //mortgage this property
+						}
+					}
+				}
+			}
+			return "";
+		}
+		//return the demolish function if this fails;
+		return "";
+
 	}
 
 	public String demolish(){
