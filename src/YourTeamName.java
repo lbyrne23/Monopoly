@@ -198,27 +198,37 @@ public class YourTeamName implements Bot {
 										yellowProperty, redProperty, orangeProperty};
 		int playerOwns = 0;
 		int otherPlayerOwns = 0;
+		int j = 0;
+		int i = 0;
+		Site site = desire[i].getMembers().get(j);
 		
-		for(int i = 0; i < 8; i++){ //go through each colourGroup
+		for(i = 0; i < 8; i++){ //go through each colourGroup
+			
 			int groupSize = desire[i].size(); //get the size (ie. brown = 2, pink = 3)
-			for(int j = 0; j < groupSize; j++){ //go through each member of the group
-				Player owner = desire[i].getMembers().get(j).getOwner(); //get the player who owns the property
-				if(owner.equals(player)){
+			
+			//Find a colour group where both players own something
+			for(j = 0; j < groupSize; j++){ //go through each member of the group
+				Player owner = site.getOwner(); //get the player who owns the property
+				if(owner.equals(player) && site.isMortgaged() == false){
 					playerOwns++; //record if player owns something in this colour
 				}
 				if(!(owner.equals(player)) && !(owner.equals(null))){
 					otherPlayerOwns++; //record if another player owns something in this colour
 				}
 			}
+			
+			//Find the first property we own in this colour group that isnt already mortgaged
 			if(playerOwns>0 && otherPlayerOwns > 0){ //We own a property of this colour and so does another player
-				for(int j = 0; j < groupSize; j++){ 
-					Player owner = desire[i].getMembers().get(j).getOwner(); //get the player who owns the property
-					String shortName = desire[i].getMembers().get(j).getShortName(); //get the short name
-					if(owner.equals(player)){
+				for(j = 0; j < groupSize; j++){ 
+					Player owner = site.getOwner(); //get the player who owns the property
+					String shortName = site.getShortName(); //get the short name
+					if(owner.equals(player) && site.isMortgaged() == false){
 						return "mortgage "+"shortName"; //mortgage this property
 					}
 				}
 			}
+			playerOwns = 0;
+			otherPlayerOwns = 0;
 		}
 		
 		return "";
