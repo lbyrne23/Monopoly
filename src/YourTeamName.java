@@ -58,6 +58,7 @@ public class YourTeamName implements Bot {
 		System.out.println(decision);
 		switch (decision){
 		case 0 : 
+			System.out.println(brownProperty.getMembers().get(1));
 			return checkAllowedRoll();	//decision is 1 if in jail, 2 if not.
 		case 1 :
 
@@ -144,17 +145,17 @@ public class YourTeamName implements Bot {
 	}
 
 	public String buyProperty(){
-		decision = 2;													//Sets choice for next time getCommand() is called.
+		decision = 2;	//Sets choice for next time getCommand() is called.
 
 		Property property;
 
-		if (player.getBalance() < 500){											//Critical stage: Only buy desirable properties, mortgage least wanted properties until above 300 pounds.
+		if (player.getBalance() < 500){	//Critical stage: Only buy desirable properties, mortgage least wanted properties until above 300 pounds.
 			stage = 0;
 		}
-		else if (player.getBalance() < 1000){									//Average stage: Buy most properties, avoid blacklisted ones.
+		else if (player.getBalance() < 1000){//Average stage: Buy most properties, avoid blacklisted ones.
 			stage = 1;
 		} 
-		else {																	//Rich stage: Buy everything.
+		else {	//Rich stage: Buy everything.
 			stage = 2;
 		}
 		
@@ -192,7 +193,36 @@ public class YourTeamName implements Bot {
 		
 	}
 
-
+	public String mortgage() {
+		ColourGroup[] desire = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty,
+										yellowProperty, redProperty, orangeProperty};
+		int playerOwns = 0;
+		int otherPlayerOwns = 0;
+		
+		for(int i = 0; i < 8; i++){ //go through each colourGroup
+			int groupSize = desire[i].size(); //get the size (ie. brown = 2, pink = 3)
+			for(int j = 0; j < groupSize; j++){ //go through each member of the group
+				Player owner = desire[i].getMembers().get(j).getOwner(); //get the player who owns the property
+				if(owner.equals(player)){
+					playerOwns++; //record if player owns something in this colour
+				}
+				if(!(owner.equals(player)) && !(owner.equals(null))){
+					otherPlayerOwns++; //record if another player owns something in this colour
+				}
+			}
+			if(playerOwns>0 && otherPlayerOwns > 0){ //We own a property of this colour and so does another player
+				for(int j = 0; j < groupSize; j++){ 
+					Player owner = desire[i].getMembers().get(j).getOwner(); //get the player who owns the property
+					String shortName = desire[i].getMembers().get(j).getShortName(); //get the short name
+					if(owner.equals(player)){
+						return "mortgage "+"shortName"; //mortgage this property
+					}
+				}
+			}
+		}
+		
+		return "";
+	}
 
 
 
