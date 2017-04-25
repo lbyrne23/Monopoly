@@ -72,7 +72,19 @@ public class YourTeamName implements Bot {
 		case 4 :
 			return buyProperty();
 
-		case 9: 
+		case 5 :
+			return build();
+			
+		case 6 :
+			return mortgage();
+			
+		case 7 :
+			return demolish();
+			
+		case 8 :
+			return bankrupt();
+			
+		case 9 : 
 			return doneFunction();
 			
 		default : 
@@ -178,38 +190,37 @@ public class YourTeamName implements Bot {
 			case 0 : //Critical Stage
 				if (player.getBalance() >= property.getPrice()){
 					if (board.isSite(property.getShortName())){
-						decision = 9;
 						System.out.println("Property purchased.");
+						decision = 5;
 						return "buy";
 					}
 					else {
-						decision = 9;
 						System.out.println("Property not purchased.");
+						decision = 5;
 						return "";
 					}
 				} 
 				else {
-					System.out.println("Balance < property price.");
-					System.out.println("Property not purchased.");
-					decision = 9;
+					System.out.println("Property not purchased: Balance < Property Price.");
+					decision = 5;
 					return "";
 				}
 				
 			case 1 : //Average Stage
 				if ( board.isSite(property.getShortName()) ){	
-					decision = 9;
 					System.out.println("Property purchased.");
+					decision = 5;
 					return "buy";
 				}
 				else {
-					decision = 9;
 					System.out.println("Property not purchased.");
+					decision = 5;
 					return "";
 				}
 			
 			case 2 : //Rich Stage
-				decision = 9;
 				System.out.println("Property purchased.");
+				decision = 5;
 				return "buy";
 				
 //			default :
@@ -217,32 +228,36 @@ public class YourTeamName implements Bot {
 			}
 		}
 
-		decision = 9;
+		decision = 5;
 		return "";	//Return null string when position is owned/not buyable.
 	}
 
+	
 	public String build(){
 		ColourGroup[] colours = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
 				redProperty, yellowProperty, greenProperty, darkBlueProperty};
 
-		for(int max = 3; max < 5; max++){	//First loop tries to build all site to 3,
+		for(int max = 3; max < 5; max++){				//First loop tries to build all site to 3,
 			for(int i = 0; i < colours.length; i++){
 				ArrayList<Site> members = colours[i].getMembers();
 
 				for(int j = 0; j < members.size(); j++ ){
 					Site site = members.get(j);
-					//BUILD IF WE CAN AFFORD.
+					//Building if we can afford it.
 					if(player.isGroupOwner(site) && site.getNumBuildings() < max && player.getBalance() > site.getBuildingPrice()){
+						System.out.println("House Built.");
+						decision = 5;					//Send to self
 						return ("build " + site.getShortName() + " 1" );
-						//decision = x SEND TO SELF
 					}
 				}
-
 			}
 		}
-		//SEND ELSEWHERE
+
+		decision = 9;
 		return ""; 
 	}
+	
+	
 	public String mortgage() {
 		if(player.getBalance() < 0){
 			ColourGroup[] desire = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty,
