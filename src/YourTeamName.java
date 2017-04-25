@@ -225,7 +225,7 @@ public class YourTeamName implements Bot {
 		return ""; 
 }
 	public String mortgage() {
-		while( player.getBalance() < 0){
+		if(player.getBalance() < 0){
 			ColourGroup[] desire = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty,
 					yellowProperty, redProperty, orangeProperty};
 
@@ -261,7 +261,7 @@ public class YourTeamName implements Bot {
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 						
-						if(owner.equals(player) && site.isMortgaged() == false){
+						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 							return "mortgage "+ shortName; //mortgage this property
 						}
 					}
@@ -276,7 +276,7 @@ public class YourTeamName implements Bot {
 				//Find a colour group where we own something
 				for(j = 0; j < groupSize; j++){ //go through each member of the group
 					Player owner = site.getOwner(); //get the player who owns the property
-					if(owner.equals(player) && site.isMortgaged() == false){
+					if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 						playerOwns++; //record if player owns something in this colour
 					}
 				}
@@ -286,7 +286,7 @@ public class YourTeamName implements Bot {
 					for(j = 0; j < groupSize; j++){ 
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
-						if(owner.equals(player)){
+						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 							return "mortgage "+shortName; //mortgage this property
 						}
 					}
@@ -297,16 +297,14 @@ public class YourTeamName implements Bot {
 					for(j = 0; j < groupSize; j++){ 
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
-						if(owner.equals(player)){
+						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 							return "mortgage "+shortName; //mortgage this property
 						}
 					}
 				}
 			}
-			return "";
 		}
-		//return the demolish function if this fails;
-		return "";
+		return ""; //Return the Demolish Function if balance > 0;
 
 	}
 
@@ -357,7 +355,6 @@ public class YourTeamName implements Bot {
 			decision = 0;
 			return "";
 		}
-		
 		wasInJail = false;
 		allowedRoll = true;
 		decision = 0;
