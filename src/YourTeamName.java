@@ -243,8 +243,8 @@ public class YourTeamName implements Bot {
 					Site site = members.get(j);
 					
 					//Building if we can afford it.
-					if(player.isGroupOwner(site) && site.getNumBuildings() < max && player.getBalance() > site.getBuildingPrice()){
-						System.out.println("House Built.");
+					if(player.isGroupOwner(site) && site.getNumBuildings() < max && player.getBalance() > site.getBuildingPrice() && !site.isMortgaged()){
+						System.out.println("House Built. " + player.getTokenName() + site.getShortName());
 						decision = 5;					//Send to self
 						return ("build " + site.getShortName() + " 1" );
 					}
@@ -341,6 +341,18 @@ public class YourTeamName implements Bot {
 						}
 					}
 				}
+				
+				if(playerOwns == 3){
+					for(j = 0; j < groupSize; j++){ 
+						Player owner = site.getOwner(); //get the player who owns the property
+						String shortName = site.getShortName(); //get the short name
+						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
+							System.out.println("Mortgaged.");
+							decision = 6;
+							return "mortgage "+shortName; //mortgage this property
+						}
+					}
+				}
 			}
 		}
 		
@@ -353,8 +365,9 @@ public class YourTeamName implements Bot {
 		ColourGroup[] colours = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
 				redProperty, yellowProperty, greenProperty, darkBlueProperty};
 		if(player.getBalance() < 0){
-			for(int min = 1; min < 6; min++){				//First loop tries to build all site to 3,
-				for(int i = 0; i < colours.length; i++){
+			for(int min = 1; min < 6; min++){				//First loop tries to demolish site with 1 house then 2, etc.
+				
+				for(int i = 0; i < 8; i++){
 					ArrayList<Site> members = colours[i].getMembers();
 
 					for(int j = 0; j < members.size(); j++ ){
@@ -362,9 +375,9 @@ public class YourTeamName implements Bot {
 						
 						//Demolish if we can afford.
 						if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
-							System.out.println("Demolished.");
+							System.out.println("Demolished." + player.getTokenName()  + site.getShortName());
 							decision = 6; //Send to mortgage.
-							return ("demolish " + site.getShortName() + " 1" );
+							return ("demolish " + site.getShortName() + " 1");
 						}
 					}
 				}
@@ -395,6 +408,7 @@ public class YourTeamName implements Bot {
 		
 		System.out.println("Game over.");
 		decision = 9;	//Send to done.
+		System.out.println("BANKRUPT");
 		return "bankrupt";
 	}
 
