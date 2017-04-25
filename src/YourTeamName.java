@@ -336,5 +336,23 @@ public class YourTeamName implements Bot {
 		return ""; 
 
 	}
+	
+	public String bankrupt(){
+		if(player.getBalance() >= 0){
+			//Send to done.
+			return "";
+		}
+		
+		for(int i = 0; i<40; i++){
+			Property property = board.getProperty(i);
+				if(property.getOwner() != null && property.getOwner().equals(player)){
+					//Send to mortgage
+					return "";
+				}
+		}
+		
+		//send to done.
+		return "bankrupt";
+	}
 
 }
