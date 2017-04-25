@@ -380,15 +380,15 @@ public class YourTeamName implements Bot {
 		ColourGroup[] colours = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
 				redProperty, yellowProperty, greenProperty, darkBlueProperty};
 		if(player.getBalance() < 0){
-			for(int min = 1; min < 6; min++){				//First loop tries to demolish site with 1 house then 2, etc.
+			for(int min = 1; min < 6; min++){				//Demolish house with least property, this amount of property is recorded by 'min'.
 				
-				for(int i = 0; i < 8; i++){
+				for(int i = 0; i < 8; i++){					//Loop through different colour groups
 					ArrayList<Site> members = colours[i].getMembers();
 
-					for(int j = 0; j < members.size(); j++ ){
+					for(int j = 0; j < members.size(); j++ ){//Loop through all members of golour group
 						Site site = members.get(j);
 					
-						//Demolish if we can afford.
+						//Demolish if we own the colour group, the amount of buildings is equal to min and we have a negative balance 
 						if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
 							System.out.println("Demolished." + player.getTokenName()  + site.getShortName());
 							decision = 6; //Send to mortgage.
@@ -398,7 +398,7 @@ public class YourTeamName implements Bot {
 				}
 			}
 		}
-
+		//If no property is demolished, return null and send to bankrupt check.
 		decision = 8;
 		return ""; 
 	}
