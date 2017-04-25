@@ -157,43 +157,86 @@ public class YourTeamName implements Bot {
 		else {																	//Rich stage: Buy everything.
 			stage = 2;
 		}
-		
-		
-		
+
+
+
 		if (board.isProperty(player.getPosition()) ){
 			property = board.getProperty(player.getPosition());
-			
+
 			switch (stage){
 			case 0 :
 				if (player.getBalance() < 300){
-//MORTGAGE LEAST VISITED PROPERTY WHERE OPPONENT OWNS SAME COLOUR.
+					//MORTGAGE LEAST VISITED PROPERTY WHERE OPPONENT OWNS SAME COLOUR.
 				}
-//EVALUATE IF WE WANT THE PROPERTY. IF SO BUY.
-				
+				//EVALUATE IF WE WANT THE PROPERTY. IF SO BUY.
+
 			case 1 :
 				if (!property.isOwned()){
-//					if (board.isSite(property.getName())){
-//					
-//					}
+					//					if (board.isSite(property.getName())){
+					//					
+					//					}
 				}
-			
+
 			case 2 :
 				if (!property.isOwned() && board.isSite(property.getShortName()) ){
 					return "buy";
 				}
-				
+
 			default :
 
 			}
 		}
-		
+
 		return "";																//Return null string when property is owned/not buyable.
 
-		
+
 	}
 
+	public String build(){
+		ColourGroup[] colours = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
+				redProperty, yellowProperty, greenProperty, darkBlueProperty};
 
+		for(int max = 3; max < 5; max++){	//First loop tries to build all site to 3,
+			for(int i = 0; i < colours.length; i++){
+				ArrayList<Site> members = colours[i].getMembers();
 
+				for(int j = 0; j < members.size(); j++ ){
+					Site site = members.get(j);
+					//BUILD IF WE CAN AFFORD.
+					if(player.isGroupOwner(site) && site.getNumBuildings() < max && player.getBalance() > site.getBuildingPrice()){
+						return ("build " + site.getShortName() + " 1" );
+						//decision = x SEND TO SELF
+					}
+				}
 
+			}
+		}
+		//SEND ELSEWHERE
+		return ""; 
+	}
+
+	public String demolish(){
+		ColourGroup[] colours = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
+				redProperty, yellowProperty, greenProperty, darkBlueProperty};
+
+		for(int min = 1; min < 6; min--){	//First loop tries to build all site to 3,
+			for(int i = 0; i < colours.length; i++){
+				ArrayList<Site> members = colours[i].getMembers();
+
+				for(int j = 0; j < members.size(); j++ ){
+					Site site = members.get(j);
+					//BUILD IF WE CAN AFFORD.
+					if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
+						return ("demolish " + site.getShortName() + " 1" );
+						//decision = x SEND TO SELF
+					}
+				}
+
+			}
+		}
+		//SEND ELSEWHERE
+		return ""; 
+
+	}
 
 }
