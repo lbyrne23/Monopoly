@@ -59,19 +59,22 @@ public class YourTeamName implements Bot {
 		switch (decision){
 		case 0 : 
 			return checkAllowedRoll();	//decision is 1 if in jail, 2 if not.
+		
 		case 1 :
-
 			return checkInJail();
-
-
+			
 		case 2 : 
 			return inJail();
+		
 		case 3 :
 			return roll();
+		
 		case 4 :
+			return buyProperty();
+
+		case 9: 
 			return doneFunction();
-
-
+			
 		default : 
 			decision = 0;
 			return "done";
@@ -87,43 +90,47 @@ public class YourTeamName implements Bot {
 		if(dice.isDouble() && !player.isInJail() && !wasInJail){
 			allowedRoll = true;
 		}
-		if(allowedRoll){
-			decision = 1; //go to check jail
-		}
-		else{
-			decision = 4; //go to done.
+		
+		if (!allowedRoll){
+			decision = 9;
+			return "";
 		}
 
+		decision = 1;
 		return ""; //Return null string, to move to next step.
 	}
 
+	
 	public String checkInJail(){
 		if(player.isInJail()){
-			decision = 2;	//go to jail function
+			decision = 2;	//Go to jail function.
 		}
 		else{
-			decision = 3;	//go to roll function
+			decision = 3;	//Go to roll function.
 		}
+		
 		return "";
 	}
 
+	
 	public String roll(){
 		if(allowedRoll){
 			allowedRoll = false;	//If you get to roll, next time you can't roll unless the previous if statement is passed.
-			decision = 0;
+			decision = 4;			//Send to buy.
 			return "roll";
 		}
 
-		decision = 4;
-		return ""; //Don't roll, send to 4, currently 'done'.
-
+		decision = 9;
+		return ""; 					//Don't roll, send to done.
 	}
 
+	
 	public String inJail(){
 		if(!allowedRoll){
-			decision = 4;
+			decision = 9;
 			return "";
 		}
+		
 		wasInJail = true;
 		System.out.println(player.isInJail());
 		if(theirMonopoly() < 1){ //If we still have a chance to go around and get monopolies
@@ -140,73 +147,76 @@ public class YourTeamName implements Bot {
 				decision = 0;
 				return "pay";
 			}
-
 		}
 
 		allowedRoll = false;
 		return "roll";
-
 	}
 
+	
 	public String buyProperty(){
-		decision = 2;	//Sets choice for next time getCommand() is called.
-
 		Property property;
 
-		if (player.getBalance() < 300){	//Critical stage: Only buy sites if affordable.
+		if (player.getBalance() < 300){			//Critical stage: Only buy sites if affordable.
 			stage = 0;
 		}
 		else if (player.getBalance() < 2000){	//Average stage: Only buy sites
 			stage = 1;
 		} 
-		else {	//Rich stage: Buy everything.
+		else {									//Rich stage: Buy everything.
 			stage = 2;
 		}
 
 
 		if (board.isProperty(player.getPosition()) 
-				&& !board.getProperty(player.getPosition()).isOwned() ){		//If board is property and not owned.
-
+				&& !board.getProperty(player.getPosition()).isOwned() ){	//If board is a property and not owned.
+			
 			property = board.getProperty(player.getPosition());
 
 			switch (stage){
-			case 0 :	//Critical Stage
+			case 0 : //Critical Stage
 				if (player.getBalance() >= property.getPrice()){
 					if (board.isSite(property.getShortName())){
-						//						decision = 
+						decision = 9;
+						System.out.println("Property purchased.");
 						return "buy";
 					}
 					else {
-						//						decision = 
+						decision = 9;
+						System.out.println("Property not purchased.");
 						return "";
 					}
 				} 
 				else {
 					System.out.println("Balance < property price.");
-					//					decision = 
+					System.out.println("Property not purchased.");
+					decision = 9;
 					return "";
 				}
-
-			case 1 :	//Average Stage
+				
+			case 1 : //Average Stage
 				if ( board.isSite(property.getShortName()) ){	
-					//					decision = 
+					decision = 9;
+					System.out.println("Property purchased.");
 					return "buy";
 				}
 				else {
-					//					decision = 
+					decision = 9;
+					System.out.println("Property not purchased.");
 					return "";
 				}
-
-			case 2 :	//Rich Stage
-				//				decision = 
+			
+			case 2 : //Rich Stage
+				decision = 9;
+				System.out.println("Property purchased.");
 				return "buy";
-
-			default :
-				System.out.println("This should not have been printed.");
+				
+//			default :
+//				System.out.println("This should not have been printed.");
 			}
 		}
 
-		//		decision = 
+		decision = 9;
 		return "";	//Return null string when position is owned/not buyable.
 	}
 
