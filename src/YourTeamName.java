@@ -290,10 +290,10 @@ public class YourTeamName implements Bot {
 				for(j = 0; j < groupSize; j++){ //go through each member of the group
 					site = desire[i].getMembers().get(j);
 					Player owner = site.getOwner(); //get the player who owns the property
-					if(owner.equals(player) && site.isMortgaged() == false){
+					if(site.isMortgaged() == false && owner != null &&  owner.equals(player)){
 						playerOwns++; //record if player owns something in this colour
 					}
-					if(!(owner.equals(player)) && !(owner.equals(null))){
+					if(owner != null && !(owner.equals(player))){
 						otherPlayerOwns++; //record if another player owns something in this colour
 					}
 				}
@@ -305,7 +305,7 @@ public class YourTeamName implements Bot {
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 
-						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
+						if(owner != null && owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 							System.out.println("Mortgaged.");
 							decision = 6;					//Send to self.
 							return "mortgage "+ shortName; 	//mortgage this property
@@ -323,7 +323,7 @@ public class YourTeamName implements Bot {
 				for(j = 0; j < groupSize; j++){ //go through each member of the group
 					site = desire[i].getMembers().get(j);
 					Player owner = site.getOwner(); //get the player who owns the property
-					if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
+					if(owner != null && owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 						playerOwns++; //record if player owns something in this colour
 					}
 				}
@@ -334,7 +334,7 @@ public class YourTeamName implements Bot {
 						site = desire[i].getMembers().get(j);
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
-						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
+						if(owner != null && owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 							decision = 6;
 							return "mortgage "+shortName; //mortgage this property
 						}
@@ -347,7 +347,7 @@ public class YourTeamName implements Bot {
 						site = desire[i].getMembers().get(j);
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
-						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
+						if(owner != null && owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 							decision = 6;
 							return "mortgage "+shortName; //mortgage this property
 						}
