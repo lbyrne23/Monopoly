@@ -363,7 +363,7 @@ public class YourTeamName implements Bot {
 						//Demolish if we can afford.
 						if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
 							System.out.println("Demolished.");
-							decision = 7; //Send to self.
+							decision = 6; //Send to mortgage.
 							return ("demolish " + site.getShortName() + " 1" );
 						}
 					}
@@ -371,29 +371,34 @@ public class YourTeamName implements Bot {
 			}
 		}
 
-		decision = 9;
+		decision = 8;
 		return ""; 
 	}
 
 	
 	public String bankrupt(){
 		if(player.getBalance() >= 0){
-			//Send to done.
+			decision = 9;	//Send to done.
 			return "";
 		}
 
 		for(int i = 0; i<40; i++){
-			Property property = board.getProperty(i);
-			if(property.getOwner() != null && property.getOwner().equals(player)){
-				//Send to mortgage
-				return "";
+			if (board.isProperty(i)){
+				Property property = board.getProperty(i);
+				if(property.getOwner() != null && property.getOwner() == player && !property.isMortgaged() ){
+					System.out.println("Bankrupt -> Mortgage: " + i);
+					decision = 6;	//Send to mortgage.
+					return "";
+				}
 			}
 		}
-
-		//send to done.
+		
+		System.out.println("Game over.");
+		decision = 9;	//Send to done.
 		return "bankrupt";
 	}
 
+	
 	public String doneFunction(){
 		if(allowedRoll){
 			decision = 0;
@@ -404,6 +409,7 @@ public class YourTeamName implements Bot {
 		decision = 0;
 		return "done";
 	}
+	
 	
 	//Function to check how many monopolies they have
 	public int theirMonopoly(){
