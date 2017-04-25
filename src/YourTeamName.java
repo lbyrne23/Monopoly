@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-//Team : Cessna Skyhawk
+//Team : CessnaSkyhawk
 //Michael Jordan
 //Lucy Byrne
 //Fiachra Dunn
@@ -148,48 +148,61 @@ public class YourTeamName implements Bot {
 
 		Property property;
 
-		if (player.getBalance() < 500){	//Critical stage: Only buy desirable properties, mortgage least wanted properties until above 300 pounds.
+		if (player.getBalance() < 300){	//Critical stage: Only buy sites if affordable.
 			stage = 0;
 		}
-		else if (player.getBalance() < 1000){//Average stage: Buy most properties, avoid blacklisted ones.
+		else if (player.getBalance() < 2000){	//Average stage: Only buy sites
 			stage = 1;
 		} 
 		else {	//Rich stage: Buy everything.
 			stage = 2;
 		}
-
-
-
-		if (board.isProperty(player.getPosition()) ){
+	
+		
+		if (board.isProperty(player.getPosition()) 
+				&& board.getProperty(player.getPosition()).isOwned() ){		//If board is property and not owned.
+			
 			property = board.getProperty(player.getPosition());
 
 			switch (stage){
-			case 0 :
-				if (player.getBalance() < 300){
-					//MORTGAGE LEAST VISITED PROPERTY WHERE OPPONENT OWNS SAME COLOUR.
+			case 0 :	//Critical Stage
+				if (player.getBalance() >= property.getPrice()){
+					if (board.isSite(property.getShortName())){
+//						decision = 
+						 return "buy";
+					}
+					else {
+//						decision = 
+						return "";
+					}
+				} 
+				else {
+					System.out.println("Balance < property price.");
+//					decision = 
+					return "";
 				}
-				//EVALUATE IF WE WANT THE PROPERTY. IF SO BUY.
-
-			case 1 :
-				if (!property.isOwned()){
-					//					if (board.isSite(property.getName())){
-					//					
-					//					}
-				}
-
-			case 2 :
-				if (!property.isOwned() && board.isSite(property.getShortName()) ){
+				
+			case 1 :	//Average Stage
+				if ( board.isSite(property.getShortName()) ){	
+//					decision = 
 					return "buy";
 				}
-
+				else {
+//					decision = 
+					return "";
+				}
+			
+			case 2 :	//Rich Stage
+//				decision = 
+				return "buy";
+				
 			default :
-
+				System.out.println("This should not have been printed.");
 			}
 		}
 
-		return "";																//Return null string when property is owned/not buyable.
-
-
+//		decision = 
+		return "";	//Return null string when position is owned/not buyable.
 	}
 
 	public String build(){
