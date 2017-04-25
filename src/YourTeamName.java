@@ -195,7 +195,6 @@ public class YourTeamName implements Bot {
 						return "buy";
 					}
 					else {
-						System.out.println("Property not purchased.");
 						decision = 5;
 						return "";
 					}
@@ -213,7 +212,6 @@ public class YourTeamName implements Bot {
 					return "buy";
 				}
 				else {
-					System.out.println("Property not purchased.");
 					decision = 5;
 					return "";
 				}
@@ -253,7 +251,7 @@ public class YourTeamName implements Bot {
 			}
 		}
 
-		decision = 9;
+		decision = 6;
 		return ""; 
 	}
 	
@@ -289,14 +287,16 @@ public class YourTeamName implements Bot {
 					}
 				}
 
-				//Find the first property we own in this colour group that isnt already mortgaged
+				//Find the first property we own in this colour group that isn't already mortgaged
 				if(playerOwns>0 && otherPlayerOwns > 0){ //We own a property of this colour and so does another player
 					for(j = 0; j < groupSize; j++){ 
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 
 						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
-							return "mortgage "+ shortName; //mortgage this property
+							System.out.println("Mortgaged.");
+							decision = 6;					//Send to self.
+							return "mortgage "+ shortName; 	//mortgage this property
 						}
 					}
 				}
@@ -305,7 +305,7 @@ public class YourTeamName implements Bot {
 			/*----------- Check if we are far away from a Monopoly ---------*/
 			for(i = 0; i < 8; i++){ //go through each colourGroup
 				playerOwns = 0;
-				int groupSize = desire[i].size(); //get the size (ie. brown = 2, pink = 3)
+				int groupSize = desire[i].size(); //get the size (i.e. brown = 2, pink = 3)
 
 				//Find a colour group where we own something
 				for(j = 0; j < groupSize; j++){ //go through each member of the group
@@ -321,6 +321,8 @@ public class YourTeamName implements Bot {
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
+							System.out.println("Mortgaged.");
+							decision = 6;
 							return "mortgage "+shortName; //mortgage this property
 						}
 					}
@@ -332,14 +334,17 @@ public class YourTeamName implements Bot {
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
+							System.out.println("Mortgaged.");
+							decision = 6;
 							return "mortgage "+shortName; //mortgage this property
 						}
 					}
 				}
 			}
 		}
-		return ""; //Return the Demolish Function if balance > 0;
-
+		
+		decision = 9;
+		return ""; //Return the Demolish Function if balance > 0
 	}
 
 	public String demolish(){
