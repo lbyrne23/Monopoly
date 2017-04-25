@@ -353,6 +353,11 @@ public class YourTeamName implements Bot {
 	}
 	
 	public String doneFunction(){
+		if(allowedRoll){
+			decision = 0;
+			return "";
+		}
+		
 		wasInJail = false;
 		allowedRoll = true;
 		decision = 0;
