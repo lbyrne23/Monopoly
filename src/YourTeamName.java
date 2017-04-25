@@ -290,10 +290,11 @@ public class YourTeamName implements Bot {
 				for(j = 0; j < groupSize; j++){ //go through each member of the group
 					site = desire[i].getMembers().get(j);
 					Player owner = site.getOwner(); //get the player who owns the property
-					if(site.isMortgaged() == false && owner != null &&  owner.equals(player)){
+
+					if(owner != null && owner.equals(player) && site.isMortgaged() == false){
 						playerOwns++; //record if player owns something in this colour
 					}
-					if(owner != null && !(owner.equals(player))){
+					if(owner != null && !owner.equals(player)){
 						otherPlayerOwns++; //record if another player owns something in this colour
 					}
 				}
