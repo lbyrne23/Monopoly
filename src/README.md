@@ -1,15 +1,15 @@
 # CessnaSkyhawk
 
-##Fiachra Dunn, Lucy Byrne, Michael Jordan
+#Fiachra Dunn, Lucy Byrne, Michael Jordan
 ---
-###General Strategy:
+#General Strategy:
 We buy everything we land on if we can afford it, except for stations and utilities.	
 
-###Building:
+#Building:
 We aim to build 3 houses at once on a property. Then we move onto the next property in that colour group and build to 3. When all have 3, we build 4 across all of them, then a hotel.
 
-###Avoiding Bankruptcy:
-If our balance goes below 0, we mortgage the least desirable* colour groups first. We first checked if the other 	player already owned another property on that colour group.
+#Avoiding Bankruptcy:
+If our balance goes below 0, we mortgage the least desirable colour groups first. We first checked if the other 	player already owned another property on that colour group.
 If they did, we mortgaged a property from that colour group straight away because the chances of getting a monopoly on that group were very low.
 Next, we check if we are very far away from a monopoly, ie we only own 1 property of the colour group. 
 Then, if our balance was still below 0, we mortgaged those where we only owned 2.
@@ -22,7 +22,7 @@ If our balance is still below 0, it goes back to the mortgage function and tries
 If all of these attempts fail, we declare bankruptcy.
 We only ever mortgage or demolish 1 thing at a time to keep as much of our assets as possible.
 
-###When in Jail:	
+#When in Jail:	
 When we're in Jail, we first check if the other player has monopoly. 
 
 If they do: 
@@ -35,9 +35,9 @@ If we have a low balance we use the card.
 If we don't have the card, we pay out if our balance allows it. 
 If our balance is too low, we roll.
 
-###The getDecision() function:
+#The getDecision() function:
 We always return "pay" for this.
 Due to our strategy being buying and building as much as possible, the risk of pulling a chance card instead of paying 50 was never worth it.
-Chance cards have a card that makes you pay £40 per house which would be much worse to get than paying the fine.
+Chance cards have a card that makes you pay Â£40 per house which would be much worse to get than paying the fine.
 	
 *[We used a Monopoly strategy article to order the colour groups by least desirable to most desirable](http://www.retroactive-vintage-games.com/games-articles/monopoly-best-property-groups.asp)
