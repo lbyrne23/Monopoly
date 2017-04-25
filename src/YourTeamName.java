@@ -126,14 +126,22 @@ public class YourTeamName implements Bot {
 		}
 		wasInJail = true;
 		System.out.println(player.isInJail());
-		if(player.getNumProperties() < 10){
+		if(theirMonopoly() < 1){ //If we still have a chance to go around and get monopolies
+			if(player.hasGetOutOfJailCard()){
+				if(player.getBalance() > 600){
+					decision = 0;
+					return "pay"; //Pay out to save card for low funds
+				}
+				else 
+					decision = 0;
+					return "card";
+			}
 			if(player.getBalance() > 50){
 				decision = 0;
 				return "pay";
 			}
 
 		}
-
 
 		allowedRoll = false;
 		return "roll";
@@ -154,51 +162,51 @@ public class YourTeamName implements Bot {
 		else {	//Rich stage: Buy everything.
 			stage = 2;
 		}
-	
-		
+
+
 		if (board.isProperty(player.getPosition()) 
 				&& !board.getProperty(player.getPosition()).isOwned() ){		//If board is property and not owned.
-			
+
 			property = board.getProperty(player.getPosition());
 
 			switch (stage){
 			case 0 :	//Critical Stage
 				if (player.getBalance() >= property.getPrice()){
 					if (board.isSite(property.getShortName())){
-//						decision = 
-						 return "buy";
+						//						decision = 
+						return "buy";
 					}
 					else {
-//						decision = 
+						//						decision = 
 						return "";
 					}
 				} 
 				else {
 					System.out.println("Balance < property price.");
-//					decision = 
+					//					decision = 
 					return "";
 				}
-				
+
 			case 1 :	//Average Stage
 				if ( board.isSite(property.getShortName()) ){	
-//					decision = 
+					//					decision = 
 					return "buy";
 				}
 				else {
-//					decision = 
+					//					decision = 
 					return "";
 				}
-			
+
 			case 2 :	//Rich Stage
-//				decision = 
+				//				decision = 
 				return "buy";
-				
+
 			default :
 				System.out.println("This should not have been printed.");
 			}
 		}
 
-//		decision = 
+		//		decision = 
 		return "";	//Return null string when position is owned/not buyable.
 	}
 
@@ -223,7 +231,7 @@ public class YourTeamName implements Bot {
 		}
 		//SEND ELSEWHERE
 		return ""; 
-}
+	}
 	public String mortgage() {
 		if(player.getBalance() < 0){
 			ColourGroup[] desire = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty,
@@ -232,8 +240,8 @@ public class YourTeamName implements Bot {
 			int i = 0;
 			int j = 0;
 			Site site = desire[i].getMembers().get(j);
-			
-			
+
+
 
 			/*--------- Check if other player owns a property on a colour group ---------*/
 			int playerOwns;
@@ -260,7 +268,7 @@ public class YourTeamName implements Bot {
 					for(j = 0; j < groupSize; j++){ 
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
-						
+
 						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 							return "mortgage "+ shortName; //mortgage this property
 						}
@@ -331,25 +339,25 @@ public class YourTeamName implements Bot {
 		return ""; 
 
 	}
-	
+
 	public String bankrupt(){
 		if(player.getBalance() >= 0){
 			//Send to done.
 			return "";
 		}
-		
+
 		for(int i = 0; i<40; i++){
 			Property property = board.getProperty(i);
-				if(property.getOwner() != null && property.getOwner().equals(player)){
-					//Send to mortgage
-					return "";
-				}
+			if(property.getOwner() != null && property.getOwner().equals(player)){
+				//Send to mortgage
+				return "";
+			}
 		}
-		
+
 		//send to done.
 		return "bankrupt";
 	}
-	
+
 	public String doneFunction(){
 		if(allowedRoll){
 			decision = 0;
@@ -360,4 +368,33 @@ public class YourTeamName implements Bot {
 		decision = 0;
 		return "done";
 	}
+	
+	//Function to check how many monopolies they have
+	public int theirMonopoly(){
+
+		ColourGroup[] groups = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
+				redProperty, yellowProperty, greenProperty, darkBlueProperty};
+		
+		int opponent = 0; //to record individual properties in a colour group
+		int theirMonopolies = 0;
+		int i = 0;
+		int j = 0;
+		Site site = groups[i].getMembers().get(j); 
+
+		for(i = 0; i < 8; i++){ //go through each colour group
+			opponent = 0; //reset
+			for(j = 0; j < groups[i].size(); j++){ //go through each individual property
+				Player owner = site.getOwner();
+				if(owner != null && !owner.equals(player)){ //record if other player owns a property
+					opponent++;
+				}
+			}
+			
+			if(opponent == groups[i].size()){
+				theirMonopolies++; //If amount of properties owned by other player matches size of group, record as monopoly
+			}
+		}
+		return theirMonopolies;
+	}
 }
+
