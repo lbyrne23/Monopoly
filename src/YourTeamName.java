@@ -69,10 +69,7 @@ public class YourTeamName implements Bot {
 		case 3 :
 			return roll();
 		case 4 :
-			wasInJail = false;
-			allowedRoll = true;
-			decision = 0;
-			return "done";
+			return doneFunction();
 
 
 		default : 
@@ -160,7 +157,7 @@ public class YourTeamName implements Bot {
 	
 		
 		if (board.isProperty(player.getPosition()) 
-				&& board.getProperty(player.getPosition()).isOwned() ){		//If board is property and not owned.
+				&& !board.getProperty(player.getPosition()).isOwned() ){		//If board is property and not owned.
 			
 			property = board.getProperty(player.getPosition());
 
@@ -354,5 +351,11 @@ public class YourTeamName implements Bot {
 		//send to done.
 		return "bankrupt";
 	}
-
+	
+	public String doneFunction(){
+		wasInJail = false;
+		allowedRoll = true;
+		decision = 0;
+		return "done";
+	}
 }
