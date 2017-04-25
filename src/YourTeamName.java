@@ -137,7 +137,7 @@ public class YourTeamName implements Bot {
 
 		}
 
-
+		decision = 0;
 		allowedRoll = false;
 		return "roll";
 
@@ -316,7 +316,7 @@ public class YourTeamName implements Bot {
 	public String demolish(){
 		ColourGroup[] colours = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
 				redProperty, yellowProperty, greenProperty, darkBlueProperty};
-
+	if(player.getBalance() < 0){
 		for(int min = 1; min < 6; min--){	//First loop tries to build all site to 3,
 			for(int i = 0; i < colours.length; i++){
 				ArrayList<Site> members = colours[i].getMembers();
@@ -332,7 +332,8 @@ public class YourTeamName implements Bot {
 
 			}
 		}
-		//SEND ELSEWHERE
+	}
+		//SEND ELSEWHERE decision =  
 		return ""; 
 
 	}
