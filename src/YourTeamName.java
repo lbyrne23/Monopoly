@@ -89,12 +89,14 @@ public class YourTeamName implements Bot {
 			
 		default : 
 			decision = 0;
+
 			return "done";
 		}
 	}
 
 	public String getDecision () {
 		// Add your code here
+		
 		return "pay";
 	}
 
@@ -129,6 +131,7 @@ public class YourTeamName implements Bot {
 		if(allowedRoll){
 			allowedRoll = false;	//If you get to roll, next time you can't roll unless the previous if statement is passed.
 			decision = 4;			//Send to buy.
+			
 			return "roll";
 		}
 
@@ -149,20 +152,24 @@ public class YourTeamName implements Bot {
 			if(player.hasGetOutOfJailCard()){
 				if(player.getBalance() > 600){
 					decision = 0;
+					
 					return "pay"; //Pay out to save card for low funds
 				}
 				else 
 					decision = 0;
+				
 					return "card";
 			}
 			if(player.getBalance() > 50){
 				decision = 0;
+				
 				return "pay";
 			}
 		}
 
 		allowedRoll = false;
 		decision = 0;
+		
 		return "roll";
 	}
 
@@ -192,6 +199,7 @@ public class YourTeamName implements Bot {
 					if (board.isSite(property.getShortName())){
 						System.out.println("Property purchased.");
 						decision = 5;
+						
 						return "buy";
 					}
 					else {
@@ -209,6 +217,7 @@ public class YourTeamName implements Bot {
 				if ( board.isSite(property.getShortName()) ){	
 					System.out.println("Property purchased.");
 					decision = 5;
+					
 					return "buy";
 				}
 				else {
@@ -217,7 +226,7 @@ public class YourTeamName implements Bot {
 				}
 			
 			case 2 : //Rich Stage
-				System.out.println("Property purchased.");
+				
 				decision = 5;
 				return "buy";
 				
@@ -262,9 +271,9 @@ public class YourTeamName implements Bot {
 			ColourGroup[] desire = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty,
 					yellowProperty, redProperty, orangeProperty};
 
-			int i = 0;
-			int j = 0;
-			Site site = desire[i].getMembers().get(j);
+			int i;
+			int j;
+			Site site;
 
 
 
@@ -279,6 +288,7 @@ public class YourTeamName implements Bot {
 
 				//Find a colour group where both players own something
 				for(j = 0; j < groupSize; j++){ //go through each member of the group
+					site = desire[i].getMembers().get(j);
 					Player owner = site.getOwner(); //get the player who owns the property
 					if(owner.equals(player) && site.isMortgaged() == false){
 						playerOwns++; //record if player owns something in this colour
@@ -291,6 +301,7 @@ public class YourTeamName implements Bot {
 				//Find the first property we own in this colour group that isn't already mortgaged
 				if(playerOwns>0 && otherPlayerOwns > 0){ //We own a property of this colour and so does another player
 					for(j = 0; j < groupSize; j++){ 
+						site = desire[i].getMembers().get(j);
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 
@@ -302,7 +313,7 @@ public class YourTeamName implements Bot {
 					}
 				}
 			}
-
+		
 			/*----------- Check if we are far away from a Monopoly ---------*/
 			for(i = 0; i < 8; i++){ //go through each colourGroup
 				playerOwns = 0;
@@ -310,6 +321,7 @@ public class YourTeamName implements Bot {
 
 				//Find a colour group where we own something
 				for(j = 0; j < groupSize; j++){ //go through each member of the group
+					site = desire[i].getMembers().get(j);
 					Player owner = site.getOwner(); //get the player who owns the property
 					if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 						playerOwns++; //record if player owns something in this colour
@@ -319,10 +331,10 @@ public class YourTeamName implements Bot {
 				//mortgage if we are too far from monopoly
 				if(playerOwns == 1){
 					for(j = 0; j < groupSize; j++){ 
+						site = desire[i].getMembers().get(j);
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
-							System.out.println("Mortgaged.");
 							decision = 6;
 							return "mortgage "+shortName; //mortgage this property
 						}
@@ -332,27 +344,29 @@ public class YourTeamName implements Bot {
 				//try mortgaging a property where we only own 2 of the group
 				if(playerOwns == 2){
 					for(j = 0; j < groupSize; j++){ 
+						site = desire[i].getMembers().get(j);
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
-							System.out.println("Mortgaged.");
 							decision = 6;
 							return "mortgage "+shortName; //mortgage this property
 						}
 					}
 				}
-				
+
 				if(playerOwns == 3){
 					for(j = 0; j < groupSize; j++){ 
+						site = desire[i].getMembers().get(j);
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
-							System.out.println("Mortgaged.");
+
 							decision = 6;
 							return "mortgage "+shortName; //mortgage this property
 						}
 					}
 				}
+
 			}
 		}
 		
@@ -372,7 +386,7 @@ public class YourTeamName implements Bot {
 
 					for(int j = 0; j < members.size(); j++ ){
 						Site site = members.get(j);
-						
+					
 						//Demolish if we can afford.
 						if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
 							System.out.println("Demolished." + player.getTokenName()  + site.getShortName());
@@ -399,9 +413,10 @@ public class YourTeamName implements Bot {
 			if (board.isProperty(i)){
 				Property property = board.getProperty(i);
 				if(property.getOwner() != null && property.getOwner() == player && !property.isMortgaged() ){
+
 					System.out.println("Bankrupt -> Mortgage: " + i);
 					decision = 6;	//Send to mortgage.
-					return "";
+					return "" ;
 				}
 			}
 		}
