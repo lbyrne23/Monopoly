@@ -228,8 +228,9 @@ public class YourTeamName implements Bot {
 					for(j = 0; j < groupSize; j++){ 
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
+						
 						if(owner.equals(player) && site.isMortgaged() == false){
-							return "mortgage "+"shortName"; //mortgage this property
+							return "mortgage "+ shortName; //mortgage this property
 						}
 					}
 				}
@@ -254,7 +255,18 @@ public class YourTeamName implements Bot {
 						Player owner = site.getOwner(); //get the player who owns the property
 						String shortName = site.getShortName(); //get the short name
 						if(owner.equals(player)){
-							return "mortgage "+"shortName"; //mortgage this property
+							return "mortgage "+shortName; //mortgage this property
+						}
+					}
+				}
+				//Mortgaging properties where we only own 1 of the colour group has failed
+				//try mortgaging a property where we only own 2 of the group
+				if(playerOwns == 2){
+					for(j = 0; j < groupSize; j++){ 
+						Player owner = site.getOwner(); //get the player who owns the property
+						String shortName = site.getShortName(); //get the short name
+						if(owner.equals(player)){
+							return "mortgage "+shortName; //mortgage this property
 						}
 					}
 				}
