@@ -241,6 +241,7 @@ public class YourTeamName implements Bot {
 
 				for(int j = 0; j < members.size(); j++ ){
 					Site site = members.get(j);
+					
 					//Building if we can afford it.
 					if(player.isGroupOwner(site) && site.getNumBuildings() < max && player.getBalance() > site.getBuildingPrice()){
 						System.out.println("House Built.");
@@ -343,35 +344,38 @@ public class YourTeamName implements Bot {
 			}
 		}
 		
-		decision = 9;
+		decision = 7;
 		return ""; //Return the Demolish Function if balance > 0
 	}
 
+	
 	public String demolish(){
 		ColourGroup[] colours = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
 				redProperty, yellowProperty, greenProperty, darkBlueProperty};
-	if(player.getBalance() < 0){
-		for(int min = 1; min < 6; min--){	//First loop tries to build all site to 3,
-			for(int i = 0; i < colours.length; i++){
-				ArrayList<Site> members = colours[i].getMembers();
+		if(player.getBalance() < 0){
+			for(int min = 1; min < 6; min++){				//First loop tries to build all site to 3,
+				for(int i = 0; i < colours.length; i++){
+					ArrayList<Site> members = colours[i].getMembers();
 
-				for(int j = 0; j < members.size(); j++ ){
-					Site site = members.get(j);
-					//BUILD IF WE CAN AFFORD.
-					if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
-						return ("demolish " + site.getShortName() + " 1" );
-						//decision = x SEND TO SELF
+					for(int j = 0; j < members.size(); j++ ){
+						Site site = members.get(j);
+						
+						//Demolish if we can afford.
+						if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
+							System.out.println("Demolished.");
+							decision = 7; //Send to self.
+							return ("demolish " + site.getShortName() + " 1" );
+						}
 					}
 				}
-
 			}
 		}
-	}
-		//SEND ELSEWHERE decision =  
+
+		decision = 9;
 		return ""; 
-
 	}
 
+	
 	public String bankrupt(){
 		if(player.getBalance() >= 0){
 			//Send to done.
