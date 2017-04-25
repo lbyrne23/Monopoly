@@ -16,6 +16,7 @@ public class YourTeamName implements Bot {
 	// YourTeamName may not alter the state of the board or the player objects
 	// It may only inspect the state of the board and the player objects
 	private int decision;
+	private int stage = 0;
 	private BoardAPI board;
 	private PlayerAPI player;
 	private DiceAPI dice;
@@ -52,17 +53,17 @@ public class YourTeamName implements Bot {
 	}
 
 	public String getCommand () {
-		
-		
+
+
 		System.out.println(decision);
 		switch (decision){
 		case 0 : 
 			return checkAllowedRoll();	//decision is 1 if in jail, 2 if not.
 		case 1 :
-			
+
 			return checkInJail();
-			
-			
+
+
 		case 2 : 
 			return inJail();
 		case 3 :
@@ -95,10 +96,10 @@ public class YourTeamName implements Bot {
 		else{
 			decision = 4; //go to done.
 		}
-		
+
 		return ""; //Return null string, to move to next step.
 	}
-	
+
 	public String checkInJail(){
 		if(player.isInJail()){
 			decision = 2;	//go to jail function
@@ -108,19 +109,19 @@ public class YourTeamName implements Bot {
 		}
 		return "";
 	}
-	
+
 	public String roll(){
 		if(allowedRoll){
 			allowedRoll = false;	//If you get to roll, next time you can't roll unless the previous if statement is passed.
 			decision = 0;
 			return "roll";
 		}
-		
+
 		decision = 4;
 		return ""; //Don't roll, send to 4, currently 'done'.
-		
+
 	}
-	
+
 	public String inJail(){
 		if(!allowedRoll){
 			decision = 4;
@@ -130,22 +131,69 @@ public class YourTeamName implements Bot {
 		System.out.println(player.isInJail());
 		if(player.getNumProperties() < 10){
 			if(player.getBalance() > 50){
-					decision = 0;
-					return "pay";
-				}
-				
+				decision = 0;
+				return "pay";
+			}
+
 		}
 
-		
+
 		allowedRoll = false;
 		return "roll";
+
+	}
+
+	public String buyProperty(){
+		decision = 2;													//Sets choice for next time getCommand() is called.
+
+		Property property;
+
+		if (player.getBalance() < 500){											//Critical stage: Only buy desirable properties, mortgage least wanted properties until above 300 pounds.
+			stage = 0;
+		}
+		else if (player.getBalance() < 1000){									//Average stage: Buy most properties, avoid blacklisted ones.
+			stage = 1;
+		} 
+		else {																	//Rich stage: Buy everything.
+			stage = 2;
+		}
+		
+		
+		
+		if (board.isProperty(player.getPosition()) ){
+			property = board.getProperty(player.getPosition());
+			
+			switch (stage){
+			case 0 :
+				if (player.getBalance() < 300){
+//MORTGAGE LEAST VISITED PROPERTY WHERE OPPONENT OWNS SAME COLOUR.
+				}
+//EVALUATE IF WE WANT THE PROPERTY. IF SO BUY.
+				
+			case 1 :
+				if (!property.isOwned()){
+//					if (board.isSite(property.getName())){
+//					
+//					}
+				}
+			
+			case 2 :
+				if (!property.isOwned() && board.isSite(property.getShortName()) ){
+					return "buy";
+				}
+				
+			default :
+
+			}
+		}
+		
+		return "";																//Return null string when property is owned/not buyable.
+
 		
 	}
-	
 
 
 
 
-	
-	
+
 }
