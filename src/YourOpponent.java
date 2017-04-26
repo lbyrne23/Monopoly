@@ -181,10 +181,10 @@ public class YourOpponent implements Bot {
 		if (player.getBalance() < 300){			// Critical stage: Only buy sites if affordable.
 			stage = 0;
 		}
-		else if (player.getBalance() < 2000){	// Average stage: Only buy sites.
+		else if (player.getBalance() < 2000){	// Average stage: Buy everything.
 			stage = 1;
 		} 
-		else {									// Rich stage: Buy everything.
+		else {									// Rich stage: Buy everything, possibility implementing a redeem capability in the future when here.
 			stage = 2;
 		}
 
@@ -215,15 +215,9 @@ public class YourOpponent implements Bot {
 
 
 			case 1 : // Average Stage
-				if ( board.isSite(property.getShortName()) ){	
-					System.out.println("Property purchased.");
-					decision = 5; // Send to build function.
-					return "buy";
-				}
-				else {
-					decision = 5; // Send to build function.
-					return "";
-				}
+				System.out.println("Property purchased.");
+				decision = 5; // Send to build function.
+				return "buy";
 
 
 			case 2 : // Rich Stage
@@ -269,6 +263,37 @@ public class YourOpponent implements Bot {
 
 	public String mortgage() {
 		if(player.getBalance() < 0){
+
+			/*---------------Mortgage Stations and Utilities First----------*/
+			ArrayList<Property> properties = player.getProperties();
+			int sizeProperties = player.getNumProperties();
+
+			//Mortgage Utilities
+			for( int i = 0; i < sizeProperties; i++){
+				for (Property p : properties) {
+					if (p instanceof Utility) { 
+						if(!p.isMortgaged()){ 
+							String name = p.getShortName();
+							return "mortgage " + name;
+						}
+					}
+				}
+			}
+
+
+			//Mortgage Stations
+			for(int i = 0; i < sizeProperties; i++){
+				for (Property p : properties) {
+					if (p instanceof Station) {
+						if(!p.isMortgaged()){
+							String name = p.getShortName();
+							return "mortgage " + name;
+						}
+					}
+				}
+			}
+
+
 			ColourGroup[] desire = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty,
 					yellowProperty, redProperty, orangeProperty};
 

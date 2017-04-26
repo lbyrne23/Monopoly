@@ -184,7 +184,7 @@ public class CessnaSkyhawk implements Bot {
 		else if (player.getBalance() < 2000){	// Average stage: Buy everything.
 			stage = 1;
 		} 
-		else {									// Rich stage: Buy everything, possibility of redeeming in the future.
+		else {									// Rich stage: Buy everything, possibility implementing a redeem capability in the future when here.
 			stage = 2;
 		}
 
@@ -236,7 +236,7 @@ public class CessnaSkyhawk implements Bot {
 		ColourGroup[] colours = {brownProperty, lightBlueProperty, pinkProperty, orangeProperty,
 				redProperty, yellowProperty, greenProperty, darkBlueProperty};
 
-		for(int max = 3; max < 5; max++){				// First loop tries to build all site to 3.
+		for(int max = 1; max < 5; max++){				// First loop tries to build all site to 3.
 			for(int i = 0; i < colours.length; i++){
 				ArrayList<Site> members = colours[i].getMembers();
 
