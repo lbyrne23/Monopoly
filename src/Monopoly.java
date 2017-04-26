@@ -35,7 +35,7 @@ public class Monopoly {
 		String[] botNames = new String [NUM_PLAYERS];
 		if (args.length<NUM_PLAYERS) {
 			botNames[0] = "CessnaSkyhawk";
-			botNames[1] = "CessnaSkyhawk";
+			botNames[1] = "YourOpponent";
 		} else {
 			for (int i=0; i<NUM_PLAYERS; i++) {
 				boolean found = false;

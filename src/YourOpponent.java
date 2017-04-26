@@ -7,7 +7,7 @@
 
 import java.util.ArrayList;
 
-public class CessnaSkyhawk implements Bot {
+public class YourOpponent implements Bot {
 
 	// The public API of YourTeamName must not change
 	// You cannot change any other classes
@@ -30,7 +30,7 @@ public class CessnaSkyhawk implements Bot {
 	ColourGroup greenProperty;
 	ColourGroup darkBlueProperty;
 
-	CessnaSkyhawk (BoardAPI board, PlayerAPI player, DiceAPI dice) {
+	YourOpponent (BoardAPI board, PlayerAPI player, DiceAPI dice) {
 		allowedRoll = true;
 		wasInJail = false;
 		this.board = board;
@@ -181,10 +181,10 @@ public class CessnaSkyhawk implements Bot {
 		if (player.getBalance() < 300){			// Critical stage: Only buy sites if affordable.
 			stage = 0;
 		}
-		else if (player.getBalance() < 2000){	// Average stage: Buy everything.
+		else if (player.getBalance() < 2000){	// Average stage: Only buy sites.
 			stage = 1;
 		} 
-		else {									// Rich stage: Buy everything, possibility of redeeming in the future.
+		else {									// Rich stage: Buy everything.
 			stage = 2;
 		}
 
@@ -215,9 +215,15 @@ public class CessnaSkyhawk implements Bot {
 
 
 			case 1 : // Average Stage
-				System.out.println("Property purchased.");
-				decision = 5; // Send to build function.
-				return "buy";
+				if ( board.isSite(property.getShortName()) ){	
+					System.out.println("Property purchased.");
+					decision = 5; // Send to build function.
+					return "buy";
+				}
+				else {
+					decision = 5; // Send to build function.
+					return "";
+				}
 
 
 			case 2 : // Rich Stage
@@ -263,37 +269,6 @@ public class CessnaSkyhawk implements Bot {
 
 	public String mortgage() {
 		if(player.getBalance() < 0){
-
-			/*---------------Mortgage Stations and Utilities First----------*/
-			ArrayList<Property> properties = player.getProperties();
-			int sizeProperties = player.getNumProperties();
-
-			//Mortgage Utilities
-			for( int i = 0; i < sizeProperties; i++){
-				for (Property p : properties) {
-					if (p instanceof Utility) { 
-						if(!p.isMortgaged()){ 
-							String name = p.getShortName();
-							return "mortgage " + name;
-						}
-					}
-				}
-			}
-
-
-			//Mortgage Stations
-			for(int i = 0; i < sizeProperties; i++){
-				for (Property p : properties) {
-					if (p instanceof Station) {
-						if(!p.isMortgaged()){
-							String name = p.getShortName();
-							return "mortgage " + name;
-						}
-					}
-				}
-			}
-
-
 			ColourGroup[] desire = {brownProperty, lightBlueProperty, darkBlueProperty, greenProperty, pinkProperty,
 					yellowProperty, redProperty, orangeProperty};
 
