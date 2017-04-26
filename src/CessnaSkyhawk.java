@@ -55,8 +55,6 @@ public class CessnaSkyhawk implements Bot {
 
 	public String getCommand () {
 
-
-		System.out.println(decision);
 		switch (decision){
 		case 0 : 
 			return checkAllowedRoll();	// Decision is 1 if in jail, 2 if not.
@@ -151,26 +149,25 @@ public class CessnaSkyhawk implements Bot {
 		}
 
 		wasInJail = true;
-		System.out.println(player.isInJail());
-		if(theirMonopoly() < 1){ 					// If we still have a chance to go around and get a monopoly.
+		if(theirMonopoly() < 1){ 	// If we still have a chance to go around and get a monopoly.
 			if(player.hasGetOutOfJailCard()){
 				if(player.getBalance() > 600){
-					decision = 0; // Send to checkAllowedRoll function.
-					return "pay"; // Pay out to save card for low funds.
+					decision = 0; 	// Send to checkAllowedRoll function.
+					return "pay"; 	// Pay out to save card for low funds.
 				}
 				else { 
-					decision = 0; // Send to checkAllowedRoll function.
+					decision = 0; 	// Send to checkAllowedRoll function.
 					return "card";
 				}
 			}
 			if(player.getBalance() > 50){
-				decision = 0; 	// Send to checkAllowedRoll function.
+				decision = 0; 		// Send to checkAllowedRoll function.
 				return "pay";
 			}
 		}
 
 		allowedRoll = false;
-		decision = 0; 			// Send to checkAllowedRoll function.
+		decision = 0; 				// Send to checkAllowedRoll function.
 		return "roll";
 	}
 
@@ -198,7 +195,6 @@ public class CessnaSkyhawk implements Bot {
 			case 0 : // Critical Stage
 				if (player.getBalance() >= property.getPrice()){
 					if (board.isSite(property.getShortName())){
-						System.out.println("Property purchased.");
 						decision = 5; // Send to build function.
 						return "buy";
 					}
@@ -208,14 +204,12 @@ public class CessnaSkyhawk implements Bot {
 					}
 				} 
 				else {
-					System.out.println("Property not purchased: Balance < Property Price.");
 					decision = 5; // Send to build function.
 					return "";
 				}
 
 
 			case 1 : // Average Stage
-				System.out.println("Property purchased.");
 				decision = 5; // Send to build function.
 				return "buy";
 
@@ -248,7 +242,6 @@ public class CessnaSkyhawk implements Bot {
 							&& site.getNumBuildings() < max 
 							&& player.getBalance() > site.getBuildingPrice() 
 							&& !site.isMortgaged()){
-						System.out.println("House Built. " + player.getTokenName() + site.getShortName());
 						decision = 5;	// Send to self.
 						return ("build " + site.getShortName() + " 1" );
 					}
@@ -336,7 +329,6 @@ public class CessnaSkyhawk implements Bot {
 								&& owner.equals(player) 
 								&& site.isMortgaged() == false 
 								&& site.getNumBuildings() == 0){
-							System.out.println("Mortgaged.");
 							decision = 6;						// Send to self.
 							return "mortgage "+ shortName; 		// Mortgage this property.
 						}
@@ -428,7 +420,6 @@ public class CessnaSkyhawk implements Bot {
 
 						//Demolish if we own the colour group, the amount of buildings is equal to min and we have a negative balance. 
 						if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
-							System.out.println("Demolished." + player.getTokenName()  + site.getShortName());
 							decision = 6; // Send to mortgage function.
 							return ("demolish " + site.getShortName() + " 1");
 						}
@@ -452,8 +443,6 @@ public class CessnaSkyhawk implements Bot {
 			if (board.isProperty(i)){
 				Property property = board.getProperty(i);
 				if(property.getOwner() != null && property.getOwner() == player && !property.isMortgaged() ){
-
-					System.out.println("Bankrupt -> Mortgage: " + i);
 					decision = 6; // Send to mortgage function.
 					return "" ;
 				}
