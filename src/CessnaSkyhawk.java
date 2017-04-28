@@ -103,15 +103,18 @@ public class CessnaSkyhawk implements Bot {
 				return "done";
 			}
 		}
+		System.out.println(command);
 		return command;
 	}
 
 
 	public String getDecision () {
 		if ( player.getBalance() > 50){
+			
 			return "pay";
 		} 
 		else{
+			
 			return "chance";
 		}
 	}
@@ -124,10 +127,12 @@ public class CessnaSkyhawk implements Bot {
 
 		if (!allowedRoll){
 			decision = 9; // Send to done function.
+			
 			return "";
 		}
 
 		decision = 1; 	// Send to checkInJail function.
+		
 		return ""; 		// Return null string, to move to next step.
 	}
 
@@ -139,7 +144,7 @@ public class CessnaSkyhawk implements Bot {
 		else{
 			decision = 3; 	// Send to roll function.
 		}
-
+		
 		return "";
 	}
 
@@ -148,10 +153,12 @@ public class CessnaSkyhawk implements Bot {
 		if(allowedRoll){
 			allowedRoll = false;	// If you get to roll, next time you can't roll unless the previous if statement is passed.
 			decision = 4;			// Send to buy function.
+			
 			return "roll";
 		}
 
 		decision = 9;	// Send to done function.
+		
 		return "";
 	}
 
@@ -159,6 +166,7 @@ public class CessnaSkyhawk implements Bot {
 	public String inJail(){
 		if(!allowedRoll){
 			decision = 9; // Send to inJail function.
+	
 			return "";
 		}
 
@@ -167,21 +175,25 @@ public class CessnaSkyhawk implements Bot {
 			if(player.hasGetOutOfJailCard()){
 				if(player.getBalance() > 600){
 					decision = 0; 	// Send to checkAllowedRoll function.
+					
 					return "pay"; 	// Pay out to save card for low funds.
 				}
 				else { 
 					decision = 0; 	// Send to checkAllowedRoll function.
+					
 					return "card";
 				}
 			}
 			if(player.getBalance() > 50){
 				decision = 0; 		// Send to checkAllowedRoll function.
+				
 				return "pay";
 			}
 		}
 
 		allowedRoll = false;
 		decision = 0; 				// Send to checkAllowedRoll function.
+	
 		return "roll";
 	}
 
@@ -210,32 +222,38 @@ public class CessnaSkyhawk implements Bot {
 				if (player.getBalance() >= property.getPrice()){
 					if (board.isSite(property.getShortName())){
 						decision = 5; // Send to build function.
+						
 						return "buy";
 					}
 					else {
 						decision = 5; // Send to build function.
+						
 						return "";
 					}
 				} 
 				else {
 					decision = 5; // Send to build function.
+					
 					return "";
 				}
 
 
 			case 1 : // Average Stage
 				decision = 5; // Send to build function.
+				
 				return "buy";
 
 
 			case 2 : // Rich Stage
 				decision = 5; // Send to build function.
+				
 				return "buy";
 
 			}
 		}
 
 		decision = 5;	// Send to build function.
+		
 		return "";		// Return null string when position is owned/not buyable.
 	}
 
@@ -257,6 +275,7 @@ public class CessnaSkyhawk implements Bot {
 							&& player.getBalance() > site.getBuildingPrice() 
 							&& !site.isMortgaged()){
 						decision = 5;	// Send to self.
+						
 						return ("build " + site.getShortName() + " 1" );
 					}
 				}
@@ -264,6 +283,7 @@ public class CessnaSkyhawk implements Bot {
 		}
 
 		decision = 6; // Send to mortgage function.
+		
 		return ""; 
 	}
 
@@ -281,6 +301,7 @@ public class CessnaSkyhawk implements Bot {
 					if (p instanceof Utility) { 
 						if(!p.isMortgaged()){ 
 							String name = p.getShortName();
+							
 							return "mortgage " + name;
 						}
 					}
@@ -294,6 +315,7 @@ public class CessnaSkyhawk implements Bot {
 					if (p instanceof Station) {
 						if(!p.isMortgaged()){
 							String name = p.getShortName();
+							
 							return "mortgage " + name;
 						}
 					}
@@ -344,6 +366,7 @@ public class CessnaSkyhawk implements Bot {
 								&& site.isMortgaged() == false 
 								&& site.getNumBuildings() == 0){
 							decision = 6;						// Send to self.
+							
 							return "mortgage "+ shortName; 		// Mortgage this property.
 						}
 					}
@@ -378,6 +401,7 @@ public class CessnaSkyhawk implements Bot {
 								&& site.isMortgaged() == false 
 								&& site.getNumBuildings() == 0){
 							decision = 6;						// Send to self.
+							
 							return "mortgage "+shortName; 		// Mortgage this property.
 						}
 					}
@@ -395,6 +419,7 @@ public class CessnaSkyhawk implements Bot {
 								&& site.isMortgaged() == false 
 								&& site.getNumBuildings() == 0){
 							decision = 6;						// Send to self.
+						
 							return "mortgage " + shortName; 	// Mortgage this property.
 						}
 					}
@@ -408,6 +433,7 @@ public class CessnaSkyhawk implements Bot {
 						if(owner.equals(player) && site.isMortgaged() == false && site.getNumBuildings() == 0){
 
 							decision = 6;						// Send to self.
+							
 							return "mortgage "+shortName; 		// Mortgage this property.
 						}
 					}
@@ -416,6 +442,7 @@ public class CessnaSkyhawk implements Bot {
 		}
 
 		decision = 7;	// Send to demolish function.
+		
 		return ""; 		// Return the Demolish Function if balance > 0.
 	}
 
@@ -435,6 +462,7 @@ public class CessnaSkyhawk implements Bot {
 						//Demolish if we own the colour group, the amount of buildings is equal to min and we have a negative balance. 
 						if(player.isGroupOwner(site) && site.getNumBuildings() == min && player.getBalance() < 0){
 							decision = 6; // Send to mortgage function.
+							
 							return ("demolish " + site.getShortName() + " 1");
 						}
 					}
@@ -443,6 +471,7 @@ public class CessnaSkyhawk implements Bot {
 		}
 		// If no property is demolished.
 		decision = 8; // Send to bankrupt function.
+		
 		return ""; 
 	}
 
@@ -450,6 +479,7 @@ public class CessnaSkyhawk implements Bot {
 	public String bankrupt(){
 		if(player.getBalance() >= 0){
 			decision = 9;	// Send to done function.
+
 			return "";
 		}
 
@@ -458,12 +488,14 @@ public class CessnaSkyhawk implements Bot {
 				Property property = board.getProperty(i);
 				if(property.getOwner() != null && property.getOwner() == player && !property.isMortgaged() ){
 					decision = 6; // Send to mortgage function.
+					
 					return "" ;
 				}
 			}
 		}
 
 		decision = 9; // Send to done function.
+		
 		return "bankrupt";
 	}
 
@@ -471,11 +503,13 @@ public class CessnaSkyhawk implements Bot {
 	public String doneFunction(){
 		if(allowedRoll){
 			decision = 0; 	// Send to checkAllowedRoll function.
+			
 			return "";
 		}
 		wasInJail = false;
 		allowedRoll = true;
 		decision = 0;		// Send to checkAllowedRoll function.
+		
 		return "done";
 	}
 
