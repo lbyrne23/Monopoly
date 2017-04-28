@@ -49,47 +49,61 @@ public class CessnaSkyhawk implements Bot {
 
 
 	public String getName () {
-		return "YourTeamName";
+		return "CessnaSkyhawk";
 	}
 
 
 	public String getCommand () {
-
-		switch (decision){
-		case 0 : 
-			return checkAllowedRoll();	// Decision is 1 if in jail, 2 if not.
-
-		case 1 :
-			return checkInJail();
-
-		case 2 : 
-			return inJail();
-
-		case 3 :
-			return roll();
-
-		case 4 :
-			return buyProperty();
-
-		case 5 :
-			return build();
-
-		case 6 :
-			return mortgage();
-
-		case 7 :
-			return demolish();
-
-		case 8 :
-			return bankrupt();
-
-		case 9 : 
-			return doneFunction();
-
-		default : 
-			decision = 0; // Send to checkAllowedRoll function.
-			return "done";
+		String command = "";
+		
+		while(command.equals("")){
+			switch (decision){
+			case 0 : 
+				command = checkAllowedRoll();
+				break;
+	
+			case 1 :
+				command = checkInJail();
+				break;
+	
+			case 2 : 
+				command = inJail();
+				break;
+	
+			case 3 :
+				command = roll();
+				break;
+	
+			case 4 :
+				command = buyProperty();
+				break;
+	
+			case 5 :
+				command = build();
+				break;
+	
+			case 6 :
+				command = mortgage();
+				break;
+	
+			case 7 :
+				command = demolish();
+				break;
+	
+			case 8 :
+				command = bankrupt();
+				break;
+	
+			case 9 : 
+				command = doneFunction();
+				break;
+	
+			default : 
+				decision = 0; // Send to checkAllowedRoll function.
+				return "done";
+			}
 		}
+		return command;
 	}
 
 
